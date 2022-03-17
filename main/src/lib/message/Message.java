@@ -1,12 +1,13 @@
 package lib.message;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public interface Message {
     char getType();
 
-    static Message parseString(String text, InetAddress sender) {
+    static Message parseString(String text, InetAddress sender) throws UnknownHostException {
         Scanner scanner = new Scanner(text);
         scanner.useDelimiter("|");
         String type = scanner.next();
@@ -17,10 +18,14 @@ public interface Message {
                 String content = scanner.next();
                 return new TextMessage(content, sender, sequenceNumber);
             case "N": // nack
+                String stringTarget = scanner.next();
+                InetAddress targetAddress = InetAddress.getByName(stringTarget);
                 sequenceNumber = scanner.nextInt();
-                return new NackMessage(sender, sequenceNumber);
+                return new NackMessage(sender, targetAddress, sequenceNumber);
             default:
                 return new ErrorMessage();
         }
     }
+
+    String getTransmissionString();
 }

@@ -4,10 +4,12 @@ import java.net.InetAddress;
 
 public class NackMessage implements Message {
     private InetAddress senderId;
+    private InetAddress targetId;
     private int requestedMessage;
 
-    public NackMessage(InetAddress senderId, int requestedMessage) {
+    public NackMessage(InetAddress senderId, InetAddress targetId, int requestedMessage) {
         this.senderId = senderId;
+        this.targetId = targetId;
         this.requestedMessage = requestedMessage;
     }
 
@@ -19,5 +21,9 @@ public class NackMessage implements Message {
 
     public int getRequestedMessage() {
         return requestedMessage;
+    }
+
+    public InetAddress getTargetId() {
+        return targetId;
     }
 }
