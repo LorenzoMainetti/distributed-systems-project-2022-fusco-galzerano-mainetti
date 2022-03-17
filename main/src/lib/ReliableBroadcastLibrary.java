@@ -7,6 +7,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReliableBroadcastLibrary {
     private MulticastSocket outSocket;
@@ -17,6 +19,8 @@ public class ReliableBroadcastLibrary {
 
     private int sequenceNumber;
 
+    Map<InetAddress, Integer> messageSeqMap;
+
     public ReliableBroadcastLibrary(String inetAddr, int inPort) throws IOException {
         port = inPort;
         address = InetAddress.getByName(inetAddr);
@@ -24,6 +28,7 @@ public class ReliableBroadcastLibrary {
         inSocket = new DatagramSocket();
 
         sequenceNumber = 0;
+        messageSeqMap = new HashMap<>();
     }
 
     public void sendTextMessage(String text) throws IOException {
