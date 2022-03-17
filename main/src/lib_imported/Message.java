@@ -1,4 +1,4 @@
-package lib;
+package lib_imported;
 
 /**
  Represents a single message, and handles the details of

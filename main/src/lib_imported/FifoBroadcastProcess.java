@@ -1,4 +1,4 @@
-package lib;
+package lib_imported;
 
 import java.net.SocketException;
 import java.util.ArrayList;

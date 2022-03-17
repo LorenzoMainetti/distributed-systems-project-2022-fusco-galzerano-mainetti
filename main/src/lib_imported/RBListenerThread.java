@@ -1,4 +1,4 @@
-package lib;
+package lib_imported;
 
 import java.io.IOException;
 import java.net.*;
