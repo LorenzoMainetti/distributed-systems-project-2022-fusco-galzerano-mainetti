@@ -22,6 +22,12 @@ public interface Message {
                 InetAddress targetAddress = InetAddress.getByName(stringTarget);
                 sequenceNumber = scanner.nextInt();
                 return new NackMessage(sender, targetAddress, sequenceNumber);
+            case "J": // join
+                String addressString = scanner.next();
+                sequenceNumber = scanner.nextInt();
+                return new JoinMessage(InetAddress.getByName(addressString), sequenceNumber);
+            case "P": // ping
+                // TODO: implement ping logic
             default:
                 return new ErrorMessage();
         }

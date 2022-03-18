@@ -1,5 +1,6 @@
 package lib;
 
+import lib.message.JoinMessage;
 import lib.message.Message;
 import lib.message.NackMessage;
 import lib.message.TextMessage;
@@ -11,20 +12,22 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.time.temporal.TemporalQuery;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class ReliableBroadcastLibrary extends Thread {
-    private MulticastSocket outSocket;
-    private DatagramSocket inSocket;
+    private final MulticastSocket outSocket;
+    private final DatagramSocket inSocket;
 
-    private int port;
-    private InetAddress address;
+    private final int port;
+    private final InetAddress address;
 
     private int sequenceNumber;
 
-    Map<InetAddress, Integer> messageSeqMap;
-    private Queue<TextMessage> deliveredQueue;
-    private List<TextMessage> receivedList;
-    private List<TextMessage> sentMessages;
+    private final Map<InetAddress, Integer> messageSeqMap;
+    private final BlockingQueue<TextMessage> deliveredQueue;
+    private final List<TextMessage> receivedList;
+    private final List<TextMessage> sentMessages;
 
     public ReliableBroadcastLibrary(String inetAddr, int inPort) throws IOException {
         port = inPort;
@@ -35,10 +38,10 @@ public class ReliableBroadcastLibrary extends Thread {
         sequenceNumber = 0;
         messageSeqMap = new HashMap<>();
         receivedList = new LinkedList<>();
-        messageSeqMap = new HashMap<>();
         sentMessages = new ArrayList<>();
+        deliveredQueue = new LinkedBlockingQueue<>();
 
-        this.run();
+        this.start();
     }
 
     public void run() {
@@ -52,7 +55,7 @@ public class ReliableBroadcastLibrary extends Thread {
                 receiveMessage(m);
                 deliverAll();
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -76,13 +79,7 @@ public class ReliableBroadcastLibrary extends Thread {
     }
 
     public TextMessage getTextMessage() throws InterruptedException {
-        TextMessage textMessage;
-        synchronized (deliveredQueue) {
-            while (deliveredQueue.isEmpty()) deliveredQueue.wait();
-            textMessage = deliveredQueue.remove();
-        }
-
-        return textMessage;
+        return deliveredQueue.take();
     }
 
     private void receiveMessage(Message m) {
@@ -101,6 +98,9 @@ public class ReliableBroadcastLibrary extends Thread {
                 NackMessage nackMessage = (NackMessage) m;
                 if (nackMessage.getTargetId() == address)
                     sendMessageHelper(sentMessages.get(nackMessage.getRequestedMessage()));
+            case 'J':
+                JoinMessage joinMessage = (JoinMessage) m;
+                messageSeqMap.put(joinMessage.getAddress(), joinMessage.getSequenceNumber());
             default:
 
         }
@@ -111,7 +111,7 @@ public class ReliableBroadcastLibrary extends Thread {
         sendMessageHelper(nackMessage);
     }
 
-    private void deliverAll() {
+    private void deliverAll() throws InterruptedException {
         boolean redo = true;
         while (redo) {
             redo = false;
@@ -120,7 +120,7 @@ public class ReliableBroadcastLibrary extends Thread {
                 int expected = messageSeqMap.get(m.getSenderId());
                 if (m.getSequenceNumber() == expected) {
                     messageSeqMap.put(m.getSenderId(), expected + 1);
-                    deliveredQueue.add(m);
+                    deliveredQueue.put(m);
                     redo = true;
                 } else if (m.getSequenceNumber() < expected) {
                     toRemove.add(m);
