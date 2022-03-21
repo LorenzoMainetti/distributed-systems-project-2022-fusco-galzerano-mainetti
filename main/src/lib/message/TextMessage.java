@@ -3,13 +3,13 @@ package lib.message;
 import java.net.InetAddress;
 
 public class TextMessage implements Message {
-    private String message;
-    private InetAddress senderId;
-    private int sequenceNumber;
+    private final String message;
+    private final InetAddress source;
+    private final int sequenceNumber;
 
-    public TextMessage(String message, InetAddress senderId, int sequenceNumber) {
+    public TextMessage(InetAddress source, String message, int sequenceNumber) {
         this.message = message;
-        this.senderId = senderId;
+        this.source = source;
         this.sequenceNumber = sequenceNumber;
     }
 
@@ -24,8 +24,8 @@ public class TextMessage implements Message {
         return message;
     }
 
-    public InetAddress getSenderId() {
-        return senderId;
+    public InetAddress getSource() {
+        return source;
     }
 
     public int getSequenceNumber() {

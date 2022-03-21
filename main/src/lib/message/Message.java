@@ -2,10 +2,14 @@ package lib.message;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public interface Message {
     char getType();
+
+    InetAddress getSource();
 
     static Message parseString(String text, InetAddress sender) throws UnknownHostException {
         Scanner scanner = new Scanner(text);
@@ -13,10 +17,10 @@ public interface Message {
         String type = scanner.next();
         int sequenceNumber;
         switch (type) {
-            case "M": // content message (normal)
+            case "T": // content message (normal)
                 sequenceNumber = scanner.nextInt();
                 String content = scanner.next();
-                return new TextMessage(content, sender, sequenceNumber);
+                return new TextMessage(sender, content, sequenceNumber);
             case "N": // nack
                 String stringTarget = scanner.next();
                 InetAddress targetAddress = InetAddress.getByName(stringTarget);
@@ -25,9 +29,15 @@ public interface Message {
             case "J": // join
                 String addressString = scanner.next();
                 sequenceNumber = scanner.nextInt();
-                return new JoinMessage(InetAddress.getByName(addressString), sequenceNumber);
+                return new JoinMessage(sender, InetAddress.getByName(addressString), sequenceNumber);
             case "P": // ping
                 // TODO: implement ping logic
+            case "V": // viewchange
+                int elements = scanner.nextInt();
+                List<InetAddress> newView = new ArrayList<>();
+                for (int i = 0; i < elements; ++i)
+                    newView.add(InetAddress.getByName(scanner.next()));
+                return new ViewChangeMessage(sender, newView);
             default:
                 return new ErrorMessage();
         }

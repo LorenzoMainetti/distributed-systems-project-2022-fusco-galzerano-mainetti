@@ -5,8 +5,10 @@ import java.net.InetAddress;
 public class JoinMessage implements Message {
     private final InetAddress address;
     private final int sequenceNumber;
+    private final InetAddress source;
 
-    public JoinMessage(InetAddress address, int sequenceNumber) {
+    public JoinMessage(InetAddress source, InetAddress address, int sequenceNumber) {
+        this.source = source;
         this.address = address;
         this.sequenceNumber = sequenceNumber;
     }
@@ -24,6 +26,8 @@ public class JoinMessage implements Message {
     public InetAddress getAddress() {
         return address;
     }
+
+    public InetAddress getSource() { return source; }
 
     public int getSequenceNumber() {
         return sequenceNumber;

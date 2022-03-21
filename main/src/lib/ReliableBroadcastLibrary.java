@@ -1,16 +1,12 @@
 package lib;
 
-import lib.message.JoinMessage;
-import lib.message.Message;
-import lib.message.NackMessage;
-import lib.message.TextMessage;
+import lib.message.*;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.time.temporal.TemporalQuery;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -24,10 +20,13 @@ public class ReliableBroadcastLibrary extends Thread {
 
     private int sequenceNumber;
 
+    private final List<InetAddress> view;
     private final Map<InetAddress, Integer> messageSeqMap;
     private final BlockingQueue<TextMessage> deliveredQueue;
     private final List<TextMessage> receivedList;
-    private final List<TextMessage> sentMessages;
+    private final Map<Integer, TextMessage> sentMessages;
+
+    private BroadcastState state;
 
     public ReliableBroadcastLibrary(String inetAddr, int inPort) throws IOException {
         port = inPort;
@@ -38,8 +37,11 @@ public class ReliableBroadcastLibrary extends Thread {
         sequenceNumber = 0;
         messageSeqMap = new HashMap<>();
         receivedList = new LinkedList<>();
-        sentMessages = new ArrayList<>();
+        sentMessages = new HashMap<>();
         deliveredQueue = new LinkedBlockingQueue<>();
+        view = new ArrayList<>();
+
+        state = BroadcastState.JOINING;
 
         this.start();
     }
@@ -72,10 +74,15 @@ public class ReliableBroadcastLibrary extends Thread {
     }
 
     public void sendTextMessage(String text) {
-        TextMessage textMessage = new TextMessage(text, address, sequenceNumber);
-        sentMessages.set(sequenceNumber, textMessage);
+        TextMessage textMessage = new TextMessage(address, text, sequenceNumber);
+        sentMessages.put(sequenceNumber, textMessage);
         sendMessageHelper(textMessage);
         sequenceNumber++;
+    }
+
+    public void sendFlushMessage() {
+        FlushMessage flushMessage = new FlushMessage(address);
+        sendMessageHelper(flushMessage);
     }
 
     public TextMessage getTextMessage() throws InterruptedException {
@@ -87,11 +94,11 @@ public class ReliableBroadcastLibrary extends Thread {
             case 'T':
                 TextMessage textMessage = (TextMessage) m;
                 receivedList.add(textMessage);
-                int expected = messageSeqMap.get(textMessage.getSenderId());
+                int expected = messageSeqMap.get(textMessage.getSource());
                 if (textMessage.getSequenceNumber() > expected) {
                     //TODO: optimize
                     for (int i = expected; i < textMessage.getSequenceNumber(); ++i) {
-                        sendNack(textMessage.getSenderId(), i);
+                        sendNack(textMessage.getSource(), i);
                     }
                 }
             case 'N':
@@ -100,8 +107,27 @@ public class ReliableBroadcastLibrary extends Thread {
                     sendMessageHelper(sentMessages.get(nackMessage.getRequestedMessage()));
             case 'J':
                 JoinMessage joinMessage = (JoinMessage) m;
-                messageSeqMap.put(joinMessage.getAddress(), joinMessage.getSequenceNumber());
+                //messageSeqMap.put(joinMessage.getAddress(), joinMessage.getSequenceNumber());
+                List<InetAddress> newView = new ArrayList<>(view);
+                newView.add(joinMessage.getAddress());
+                beginViewChange(newView);
+            case 'V':
+                ViewChangeMessage viewChangeMessage = (ViewChangeMessage) m;
+                if (state != BroadcastState.VIEWCHANGE) {
+                    beginViewChange(viewChangeMessage.getView());
+                }
             default:
+
+        }
+    }
+
+    private void beginViewChange(List<InetAddress> newView) {
+        state = BroadcastState.VIEWCHANGE;
+        // only flush logic, skip sending unstable messages for now
+        sendFlushMessage();
+        // wait to receive all flush from all other components of the view
+
+        for (InetAddress address : newView) {
 
         }
     }
@@ -117,9 +143,9 @@ public class ReliableBroadcastLibrary extends Thread {
             redo = false;
             List<TextMessage> toRemove = new LinkedList<>();
             for (TextMessage m : receivedList) {
-                int expected = messageSeqMap.get(m.getSenderId());
+                int expected = messageSeqMap.get(m.getSource());
                 if (m.getSequenceNumber() == expected) {
-                    messageSeqMap.put(m.getSenderId(), expected + 1);
+                    messageSeqMap.put(m.getSource(), expected + 1);
                     deliveredQueue.put(m);
                     redo = true;
                 } else if (m.getSequenceNumber() < expected) {
@@ -130,4 +156,10 @@ public class ReliableBroadcastLibrary extends Thread {
             receivedList.removeAll(toRemove);
         }
     }
+}
+
+enum BroadcastState {
+    NORMAL,
+    VIEWCHANGE,
+    JOINING
 }
