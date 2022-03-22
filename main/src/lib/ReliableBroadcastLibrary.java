@@ -27,6 +27,7 @@ public class ReliableBroadcastLibrary extends Thread {
     private final Map<Integer, TextMessage> sentMessages;
 
     private BroadcastState state;
+    private List<InetAddress> partialViewFlushAwaitList;
 
     public ReliableBroadcastLibrary(String inetAddr, int inPort) throws IOException {
         port = inPort;
@@ -55,7 +56,6 @@ public class ReliableBroadcastLibrary extends Thread {
                 Message m = Message.parseString(new String(packet.getData()), packet.getAddress());
 
                 receiveMessage(m);
-                deliverAll();
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -80,16 +80,11 @@ public class ReliableBroadcastLibrary extends Thread {
         sequenceNumber++;
     }
 
-    public void sendFlushMessage() {
-        FlushMessage flushMessage = new FlushMessage(address);
-        sendMessageHelper(flushMessage);
-    }
-
     public TextMessage getTextMessage() throws InterruptedException {
         return deliveredQueue.take();
     }
 
-    private void receiveMessage(Message m) {
+    private void receiveMessage(Message m) throws InterruptedException {
         switch (m.getType()) {
             case 'T':
                 TextMessage textMessage = (TextMessage) m;
@@ -98,8 +93,10 @@ public class ReliableBroadcastLibrary extends Thread {
                 if (textMessage.getSequenceNumber() > expected) {
                     //TODO: optimize
                     for (int i = expected; i < textMessage.getSequenceNumber(); ++i) {
-                        sendNack(textMessage.getSource(), i);
+                        sendMessageHelper(new NackMessage(address, textMessage.getSource(),  i));
                     }
+                } else {
+                    deliverAll();
                 }
             case 'N':
                 NackMessage nackMessage = (NackMessage) m;
@@ -116,25 +113,32 @@ public class ReliableBroadcastLibrary extends Thread {
                 if (state != BroadcastState.VIEWCHANGE) {
                     beginViewChange(viewChangeMessage.getView());
                 }
+            case 'F':
+                FlushMessage flushMessage = (FlushMessage) m;
+                if (state == BroadcastState.VIEWCHANGE) { // should always be true
+                    processFlushMessage(flushMessage);
+                }
             default:
 
+        }
+    }
+
+    private void processFlushMessage(FlushMessage flushMessage) throws InterruptedException {
+        InetAddress source = flushMessage.getSource();
+        partialViewFlushAwaitList.remove(source);
+        if (partialViewFlushAwaitList.isEmpty()) {
+            state = BroadcastState.NORMAL;
+            deliverAll();
         }
     }
 
     private void beginViewChange(List<InetAddress> newView) {
         state = BroadcastState.VIEWCHANGE;
         // only flush logic, skip sending unstable messages for now
-        sendFlushMessage();
+        sendMessageHelper(new FlushMessage(address));
         // wait to receive all flush from all other components of the view
-
-        for (InetAddress address : newView) {
-
-        }
-    }
-
-    private void sendNack(InetAddress targetAddress, int i) {
-        NackMessage nackMessage = new NackMessage(address, targetAddress,  i);
-        sendMessageHelper(nackMessage);
+        partialViewFlushAwaitList = new ArrayList<>(newView);
+        // TODO: wait
     }
 
     private void deliverAll() throws InterruptedException {

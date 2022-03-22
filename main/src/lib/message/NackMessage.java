@@ -26,4 +26,8 @@ public class NackMessage implements Message {
     public InetAddress getTargetId() {
         return targetId;
     }
+
+    public String getTransmissionString() {
+        return "N|" + targetId.toString() + "|" + requestedMessage;
+    }
 }

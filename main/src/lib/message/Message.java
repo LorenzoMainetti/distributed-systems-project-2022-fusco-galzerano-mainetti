@@ -39,7 +39,7 @@ public interface Message {
                     newView.add(InetAddress.getByName(scanner.next()));
                 return new ViewChangeMessage(sender, newView);
             default:
-                return new ErrorMessage();
+                return new ErrorMessage(sender);
         }
     }
 

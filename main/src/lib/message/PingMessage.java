@@ -3,10 +3,10 @@ package lib.message;
 import java.net.InetAddress;
 
 public class PingMessage implements Message {
-    private final InetAddress address;
+    private final InetAddress source;
 
-    public PingMessage(InetAddress address) {
-        this.address = address;
+    public PingMessage(InetAddress source) {
+        this.source = source;
     }
 
     @Override
@@ -16,6 +16,8 @@ public class PingMessage implements Message {
 
     @Override
     public String getTransmissionString() {
-        return "P|" + address.toString();
+        return "P|" + source.toString();
     }
+
+    public InetAddress getSource() { return source; }
 }
