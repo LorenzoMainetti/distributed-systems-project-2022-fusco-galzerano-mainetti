@@ -6,11 +6,13 @@ public class TextMessage implements Message {
     private final String message;
     private final InetAddress source;
     private final int sequenceNumber;
+    private int ackCount;
 
     public TextMessage(InetAddress source, String message, int sequenceNumber) {
         this.message = message;
         this.source = source;
         this.sequenceNumber = sequenceNumber;
+        ackCount = 0;
     }
 
     public char getType() { return 'T'; }
@@ -31,4 +33,8 @@ public class TextMessage implements Message {
     public int getSequenceNumber() {
         return sequenceNumber;
     }
+
+    public void incrementAckCount() { ackCount++; }
+
+    public int getAckCount() { return ackCount; }
 }

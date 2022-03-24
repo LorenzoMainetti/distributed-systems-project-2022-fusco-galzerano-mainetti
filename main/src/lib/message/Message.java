@@ -16,16 +16,21 @@ public interface Message {
         scanner.useDelimiter("|");
         String type = scanner.next();
         int sequenceNumber;
+        InetAddress target;
         switch (type) {
             case "T": // content message (normal)
                 sequenceNumber = scanner.nextInt();
                 String content = scanner.next();
                 return new TextMessage(sender, content, sequenceNumber);
+            case "A": // ack
+                target = InetAddress.getByName(scanner.next());
+                sequenceNumber = scanner.nextInt();
+                return new AckMessage(sender, target, sequenceNumber);
             case "N": // nack
                 String stringTarget = scanner.next();
-                InetAddress targetAddress = InetAddress.getByName(stringTarget);
+                target = InetAddress.getByName(stringTarget);
                 sequenceNumber = scanner.nextInt();
-                return new NackMessage(sender, targetAddress, sequenceNumber);
+                return new NackMessage(sender, target, sequenceNumber);
             case "J": // join
                 String addressString = scanner.next();
                 sequenceNumber = scanner.nextInt();

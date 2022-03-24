@@ -4,9 +4,13 @@ import java.net.InetAddress;
 
 public class AckMessage implements Message {
     private final InetAddress source;
+    private final InetAddress target;
+    private final int sequenceNumber;
 
-    public AckMessage(InetAddress source) {
+    public AckMessage(InetAddress source, InetAddress target, int sequenceNumber) {
         this.source = source;
+        this.target = target;
+        this.sequenceNumber = sequenceNumber;
     }
 
     @Override
@@ -21,6 +25,14 @@ public class AckMessage implements Message {
 
     @Override
     public String getTransmissionString() {
-        return "A";
+        return "A|" + target.toString() + "|" + sequenceNumber;
+    }
+
+    public InetAddress getTarget() {
+        return target;
+    }
+
+    public int getSequenceNumber() {
+        return sequenceNumber;
     }
 }

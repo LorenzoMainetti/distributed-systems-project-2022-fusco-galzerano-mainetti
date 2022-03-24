@@ -104,6 +104,15 @@ public class ReliableBroadcastLibrary extends Thread {
                 } else {
                     deliverAll();
                 }
+            case 'A': // ack
+                AckMessage ackMessage = (AckMessage) m;
+                if (ackMessage.getTarget().equals(address)) {
+                    TextMessage t = sentMessages.get(ackMessage.getSequenceNumber());
+                    t.incrementAckCount();
+                    if (t.getAckCount() == view.size()) { // all other processes in the view acknowledge
+                        sentMessages.remove(t);
+                    }
+                }
             case 'N':
                 NackMessage nackMessage = (NackMessage) m;
                 if (nackMessage.getTargetId() == address)
@@ -166,6 +175,8 @@ public class ReliableBroadcastLibrary extends Thread {
                 if (m.getSequenceNumber() == expected) {
                     messageSeqMap.put(m.getSource(), expected + 1);
                     deliveredQueue.put(m);
+                    AckMessage ackMessage = new AckMessage(address, m.getSource(), m.getSequenceNumber());
+                    sendMessageHelper(ackMessage);
                     redo = true;
                 } else if (m.getSequenceNumber() < expected) {
                     toRemove.add(m);
