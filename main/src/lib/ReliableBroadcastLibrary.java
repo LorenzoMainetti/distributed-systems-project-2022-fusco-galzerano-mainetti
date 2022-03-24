@@ -24,6 +24,7 @@ public class ReliableBroadcastLibrary extends Thread {
     private final Map<InetAddress, Integer> messageSeqMap;
     private final BlockingQueue<TextMessage> deliveredQueue;
     private final List<TextMessage> receivedList;
+    private final Queue<TextMessage> toSend;
     private final Map<Integer, TextMessage> sentMessages;
 
     private BroadcastState state;
@@ -40,6 +41,7 @@ public class ReliableBroadcastLibrary extends Thread {
         receivedList = new LinkedList<>();
         sentMessages = new HashMap<>();
         deliveredQueue = new LinkedBlockingQueue<>();
+        toSend = new LinkedList<>();
         view = new ArrayList<>();
 
         state = BroadcastState.JOINING;
@@ -75,8 +77,12 @@ public class ReliableBroadcastLibrary extends Thread {
 
     public void sendTextMessage(String text) {
         TextMessage textMessage = new TextMessage(address, text, sequenceNumber);
-        sentMessages.put(sequenceNumber, textMessage);
-        sendMessageHelper(textMessage);
+        if (state == BroadcastState.NORMAL) {
+            sendMessageHelper(textMessage);
+            sentMessages.put(sequenceNumber, textMessage);
+        } else { // add to queue, all messages in queue will be sent when state goes back to normal
+            toSend.add(textMessage);
+        }
         sequenceNumber++;
     }
 
@@ -123,11 +129,20 @@ public class ReliableBroadcastLibrary extends Thread {
         }
     }
 
+    private void sendAllPending() {
+        while (!toSend.isEmpty()) {
+            TextMessage m = toSend.remove();
+            sendMessageHelper(m);
+            sentMessages.put(m.getSequenceNumber(), m);
+        }
+    }
+
     private void processFlushMessage(FlushMessage flushMessage) throws InterruptedException {
         InetAddress source = flushMessage.getSource();
         partialViewFlushAwaitList.remove(source);
         if (partialViewFlushAwaitList.isEmpty()) {
             state = BroadcastState.NORMAL;
+            sendAllPending();
             deliverAll();
         }
     }
