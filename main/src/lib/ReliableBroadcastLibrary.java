@@ -25,7 +25,7 @@ public class ReliableBroadcastLibrary extends Thread {
     private final BlockingQueue<TextMessage> deliveredQueue;
     private final List<TextMessage> receivedList;
     private final Queue<TextMessage> toSend;
-    private final Map<Integer, TextMessage> sentMessages;
+    private final Map<Integer, TextMessage> sentUnstableMessages;
 
     private BroadcastState state;
     private List<InetAddress> partialViewFlushAwaitList;
@@ -39,7 +39,7 @@ public class ReliableBroadcastLibrary extends Thread {
         sequenceNumber = 0;
         messageSeqMap = new HashMap<>();
         receivedList = new LinkedList<>();
-        sentMessages = new HashMap<>();
+        sentUnstableMessages = new HashMap<>();
         deliveredQueue = new LinkedBlockingQueue<>();
         toSend = new LinkedList<>();
         view = new ArrayList<>();
@@ -79,7 +79,7 @@ public class ReliableBroadcastLibrary extends Thread {
         TextMessage textMessage = new TextMessage(address, text, sequenceNumber);
         if (state == BroadcastState.NORMAL) {
             sendMessageHelper(textMessage);
-            sentMessages.put(sequenceNumber, textMessage);
+            sentUnstableMessages.put(sequenceNumber, textMessage);
         } else { // add to queue, all messages in queue will be sent when state goes back to normal
             toSend.add(textMessage);
         }
@@ -107,16 +107,16 @@ public class ReliableBroadcastLibrary extends Thread {
             case 'A': // ack
                 AckMessage ackMessage = (AckMessage) m;
                 if (ackMessage.getTarget().equals(address)) {
-                    TextMessage t = sentMessages.get(ackMessage.getSequenceNumber());
+                    TextMessage t = sentUnstableMessages.get(ackMessage.getSequenceNumber());
                     t.incrementAckCount();
                     if (t.getAckCount() == view.size()) { // all other processes in the view acknowledge
-                        sentMessages.remove(t);
+                        sentUnstableMessages.remove(t);
                     }
                 }
             case 'N':
                 NackMessage nackMessage = (NackMessage) m;
                 if (nackMessage.getTargetId() == address)
-                    sendMessageHelper(sentMessages.get(nackMessage.getRequestedMessage()));
+                    sendMessageHelper(sentUnstableMessages.get(nackMessage.getRequestedMessage()));
             case 'J':
                 JoinMessage joinMessage = (JoinMessage) m;
                 //messageSeqMap.put(joinMessage.getAddress(), joinMessage.getSequenceNumber());
@@ -142,7 +142,7 @@ public class ReliableBroadcastLibrary extends Thread {
         while (!toSend.isEmpty()) {
             TextMessage m = toSend.remove();
             sendMessageHelper(m);
-            sentMessages.put(m.getSequenceNumber(), m);
+            sentUnstableMessages.put(m.getSequenceNumber(), m);
         }
     }
 
@@ -158,7 +158,15 @@ public class ReliableBroadcastLibrary extends Thread {
 
     private void beginViewChange(List<InetAddress> newView) {
         state = BroadcastState.VIEWCHANGE;
-        // only flush logic, skip sending unstable messages for now
+
+        Set<Integer> unstableIdsSet = sentUnstableMessages.keySet();
+        Integer[] unstableIds = unstableIdsSet.toArray(new Integer[unstableIdsSet.size()]);
+        Arrays.sort(unstableIds);
+        for (Integer i : unstableIds) {
+            sendMessageHelper(sentUnstableMessages.get(i));
+        }
+        sentUnstableMessages.clear();
+
         sendMessageHelper(new FlushMessage(address));
         // wait to receive all flush from all other components of the view
         partialViewFlushAwaitList = new ArrayList<>(newView);
