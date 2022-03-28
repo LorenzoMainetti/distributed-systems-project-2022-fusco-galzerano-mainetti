@@ -32,9 +32,11 @@ public interface Message {
                 sequenceNumber = scanner.nextInt();
                 return new NackMessage(sender, target, sequenceNumber);
             case "J": // join
-                String addressString = scanner.next();
                 sequenceNumber = scanner.nextInt();
-                return new JoinMessage(sender, InetAddress.getByName(addressString), sequenceNumber);
+                return new JoinMessage(sender, sequenceNumber);
+            case "L": // leave
+                sequenceNumber = scanner.nextInt();
+                return new LeaveMessage(sender, sequenceNumber);
             case "P": // ping
                 // TODO: implement ping logic
             case "V": // viewchange

@@ -45,10 +45,12 @@ public class ReliableBroadcastLibrary extends Thread {
         view = new ArrayList<>();
 
         state = BroadcastState.JOINING;
-
+        //broadcast join message
+        sendMessageHelper(new JoinMessage(address, sequenceNumber));
         this.start();
     }
 
+    @Override
     public void run() {
         try {
             while (true) {
@@ -90,7 +92,13 @@ public class ReliableBroadcastLibrary extends Thread {
         return deliveredQueue.take();
     }
 
+    public void leaveGroup() {
+        sendMessageHelper(new LeaveMessage(address, sequenceNumber));
+        System.exit(0);
+    }
+
     private void receiveMessage(Message m) throws InterruptedException {
+        List<InetAddress> newView;
         switch (m.getType()) {
             case 'T':
                 TextMessage textMessage = (TextMessage) m;
@@ -120,9 +128,14 @@ public class ReliableBroadcastLibrary extends Thread {
             case 'J':
                 JoinMessage joinMessage = (JoinMessage) m;
                 //messageSeqMap.put(joinMessage.getAddress(), joinMessage.getSequenceNumber());
-                List<InetAddress> newView = new ArrayList<>(view);
-                newView.add(joinMessage.getAddress());
+                newView = new ArrayList<>(view);
+                newView.add(joinMessage.getSource());
                 beginViewChange(newView);
+            case 'L':
+                LeaveMessage leaveMessage = (LeaveMessage) m;
+                newView = new ArrayList<>(view);
+                newView.remove(leaveMessage.getSource());
+                beginViewChange(view);
             case 'V':
                 ViewChangeMessage viewChangeMessage = (ViewChangeMessage) m;
                 if (state != BroadcastState.VIEWCHANGE) {
