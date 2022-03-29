@@ -12,6 +12,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ReliableBroadcastLibrary extends Thread {
+
     private final MulticastSocket outSocket;
     private final DatagramSocket inSocket;
 
@@ -30,6 +31,14 @@ public class ReliableBroadcastLibrary extends Thread {
     private BroadcastState state;
     private List<InetAddress> partialViewFlushAwaitList;
 
+    private ProcessTimer processTimer;
+
+    /**
+     * constructor
+     * @param inetAddr is the address of the process
+     * @param inPort is the input port for the process
+     * @throws IOException
+     */
     public ReliableBroadcastLibrary(String inetAddr, int inPort) throws IOException {
         port = inPort;
         address = InetAddress.getByName(inetAddr);
@@ -49,8 +58,31 @@ public class ReliableBroadcastLibrary extends Thread {
         this.start();
     }
 
+    /**
+     *This function waits for input packets to arrive; it then calls other functions for receipt and delivery
+     */
     public void run() {
+
         try {
+            /*
+            processTimer = new ProcessTimer(this);
+            new Thread(processTimer).start();
+
+            // Send a ping each 5 seconds.
+            new Thread(() -> {
+                while (true) { //isConnected=true
+                    try {
+                        sendMessageHelper(new PingMessage());
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        // endConnection();
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+            dispatchMessages();*/
+
             while (true) {
                 byte[] in = new byte[2048];
                 DatagramPacket packet = new DatagramPacket(in, in.length);
@@ -62,8 +94,14 @@ public class ReliableBroadcastLibrary extends Thread {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+
+
     }
 
+    /**
+     * This message creates a datagramPacket to be sent through the {@Link outSocket}
+     * @param m
+     */
     private void sendMessageHelper(Message m) {
         byte[] buf = m.getTransmissionString().getBytes();
         try {
@@ -75,6 +113,10 @@ public class ReliableBroadcastLibrary extends Thread {
         }
     }
 
+    /**
+     * This function creates a text message that is then sent through another function
+     * @param text is the string to insert in the message
+     */
     public void sendTextMessage(String text) {
         TextMessage textMessage = new TextMessage(address, text, sequenceNumber);
         if (state == BroadcastState.NORMAL) {
@@ -86,10 +128,18 @@ public class ReliableBroadcastLibrary extends Thread {
         sequenceNumber++;
     }
 
+    /**
+     * @return the last message in the queue of delivered messages
+     * @throws InterruptedException
+     */
     public TextMessage getTextMessage() throws InterruptedException {
         return deliveredQueue.take();
     }
 
+    /**
+     * This function is used to receive messsages and do different operations depending on the type of message received
+     * @param m is the received message that has to be processed
+     */
     private void receiveMessage(Message m) throws InterruptedException {
         switch (m.getType()) {
             case 'T':
@@ -173,6 +223,11 @@ public class ReliableBroadcastLibrary extends Thread {
         // TODO: wait
     }
 
+    /**
+     * This function delivers all messages that have a value of {@Link sequenceNumber} equal to the one {@Link expected}
+     * discards the ones with lower value and keeps the one with higher value
+     * @throws InterruptedException
+     */
     private void deliverAll() throws InterruptedException {
         boolean redo = true;
         while (redo) {
