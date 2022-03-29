@@ -19,5 +19,6 @@ public class PingMessage implements Message {
         return "P|" + source.toString();
     }
 
+    @Override
     public InetAddress getSource() { return source; }
 }

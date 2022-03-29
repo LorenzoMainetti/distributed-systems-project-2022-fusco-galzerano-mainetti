@@ -12,7 +12,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ReliableBroadcastLibrary extends Thread {
-
     private final MulticastSocket outSocket;
     private final DatagramSocket inSocket;
 
@@ -54,13 +53,15 @@ public class ReliableBroadcastLibrary extends Thread {
         view = new ArrayList<>();
 
         state = BroadcastState.JOINING;
-
+        //broadcast join message
+        sendMessageHelper(new JoinMessage(address, sequenceNumber));
         this.start();
     }
 
     /**
      *This function waits for input packets to arrive; it then calls other functions for receipt and delivery
      */
+    @Override
     public void run() {
 
         try {
@@ -94,8 +95,6 @@ public class ReliableBroadcastLibrary extends Thread {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-
-
     }
 
     /**
@@ -136,11 +135,18 @@ public class ReliableBroadcastLibrary extends Thread {
         return deliveredQueue.take();
     }
 
+
+    public void leaveGroup() {
+        sendMessageHelper(new LeaveMessage(address, sequenceNumber));
+        System.exit(0);
+    }
+
     /**
      * This function is used to receive messsages and do different operations depending on the type of message received
      * @param m is the received message that has to be processed
      */
     private void receiveMessage(Message m) throws InterruptedException {
+        List<InetAddress> newView;
         switch (m.getType()) {
             case 'T':
                 TextMessage textMessage = (TextMessage) m;
@@ -170,9 +176,14 @@ public class ReliableBroadcastLibrary extends Thread {
             case 'J':
                 JoinMessage joinMessage = (JoinMessage) m;
                 //messageSeqMap.put(joinMessage.getAddress(), joinMessage.getSequenceNumber());
-                List<InetAddress> newView = new ArrayList<>(view);
-                newView.add(joinMessage.getAddress());
+                newView = new ArrayList<>(view);
+                newView.add(joinMessage.getSource());
                 beginViewChange(newView);
+            case 'L':
+                LeaveMessage leaveMessage = (LeaveMessage) m;
+                newView = new ArrayList<>(view);
+                newView.remove(leaveMessage.getSource());
+                beginViewChange(view);
             case 'V':
                 ViewChangeMessage viewChangeMessage = (ViewChangeMessage) m;
                 if (state != BroadcastState.VIEWCHANGE) {
