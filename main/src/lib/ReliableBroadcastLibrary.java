@@ -63,7 +63,7 @@ public class ReliableBroadcastLibrary extends Thread {
         return view;
     }
 
-    public Map<InetAddress, Integer> getviewTimers() {
+    public Map<InetAddress, Integer> getViewTimers() {
         return viewTimers;
     }
 
@@ -80,9 +80,9 @@ public class ReliableBroadcastLibrary extends Thread {
 
             // Send a ping each 5 seconds.
             new Thread(() -> {
-                while (true) { //isConnected=true
+                while (state != BroadcastState.DISCONNECTED) { //isConnected=true
                     try {
-                        sendMessageHelper(new PingMessage(this.address)); //TODO broadcast
+                        sendMessageHelper(new PingMessage(this.address));
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         // endConnection();
@@ -91,7 +91,7 @@ public class ReliableBroadcastLibrary extends Thread {
                 }
             }).start();
 
-            while (true) {
+            while (state != BroadcastState.DISCONNECTED) {
                 byte[] in = new byte[2048];
                 DatagramPacket packet = new DatagramPacket(in, in.length);
                 inSocket.receive(packet);
@@ -143,7 +143,8 @@ public class ReliableBroadcastLibrary extends Thread {
         if (state == BroadcastState.NORMAL) {
             sendMessageHelper(viewChangeMessage);
         } else {
-            // TODO decide how handle view change when there is another one ongoing
+            //add log
+            // TODO decide how to handle view change when there is another one ongoing
         }
         sequenceNumber++;
     }
@@ -153,7 +154,10 @@ public class ReliableBroadcastLibrary extends Thread {
      * @throws InterruptedException
      */
     public TextMessage getTextMessage() throws InterruptedException {
-        return deliveredQueue.take();
+        if(state != BroadcastState.DISCONNECTED)
+            return deliveredQueue.take();
+        else
+            throw new InterruptedException();
     }
 
     /**
@@ -162,7 +166,8 @@ public class ReliableBroadcastLibrary extends Thread {
      */
     public void leaveGroup() {
         sendMessageHelper(new LeaveMessage(address, sequenceNumber));
-        System.exit(0);
+        state = BroadcastState.DISCONNECTED;
+        //System.exit(0); TODO System.exit(0) lo fa l'applicazione
     }
 
     /**
@@ -185,6 +190,7 @@ public class ReliableBroadcastLibrary extends Thread {
                     deliverAll();
                 }
             case 'A': // ack
+                assert m instanceof AckMessage;
                 AckMessage ackMessage = (AckMessage) m;
                 if (ackMessage.getTarget().equals(address)) {
                     TextMessage t = sentUnstableMessages.get(ackMessage.getSequenceNumber());
@@ -194,36 +200,41 @@ public class ReliableBroadcastLibrary extends Thread {
                     }
                 }
             case 'N':
+                assert m instanceof NackMessage;
                 NackMessage nackMessage = (NackMessage) m;
                 if (nackMessage.getTargetId() == address)
                     sendMessageHelper(sentUnstableMessages.get(nackMessage.getRequestedMessage()));
             case 'J':
+                assert m instanceof JoinMessage;
                 JoinMessage joinMessage = (JoinMessage) m;
                 //messageSeqMap.put(joinMessage.getAddress(), joinMessage.getSequenceNumber());
                 newView = new ArrayList<>(view);
                 newView.add(joinMessage.getSource());
                 beginViewChange(newView);
             case 'L':
+                assert m instanceof LeaveMessage;
                 LeaveMessage leaveMessage = (LeaveMessage) m;
                 newView = new ArrayList<>(view);
                 newView.remove(leaveMessage.getSource());
                 beginViewChange(view);
             case 'V':
+                assert m instanceof ViewChangeMessage;
                 ViewChangeMessage viewChangeMessage = (ViewChangeMessage) m;
                 if (state != BroadcastState.VIEWCHANGE) {
                     beginViewChange(viewChangeMessage.getView());
                 }
             case 'F':
+                assert m instanceof FlushMessage;
                 FlushMessage flushMessage = (FlushMessage) m;
                 if (state == BroadcastState.VIEWCHANGE) { // should always be true
                     processFlushMessage(flushMessage);
                 }
             case 'P':
+                assert m instanceof PingMessage;
                 PingMessage pingMessage = (PingMessage) m;
                 if (state != BroadcastState.VIEWCHANGE) { // should always be true
                     //reset timer for the specific process in the view
                     processTimer.resetTime(m.getSource());
-
                 }
             default:
 
@@ -304,5 +315,6 @@ public class ReliableBroadcastLibrary extends Thread {
 enum BroadcastState {
     NORMAL,
     VIEWCHANGE,
-    JOINING
+    JOINING,
+    DISCONNECTED
 }

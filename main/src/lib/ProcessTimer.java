@@ -25,14 +25,14 @@ public class ProcessTimer implements Runnable{
         while (isConnected) {
             for(int i=0; i< library.getView().size(); i++) {
                 InetAddress source = library.getView().get(i);
-                int timerValue = library.getviewTimers().get(source);
+                int timerValue = library.getViewTimers().get(source);
 
                 if (timerValue > TIME_EXPIRED_MILLIS) {
                     isConnected = false;
                     library.getView().remove(i);
                     library.sendViewChangeMessage(library.getView());
                 }
-                library.getviewTimers().put(source, timerValue+1000);
+                library.getViewTimers().put(source, timerValue+1000);
 
             }
 
@@ -55,6 +55,6 @@ public class ProcessTimer implements Runnable{
      * When a ping is listened by the {@link ReliableBroadcastLibrary}, the timer is reset.
      */
     void resetTime(InetAddress source){
-        library.getviewTimers().put(source, 0);
+        library.getViewTimers().put(source, 0);
     }
 }
