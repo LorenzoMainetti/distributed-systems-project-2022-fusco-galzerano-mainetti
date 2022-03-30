@@ -57,6 +57,6 @@ public class ProcessTimer implements Runnable{
      * When a ping is listened by the {@link ReliableBroadcastLibrary}, the timer is reset.
      */
     void resetTime(InetAddress source){
-        library.getviewTimers().put(source, 0);
+        library.getViewTimers().put(source, 0);
     }
 }
