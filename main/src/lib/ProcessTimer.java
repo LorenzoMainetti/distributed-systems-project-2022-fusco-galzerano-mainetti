@@ -22,18 +22,20 @@ public class ProcessTimer implements Runnable{
      */
     @Override
     public void run() {
-        while (isConnected) {
-            for(int i=0; i< library.getView().size(); i++) {
-                InetAddress source = library.getView().get(i);
-                int timerValue = library.getviewTimers().get(source);
+        while (true) {
+            if( library.getLibraryState() == BroadcastState.NORMAL) {
+                for (int i = 0; i < library.getView().size(); i++) {
+                    InetAddress source = library.getView().get(i);
+                    int timerValue = library.getviewTimers().get(source);
 
-                if (timerValue > TIME_EXPIRED_MILLIS) {
-                    isConnected = false;
-                    library.getView().remove(i);
-                    library.sendViewChangeMessage(library.getView());
+                    if (timerValue > TIME_EXPIRED_MILLIS) {
+                        isConnected = false;
+                        library.getView().remove(i);
+                        library.sendViewChangeMessage(library.getView());
+                    }
+                    library.getviewTimers().put(source, timerValue + 1000);
+
                 }
-                library.getviewTimers().put(source, timerValue+1000);
-
             }
 
             try {

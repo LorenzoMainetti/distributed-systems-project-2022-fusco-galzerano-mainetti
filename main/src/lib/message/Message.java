@@ -38,7 +38,8 @@ public interface Message {
                 sequenceNumber = scanner.nextInt();
                 return new LeaveMessage(sender, sequenceNumber);
             case "P": // ping
-                // TODO: implement ping logic
+                sequenceNumber = scanner.nextInt();
+                return new PingMessage(sender);
             case "V": // viewchange
                 int elements = scanner.nextInt();
                 List<InetAddress> newView = new ArrayList<>();

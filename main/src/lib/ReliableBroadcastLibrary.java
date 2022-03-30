@@ -67,6 +67,8 @@ public class ReliableBroadcastLibrary extends Thread {
         return viewTimers;
     }
 
+    public BroadcastState getLibraryState() { return state; }
+
     /**
      *This function waits for input packets to arrive; it then calls other functions for receipt and delivery
      */
@@ -82,7 +84,7 @@ public class ReliableBroadcastLibrary extends Thread {
             new Thread(() -> {
                 while (true) { //isConnected=true
                     try {
-                        sendMessageHelper(new PingMessage(this.address)); //TODO broadcast
+                        sendMessageHelper(new PingMessage(this.address));
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         // endConnection();
@@ -142,8 +144,6 @@ public class ReliableBroadcastLibrary extends Thread {
         ViewChangeMessage viewChangeMessage = new ViewChangeMessage(address, viewChanged);
         if (state == BroadcastState.NORMAL) {
             sendMessageHelper(viewChangeMessage);
-        } else {
-            // TODO decide how handle view change when there is another one ongoing
         }
         sequenceNumber++;
     }
@@ -299,10 +299,4 @@ public class ReliableBroadcastLibrary extends Thread {
             receivedList.removeAll(toRemove);
         }
     }
-}
-
-enum BroadcastState {
-    NORMAL,
-    VIEWCHANGE,
-    JOINING
 }
