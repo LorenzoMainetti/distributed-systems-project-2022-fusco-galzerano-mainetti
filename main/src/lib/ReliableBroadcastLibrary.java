@@ -31,6 +31,7 @@ public class ReliableBroadcastLibrary extends Thread {
     private List<InetAddress> partialViewFlushAwaitList;
 
     private ProcessTimer processTimer;
+    private Map<InetAddress, Integer> viewTimers;
 
     /**
      * constructor
@@ -58,6 +59,14 @@ public class ReliableBroadcastLibrary extends Thread {
         this.start();
     }
 
+    public List<InetAddress> getView() {
+        return view;
+    }
+
+    public Map<InetAddress, Integer> getviewTimers() {
+        return viewTimers;
+    }
+
     /**
      *This function waits for input packets to arrive; it then calls other functions for receipt and delivery
      */
@@ -65,7 +74,7 @@ public class ReliableBroadcastLibrary extends Thread {
     public void run() {
 
         try {
-            /*
+
             processTimer = new ProcessTimer(this);
             new Thread(processTimer).start();
 
@@ -73,7 +82,7 @@ public class ReliableBroadcastLibrary extends Thread {
             new Thread(() -> {
                 while (true) { //isConnected=true
                     try {
-                        sendMessageHelper(new PingMessage());
+                        sendMessageHelper(new PingMessage(this.address)); //TODO broadcast
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         // endConnection();
@@ -81,8 +90,6 @@ public class ReliableBroadcastLibrary extends Thread {
                     }
                 }
             }).start();
-
-            dispatchMessages();*/
 
             while (true) {
                 byte[] in = new byte[2048];
@@ -98,8 +105,8 @@ public class ReliableBroadcastLibrary extends Thread {
     }
 
     /**
-     * This message creates a datagramPacket to be sent through the {@Link outSocket}
-     * @param m
+     * This function creates a datagramPacket to be sent through the {@Link outSocket}
+     * @param m message to be sent
      */
     private void sendMessageHelper(Message m) {
         byte[] buf = m.getTransmissionString().getBytes();
@@ -128,6 +135,20 @@ public class ReliableBroadcastLibrary extends Thread {
     }
 
     /**
+     * This function  is used to send to all the processes in the group a message to inform that the view has changed
+     * @param viewChanged is the new view that is the new list of processesma
+     */
+    public void sendViewChangeMessage(List<InetAddress> viewChanged) {
+        ViewChangeMessage viewChangeMessage = new ViewChangeMessage(address, viewChanged);
+        if (state == BroadcastState.NORMAL) {
+            sendMessageHelper(viewChangeMessage);
+        } else {
+            // TODO decide how handle view change when there is another one ongoing
+        }
+        sequenceNumber++;
+    }
+
+    /**
      * @return the last message in the queue of delivered messages
      * @throws InterruptedException
      */
@@ -135,14 +156,17 @@ public class ReliableBroadcastLibrary extends Thread {
         return deliveredQueue.take();
     }
 
-
+    /**
+     * This function is used to inform the other processes in the group that the process is leaving through a message
+     * and then exit
+     */
     public void leaveGroup() {
         sendMessageHelper(new LeaveMessage(address, sequenceNumber));
         System.exit(0);
     }
 
     /**
-     * This function is used to receive messsages and do different operations depending on the type of message received
+     * This function is used to receive messages and do different operations depending on the type of message received
      * @param m is the received message that has to be processed
      */
     private void receiveMessage(Message m) throws InterruptedException {
@@ -194,11 +218,21 @@ public class ReliableBroadcastLibrary extends Thread {
                 if (state == BroadcastState.VIEWCHANGE) { // should always be true
                     processFlushMessage(flushMessage);
                 }
+            case 'P':
+                PingMessage pingMessage = (PingMessage) m;
+                if (state != BroadcastState.VIEWCHANGE) { // should always be true
+                    //reset timer for the specific process in the view
+                    processTimer.resetTime(m.getSource());
+
+                }
             default:
 
         }
     }
 
+    /**
+     * This function sends all the pending text messages and adds them to the {@Link sentUnstableMessages}
+     */
     private void sendAllPending() {
         while (!toSend.isEmpty()) {
             TextMessage m = toSend.remove();
@@ -207,6 +241,11 @@ public class ReliableBroadcastLibrary extends Thread {
         }
     }
 
+    /**
+     * This function is used to flush messages of the given process by sending all pending messages and deliver them
+     * @param flushMessage is the message received
+     * @throws InterruptedException
+     */
     private void processFlushMessage(FlushMessage flushMessage) throws InterruptedException {
         InetAddress source = flushMessage.getSource();
         partialViewFlushAwaitList.remove(source);

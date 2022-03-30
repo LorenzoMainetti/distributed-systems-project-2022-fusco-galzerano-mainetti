@@ -1,12 +1,14 @@
 package lib;
 
+import java.net.InetAddress;
+
 /**
  * This class controls if the server is still connected to the network.
  */
 public class ProcessTimer implements Runnable{
 
-    public final static int TIME_EXPIRED_MILLIS = 15000;
-    private int timeMillis = 0;
+    public final static int TIME_EXPIRED_MILLIS = 15000; //15 sec
+    //private int timeMillis = 0;
     private final ReliableBroadcastLibrary library;
     private boolean isConnected = true;
 
@@ -21,19 +23,28 @@ public class ProcessTimer implements Runnable{
     @Override
     public void run() {
         while (isConnected) {
-            try {
-                if (timeMillis > TIME_EXPIRED_MILLIS) {
-                    isConnected = false;
-                }
+            for(int i=0; i< library.getView().size(); i++) {
+                InetAddress source = library.getView().get(i);
+                int timerValue = library.getviewTimers().get(source);
 
-                Thread.sleep(1);
-                timeMillis++;
+                if (timerValue > TIME_EXPIRED_MILLIS) {
+                    isConnected = false;
+                    library.getView().remove(i);
+                    library.sendViewChangeMessage(library.getView());
+                }
+                library.getviewTimers().put(source, timerValue+1000);
+
+            }
+
+            try {
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 isConnected = false;
-//                e.printStackTrace();
+                //e.printStackTrace();
             }
+
         }
-        // library.endConnection(); TODO implement endConnection?
+
     }
 
     void setIsConnectedFalse(){
@@ -43,7 +54,7 @@ public class ProcessTimer implements Runnable{
     /**
      * When a ping is listened by the {@link ReliableBroadcastLibrary}, the timer is reset.
      */
-    void resetTime(){
-        timeMillis = 0;
+    void resetTime(InetAddress source){
+        library.getviewTimers().put(source, 0);
     }
 }
