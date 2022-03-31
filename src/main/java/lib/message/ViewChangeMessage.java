@@ -13,12 +13,15 @@ public class ViewChangeMessage implements Message {
         this.view = new ArrayList<>(view);
     }
 
+    @Override
     public char getType() {
         return 'V';
     }
 
+    @Override
     public InetAddress getSource() { return source; }
 
+    @Override
     public String getTransmissionString() {
         StringBuilder s = new StringBuilder();
         s.append("V|");

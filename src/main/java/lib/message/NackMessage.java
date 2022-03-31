@@ -13,8 +13,10 @@ public class NackMessage implements Message {
         this.requestedMessage = requestedMessage;
     }
 
+    @Override
     public char getType() { return 'N'; }
 
+    @Override
     public InetAddress getSource() {
         return source;
     }
@@ -27,6 +29,7 @@ public class NackMessage implements Message {
         return targetId;
     }
 
+    @Override
     public String getTransmissionString() {
         return "N|" + targetId.toString() + "|" + requestedMessage;
     }

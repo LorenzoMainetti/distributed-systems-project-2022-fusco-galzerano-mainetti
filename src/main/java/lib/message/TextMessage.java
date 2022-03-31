@@ -15,8 +15,10 @@ public class TextMessage implements Message {
         ackCount = 0;
     }
 
+    @Override
     public char getType() { return 'T'; }
 
+    @Override
     public String getTransmissionString() {
         String sequenceString = Integer.toString(sequenceNumber);
         return "T|" + sequenceString + "|" + message;
@@ -26,6 +28,7 @@ public class TextMessage implements Message {
         return message;
     }
 
+    @Override
     public InetAddress getSource() {
         return source;
     }

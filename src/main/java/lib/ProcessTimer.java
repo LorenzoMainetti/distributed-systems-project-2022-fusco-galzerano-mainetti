@@ -17,23 +17,23 @@ public class ProcessTimer implements Runnable{
     }
 
     /**
-     * This method controls, each milliseconds, that the client is still connected to the server.
+     * This method controls, each millisecond, that the client is still connected to the server.
      * If not, it calls the {@link ..} and terminates.
      */
     @Override
     public void run() {
-        while (true) {
-            if( library.getLibraryState() == BroadcastState.NORMAL) {
+        while (library.getLibraryState() != BroadcastState.DISCONNECTED) {
+            if(library.getLibraryState() == BroadcastState.NORMAL) {
                 for (int i = 0; i < library.getView().size(); i++) {
                     InetAddress source = library.getView().get(i);
-                    int timerValue = library.getviewTimers().get(source);
+                    int timerValue = library.getViewTimers().get(source);
 
                     if (timerValue > TIME_EXPIRED_MILLIS) {
                         isConnected = false;
                         library.getView().remove(i);
                         library.sendViewChangeMessage(library.getView());
                     }
-                    library.getviewTimers().put(source, timerValue + 1000);
+                    library.getViewTimers().put(source, timerValue + 1000);
 
                 }
             }
