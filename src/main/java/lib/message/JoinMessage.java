@@ -18,7 +18,7 @@ public class JoinMessage implements Message {
 
     @Override
     public String getTransmissionString() {
-        return "J|" + source.toString() + "|" + sequenceNumber;
+        return "J|" + sequenceNumber;
     }
 
     @Override

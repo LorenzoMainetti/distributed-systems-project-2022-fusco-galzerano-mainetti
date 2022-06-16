@@ -10,12 +10,13 @@ public class Main {
     public static void main (String[] args) {
         System.out.println("Hello world!");
         try {
-            ReliableBroadcastLibrary lib = new ReliableBroadcastLibrary("224.0.0.3", 8888);
+            ReliableBroadcastLibrary lib = new ReliableBroadcastLibrary("172.19.0.3", 8888);
             System.out.println(InetAddress.getLocalHost());
-            Scanner scanner = new Scanner(System.in);
-            String msg = scanner.nextLine();
-            lib.sendTextMessage(msg);
-        } catch (IOException e) {
+            //Scanner scanner = new Scanner(System.in);
+            //String msg = scanner.nextLine();
+            lib.sendTextMessage("hello");
+            lib.join();
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

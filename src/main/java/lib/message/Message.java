@@ -13,6 +13,7 @@ public interface Message {
 
     static Message parseString(String text, InetAddress sender) throws UnknownHostException {
         Scanner scanner = new Scanner(text);
+        System.out.println("RECEIVED: " + text);
         scanner.useDelimiter("|");
         String type = scanner.next();
         int sequenceNumber;
