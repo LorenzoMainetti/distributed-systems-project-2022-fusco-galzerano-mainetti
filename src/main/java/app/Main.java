@@ -14,8 +14,10 @@ public class Main {
             System.out.println(InetAddress.getLocalHost());
             //Scanner scanner = new Scanner(System.in);
             //String msg = scanner.nextLine();
-            lib.sendTextMessage("hello");
-            lib.join();
+            while (true) {
+                lib.sendTextMessage("hello");
+                Thread.sleep(1000);
+            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

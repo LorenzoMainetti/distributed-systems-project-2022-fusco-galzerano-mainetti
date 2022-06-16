@@ -13,7 +13,7 @@ public interface Message {
 
     static Message parseString(String text, InetAddress sender) throws UnknownHostException {
         Scanner scanner = new Scanner(text);
-        System.out.println("RECEIVED: " + text);
+        System.out.println("PARSING: " + text);
         scanner.useDelimiter("\\|");
         String type = scanner.next();
         int sequenceNumber;
@@ -46,6 +46,8 @@ public interface Message {
                 for (int i = 0; i < elements; ++i)
                     newView.add(InetAddress.getByName(scanner.next()));
                 return new ViewChangeMessage(sender, newView);
+            case "F":
+                return new FlushMessage(sender);
             default:
                 return new ErrorMessage(sender);
         }

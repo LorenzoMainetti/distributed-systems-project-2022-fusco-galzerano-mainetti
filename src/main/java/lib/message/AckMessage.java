@@ -25,7 +25,7 @@ public class AckMessage implements Message {
 
     @Override
     public String getTransmissionString() {
-        return "A|" + target.toString() + "|" + sequenceNumber;
+        return "A|" + target.toString().substring(1) + "|" + sequenceNumber + "|";
     }
 
     public InetAddress getTarget() {
