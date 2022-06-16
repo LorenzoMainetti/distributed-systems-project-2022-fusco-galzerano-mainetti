@@ -16,7 +16,7 @@ public class PingMessage implements Message {
 
     @Override
     public String getTransmissionString() {
-        return "P|" + source.toString();
+        return "P|";
     }
 
     @Override

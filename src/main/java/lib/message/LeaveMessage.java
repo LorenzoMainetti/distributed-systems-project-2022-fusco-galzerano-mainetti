@@ -18,7 +18,7 @@ public class LeaveMessage implements Message {
 
     @Override
     public String getTransmissionString() {
-        return "L|" + source.toString() + "|" + sequenceNumber;
+        return "L|" + source.toString() + "|" + sequenceNumber + "|";
     }
 
     @Override

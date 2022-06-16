@@ -14,7 +14,7 @@ public class ErrorMessage implements Message {
 
     @Override
     public String getTransmissionString() {
-        return "E";
+        return "E|";
     }
 
     @Override

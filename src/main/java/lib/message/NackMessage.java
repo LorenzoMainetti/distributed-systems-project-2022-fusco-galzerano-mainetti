@@ -31,6 +31,6 @@ public class NackMessage implements Message {
 
     @Override
     public String getTransmissionString() {
-        return "N|" + targetId.toString() + "|" + requestedMessage;
+        return "N|" + targetId.toString() + "|" + requestedMessage + "|";
     }
 }

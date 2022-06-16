@@ -21,7 +21,7 @@ public class TextMessage implements Message {
     @Override
     public String getTransmissionString() {
         String sequenceString = Integer.toString(sequenceNumber);
-        return "T|" + sequenceString + "|" + message;
+        return "T|" + sequenceString + "|" + message + "|";
     }
 
     public String getMessage() {

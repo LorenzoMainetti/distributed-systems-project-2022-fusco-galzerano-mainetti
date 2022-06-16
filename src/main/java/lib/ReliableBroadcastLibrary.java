@@ -4,7 +4,6 @@ import lib.message.*;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.*;
@@ -12,12 +11,11 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ReliableBroadcastLibrary extends Thread {
-    private final MulticastSocket outSocket;
-    private final DatagramSocket inSocket;
+    private final MulticastSocket ioSocket;
 
     private final int port;
-    private final InetAddress address;
-    private final String myAddress;
+    private final InetAddress targetAddress;
+    private final InetAddress myAddress;
 
     private int sequenceNumber;
 
@@ -42,10 +40,10 @@ public class ReliableBroadcastLibrary extends Thread {
      */
     public ReliableBroadcastLibrary(String inetAddr, int inPort) throws IOException {
         port = inPort;
-        address = InetAddress.getByName(inetAddr);
-        myAddress = InetAddress.getLocalHost().getHostAddress();
-        outSocket = new MulticastSocket(port);
-        inSocket = new DatagramSocket();
+        targetAddress = InetAddress.getByName(inetAddr);
+        myAddress = InetAddress.getLocalHost();
+        ioSocket = new MulticastSocket(port);
+        ioSocket.joinGroup(targetAddress);
 
         sequenceNumber = 0;
         messageSeqMap = new HashMap<>();
@@ -54,11 +52,12 @@ public class ReliableBroadcastLibrary extends Thread {
         deliveredQueue = new LinkedBlockingQueue<>();
         toSend = new LinkedList<>();
         view = new ArrayList<>();
+        viewTimers = new HashMap<>();
 
         state = BroadcastState.JOINING;
         System.out.println("{"+myAddress+"} joining");
         //broadcast join message
-        sendMessageHelper(new JoinMessage(address, sequenceNumber));
+        sendMessageHelper(new JoinMessage(myAddress, sequenceNumber));
         this.start();
     }
 
@@ -87,7 +86,7 @@ public class ReliableBroadcastLibrary extends Thread {
             new Thread(() -> {
                 while (state != BroadcastState.DISCONNECTED) { //isConnected=true
                     try {
-                        sendMessageHelper(new PingMessage(this.address));
+                        sendMessageHelper(new PingMessage(this.targetAddress));
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         // endConnection();
@@ -100,7 +99,7 @@ public class ReliableBroadcastLibrary extends Thread {
                 byte[] in = new byte[2048];
                 DatagramPacket packet = new DatagramPacket(in, in.length);
                 System.out.println("waiting for a message...");
-                inSocket.receive(packet);
+                ioSocket.receive(packet);
                 Message m = Message.parseString(new String(packet.getData()), packet.getAddress());
 
                 receiveMessage(m);
@@ -118,8 +117,8 @@ public class ReliableBroadcastLibrary extends Thread {
         byte[] buf = m.getTransmissionString().getBytes();
         try {
             System.out.println("{"+myAddress+"} sending " + m.getType() + " message");
-            DatagramPacket packet = new DatagramPacket(buf, buf.length, address, port);
-            outSocket.send(packet);
+            DatagramPacket packet = new DatagramPacket(buf, buf.length, targetAddress, port);
+            ioSocket.send(packet);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -131,7 +130,7 @@ public class ReliableBroadcastLibrary extends Thread {
      * @param text is the string to insert in the message
      */
     public void sendTextMessage(String text) {
-        TextMessage textMessage = new TextMessage(address, text, sequenceNumber);
+        TextMessage textMessage = new TextMessage(targetAddress, text, sequenceNumber);
         if (state == BroadcastState.NORMAL) {
             sendMessageHelper(textMessage);
             sentUnstableMessages.put(sequenceNumber, textMessage);
@@ -147,7 +146,7 @@ public class ReliableBroadcastLibrary extends Thread {
      * @param viewChanged is the new view that is the new list of processes
      */
     public void sendViewChangeMessage(List<InetAddress> viewChanged) {
-        ViewChangeMessage viewChangeMessage = new ViewChangeMessage(address, viewChanged);
+        ViewChangeMessage viewChangeMessage = new ViewChangeMessage(targetAddress, viewChanged);
         if (state == BroadcastState.NORMAL) {
             sendMessageHelper(viewChangeMessage);
         } else {
@@ -178,7 +177,7 @@ public class ReliableBroadcastLibrary extends Thread {
      */
     public void leaveGroup() {
         System.out.println("{"+myAddress+"} disconnecting");
-        sendMessageHelper(new LeaveMessage(address, sequenceNumber));
+        sendMessageHelper(new LeaveMessage(targetAddress, sequenceNumber));
         state = BroadcastState.DISCONNECTED;
         //TODO System.exit(0) lo fa l'applicazione
     }
@@ -198,7 +197,7 @@ public class ReliableBroadcastLibrary extends Thread {
                 if (textMessage.getSequenceNumber() > expected) {
                     //TODO: optimize
                     for (int i = expected; i < textMessage.getSequenceNumber(); ++i) {
-                        sendMessageHelper(new NackMessage(address, textMessage.getSource(),  i));
+                        sendMessageHelper(new NackMessage(targetAddress, textMessage.getSource(),  i));
                     }
                 } else {
                     deliverAll();
@@ -206,7 +205,7 @@ public class ReliableBroadcastLibrary extends Thread {
             case 'A': // ack
                 assert m instanceof AckMessage;
                 AckMessage ackMessage = (AckMessage) m;
-                if (ackMessage.getTarget().equals(address)) {
+                if (ackMessage.getTarget().equals(targetAddress)) {
                     TextMessage t = sentUnstableMessages.get(ackMessage.getSequenceNumber());
                     t.incrementAckCount();
                     if (t.getAckCount() == view.size()) { // all other processes in the view acknowledge
@@ -216,7 +215,7 @@ public class ReliableBroadcastLibrary extends Thread {
             case 'N':
                 assert m instanceof NackMessage;
                 NackMessage nackMessage = (NackMessage) m;
-                if (nackMessage.getTargetId() == address)
+                if (nackMessage.getTargetId() == targetAddress)
                     sendMessageHelper(sentUnstableMessages.get(nackMessage.getRequestedMessage()));
             case 'J':
                 assert m instanceof JoinMessage;
@@ -296,7 +295,7 @@ public class ReliableBroadcastLibrary extends Thread {
         }
         sentUnstableMessages.clear();
 
-        sendMessageHelper(new FlushMessage(address));
+        sendMessageHelper(new FlushMessage(targetAddress));
         // wait to receive all flush from all other components of the view
         partialViewFlushAwaitList = new ArrayList<>(newView);
         // TODO: wait
@@ -318,7 +317,7 @@ public class ReliableBroadcastLibrary extends Thread {
                 if (m.getSequenceNumber() == expected) {
                     messageSeqMap.put(m.getSource(), expected + 1);
                     deliveredQueue.put(m);
-                    AckMessage ackMessage = new AckMessage(address, m.getSource(), m.getSequenceNumber());
+                    AckMessage ackMessage = new AckMessage(targetAddress, m.getSource(), m.getSequenceNumber());
                     sendMessageHelper(ackMessage);
                     redo = true;
                 } else if (m.getSequenceNumber() < expected) {

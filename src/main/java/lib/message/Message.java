@@ -14,7 +14,7 @@ public interface Message {
     static Message parseString(String text, InetAddress sender) throws UnknownHostException {
         Scanner scanner = new Scanner(text);
         System.out.println("RECEIVED: " + text);
-        scanner.useDelimiter("|");
+        scanner.useDelimiter("\\|");
         String type = scanner.next();
         int sequenceNumber;
         InetAddress target;
@@ -39,7 +39,6 @@ public interface Message {
                 sequenceNumber = scanner.nextInt();
                 return new LeaveMessage(sender, sequenceNumber);
             case "P": // ping
-                sequenceNumber = scanner.nextInt();
                 return new PingMessage(sender);
             case "V": // viewchange
                 int elements = scanner.nextInt();

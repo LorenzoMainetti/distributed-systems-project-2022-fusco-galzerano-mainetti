@@ -21,6 +21,6 @@ public class FlushMessage implements Message {
 
     @Override
     public String getTransmissionString() {
-        return "F";
+        return "F|";
     }
 }
