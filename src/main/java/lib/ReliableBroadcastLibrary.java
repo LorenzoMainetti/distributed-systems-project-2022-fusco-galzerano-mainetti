@@ -43,6 +43,7 @@ public class ReliableBroadcastLibrary extends Thread {
         targetAddress = InetAddress.getByName(inetAddr);
         myAddress = InetAddress.getLocalHost();
         ioSocket = new MulticastSocket(port);
+        //ioSocket.setLoopbackMode(true);  //disable multicast loopback (receive own messages)
         ioSocket.joinGroup(targetAddress);
 
         sequenceNumber = 0;
@@ -55,7 +56,7 @@ public class ReliableBroadcastLibrary extends Thread {
         viewTimers = new HashMap<>();
 
         state = BroadcastState.JOINING;
-        System.out.println("joining");
+        System.out.println("[JOIN]");
         //broadcast join message
         sendMessageHelper(new JoinMessage(myAddress, sequenceNumber));
         this.start();
@@ -98,7 +99,6 @@ public class ReliableBroadcastLibrary extends Thread {
             while (state != BroadcastState.DISCONNECTED) {
                 byte[] in = new byte[2048];
                 DatagramPacket packet = new DatagramPacket(in, in.length);
-                System.out.println("waiting for a message...");
                 ioSocket.receive(packet);
                 Message m = Message.parseString(new String(packet.getData()), packet.getAddress());
 
@@ -116,7 +116,7 @@ public class ReliableBroadcastLibrary extends Thread {
     private void sendMessageHelper(Message m) {
         byte[] buf = m.getTransmissionString().getBytes();
         try {
-            System.out.println("sending " + m.getType() + " message");
+            System.out.println("[SEND] " + m.getType() + " message");
             DatagramPacket packet = new DatagramPacket(buf, buf.length, targetAddress, port);
             ioSocket.send(packet);
         }
@@ -135,7 +135,7 @@ public class ReliableBroadcastLibrary extends Thread {
             sendMessageHelper(textMessage);
             sentUnstableMessages.put(sequenceNumber, textMessage);
         } else { // add to queue, all messages in queue will be sent when state goes back to normal
-            System.out.println("state is not normal, message is added to queue");
+            System.out.println("[SEND TEXT] state is not normal, message is added to queue");
             toSend.add(textMessage);
         }
         sequenceNumber++;
@@ -150,7 +150,7 @@ public class ReliableBroadcastLibrary extends Thread {
         if (state == BroadcastState.NORMAL) {
             sendMessageHelper(viewChangeMessage);
         } else {
-            System.out.println("view change is already ongoing");
+            System.out.println("[SEND VIEWCHANGE] view change is already ongoing");
             // TODO decide how to handle view change when there is another one ongoing
         }
         sequenceNumber++;
@@ -162,7 +162,7 @@ public class ReliableBroadcastLibrary extends Thread {
      */
     public TextMessage getTextMessage() throws InterruptedException {
         if(state != BroadcastState.DISCONNECTED) {
-            System.out.println("delivering messages");
+            System.out.println("delivering message");
             return deliveredQueue.take();
         }
         else {
@@ -176,7 +176,7 @@ public class ReliableBroadcastLibrary extends Thread {
      * and then exit
      */
     public void leaveGroup() {
-        System.out.println("disconnecting");
+        System.out.println("[DISCONNECT]");
         sendMessageHelper(new LeaveMessage(targetAddress, sequenceNumber));
         state = BroadcastState.DISCONNECTED;
         //TODO System.exit(0) lo fa l'applicazione
@@ -188,7 +188,7 @@ public class ReliableBroadcastLibrary extends Thread {
      */
     private void receiveMessage(Message m) throws InterruptedException {
         List<InetAddress> newView;
-        System.out.println("processing " + m.getType() + " message");
+        System.out.println("[RECEIVE] processing " + m.getType() + " message");
         switch (m.getType()) {
             case 'T':
                 TextMessage textMessage = (TextMessage) m;
@@ -255,23 +255,10 @@ public class ReliableBroadcastLibrary extends Thread {
                 if (state != BroadcastState.VIEWCHANGE) { // should always be true
                     //reset timer for the specific process in the view
                     processTimer.resetTime(m.getSource());
-
                 }
                 break;
             default:
                 break;
-        }
-    }
-
-    /**
-     * This function sends all the pending text messages and adds them to the {@Link sentUnstableMessages}
-     */
-    private void sendAllPending() {
-        System.out.println("sending all pending text messages");
-        while (!toSend.isEmpty()) {
-            TextMessage m = toSend.remove();
-            sendMessageHelper(m);
-            sentUnstableMessages.put(m.getSequenceNumber(), m);
         }
     }
 
@@ -284,15 +271,30 @@ public class ReliableBroadcastLibrary extends Thread {
         InetAddress source = flushMessage.getSource();
         partialViewFlushAwaitList.remove(source);
         if (partialViewFlushAwaitList.isEmpty()) {
-            System.out.println("back to normal broadcast state");
+            System.out.println("[FLUSH] completed, back to normal broadcast state");
             state = BroadcastState.NORMAL;
             sendAllPending();
             deliverAll();
         }
+        else {
+            System.out.println("[FLUSH] cannot be completed, view change still ongoing");
+        }
+    }
+
+    /**
+     * This function sends all the pending text messages and adds them to the {@Link sentUnstableMessages}
+     */
+    private void sendAllPending() {
+        System.out.println("[FLUSH] sending all pending text messages");
+        while (!toSend.isEmpty()) {
+            TextMessage m = toSend.remove();
+            sendMessageHelper(m);
+            sentUnstableMessages.put(m.getSequenceNumber(), m);
+        }
     }
 
     private void beginViewChange(List<InetAddress> newView) {
-        System.out.println("beginning view change");
+        System.out.println("[VIEWCHANGE] beginning view change");
         state = BroadcastState.VIEWCHANGE;
 
         Set<Integer> unstableIdsSet = sentUnstableMessages.keySet();
@@ -315,7 +317,7 @@ public class ReliableBroadcastLibrary extends Thread {
      * @throws InterruptedException
      */
     private void deliverAll() throws InterruptedException {
-        System.out.println("delivering messages in FIFO order");
+        System.out.println("[DELIVER TEXT] delivering messages in FIFO order");
         boolean redo = true;
         while (redo) {
             redo = false;

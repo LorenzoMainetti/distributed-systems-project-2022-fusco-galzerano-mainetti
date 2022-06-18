@@ -11,7 +11,7 @@ public class Main {
         System.out.println("Hello world!");
         try {
             ReliableBroadcastLibrary lib = new ReliableBroadcastLibrary("224.0.0.1", 8888);
-            System.out.println(InetAddress.getLocalHost());
+            System.out.println("localhost:" + InetAddress.getLocalHost());
             //Scanner scanner = new Scanner(System.in);
             //String msg = scanner.nextLine();
             while (true) {
