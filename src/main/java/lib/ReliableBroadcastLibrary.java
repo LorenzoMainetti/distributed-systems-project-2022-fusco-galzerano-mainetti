@@ -20,7 +20,7 @@ public class ReliableBroadcastLibrary extends Thread {
     private int sequenceNumber;
 
     private final List<InetAddress> view;
-    private final Map<InetAddress, Integer> messageSeqMap;
+    private final Map<String, Integer> messageSeqMap;
     private final BlockingQueue<TextMessage> deliveredQueue;
     private final List<TextMessage> receivedList;
     private final Queue<TextMessage> toSend;
@@ -188,12 +188,12 @@ public class ReliableBroadcastLibrary extends Thread {
      */
     private void receiveMessage(Message m) throws InterruptedException {
         List<InetAddress> newView;
-        System.out.println("[RECEIVE] processing " + m.getType() + " message");
+        System.out.println("[RECEIVE] processing " + m.getType() + " message from " + m.getSource().getCanonicalHostName());
         switch (m.getType()) {
             case 'T':
                 TextMessage textMessage = (TextMessage) m;
                 receivedList.add(textMessage);
-                int expected = messageSeqMap.get(textMessage.getSource());
+                int expected = messageSeqMap.get(textMessage.getSource().getCanonicalHostName());
                 if (textMessage.getSequenceNumber() > expected) {
                     //TODO: optimize
                     for (int i = expected; i < textMessage.getSequenceNumber(); ++i) {
@@ -223,7 +223,7 @@ public class ReliableBroadcastLibrary extends Thread {
             case 'J':
                 assert m instanceof JoinMessage;
                 JoinMessage joinMessage = (JoinMessage) m;
-                messageSeqMap.put(joinMessage.getSource(), joinMessage.getSequenceNumber());
+                messageSeqMap.put(joinMessage.getSource().getCanonicalHostName(), joinMessage.getSequenceNumber());
                 newView = new ArrayList<>(view);
                 newView.add(joinMessage.getSource());
                 beginViewChange(newView);
@@ -323,9 +323,9 @@ public class ReliableBroadcastLibrary extends Thread {
             redo = false;
             List<TextMessage> toRemove = new LinkedList<>();
             for (TextMessage m : receivedList) {
-                int expected = messageSeqMap.get(m.getSource());
+                int expected = messageSeqMap.get(m.getSource().getCanonicalHostName());
                 if (m.getSequenceNumber() == expected) {
-                    messageSeqMap.put(m.getSource(), expected + 1);
+                    messageSeqMap.put(m.getSource().getCanonicalHostName(), expected + 1);
                     deliveredQueue.put(m);
                     AckMessage ackMessage = new AckMessage(targetAddress, m.getSource(), m.getSequenceNumber());
                     sendMessageHelper(ackMessage);
