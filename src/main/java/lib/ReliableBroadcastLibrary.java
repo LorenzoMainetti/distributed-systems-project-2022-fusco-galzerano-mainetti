@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -33,7 +34,7 @@ public class ReliableBroadcastLibrary extends Thread {
     private Map<InetAddress, Integer> viewTimers;
 
     /**
-     * constructor
+     * Constructor
      * @param inetAddr is the address of the process
      * @param inPort is the input port for the process
      * @throws IOException
@@ -73,7 +74,7 @@ public class ReliableBroadcastLibrary extends Thread {
     public BroadcastState getLibraryState() { return state; }
 
     /**
-     *This function waits for input packets to arrive; it then calls other functions for receipt and delivery
+     * This function waits for input packets to arrive; it then calls other functions for receipt and delivery
      */
     @Override
     public void run() {
@@ -126,6 +127,24 @@ public class ReliableBroadcastLibrary extends Thread {
     }
 
     /**
+     * API call used internally by ProcessTimer:
+     * This function  is used to send to all the processes in the group a message to inform that the view has changed.
+     * Sent after a process has failed, i.e. ProcessTimer exceeded
+     * @param viewChanged is the new view that is the new list of processes
+     */
+    protected void sendViewChangeMessage(List<InetAddress> viewChanged) {
+        ViewChangeMessage viewChangeMessage = new ViewChangeMessage(targetAddress, viewChanged);
+        if (state == BroadcastState.NORMAL) {
+            sendMessageHelper(viewChangeMessage);
+        } else {
+            System.out.println("[SEND VIEWCHANGE] view change is already ongoing");
+            // TODO decide how to handle view change when there is another one ongoing
+        }
+        sequenceNumber++;
+    }
+
+    /**
+     * API call to send a text message:
      * This function creates a text message that is then sent through another function
      * @param text is the string to insert in the message
      */
@@ -142,36 +161,23 @@ public class ReliableBroadcastLibrary extends Thread {
     }
 
     /**
-     * This function  is used to send to all the processes in the group a message to inform that the view has changed
-     * @param viewChanged is the new view that is the new list of processes
-     */
-    public void sendViewChangeMessage(List<InetAddress> viewChanged) {
-        ViewChangeMessage viewChangeMessage = new ViewChangeMessage(targetAddress, viewChanged);
-        if (state == BroadcastState.NORMAL) {
-            sendMessageHelper(viewChangeMessage);
-        } else {
-            System.out.println("[SEND VIEWCHANGE] view change is already ongoing");
-            // TODO decide how to handle view change when there is another one ongoing
-        }
-        sequenceNumber++;
-    }
-
-    /**
+     * API call to retrieve the last delivered message
      * @return the last message in the queue of delivered messages
      * @throws InterruptedException
      */
     public TextMessage getTextMessage() throws InterruptedException {
         if(state != BroadcastState.DISCONNECTED) {
-            System.out.println("delivering message");
+            System.out.println("[DELIVER TEXT] delivering message");
             return deliveredQueue.take();
         }
         else {
-            System.out.println("process is disconnected");
+            System.out.println("[DELIVER TEXT] process is disconnected");
             throw new InterruptedException();
         }
     }
 
     /**
+     * API call to leave the group and close the communication:
      * This function is used to inform the other processes in the group that the process is leaving through a message
      * and then exit
      */
@@ -186,21 +192,25 @@ public class ReliableBroadcastLibrary extends Thread {
      * This function is used to receive messages and do different operations depending on the type of message received
      * @param m is the received message that has to be processed
      */
-    private void receiveMessage(Message m) throws InterruptedException {
+    private void receiveMessage(Message m) throws InterruptedException, UnknownHostException {
         List<InetAddress> newView;
-        System.out.println("[RECEIVE] processing " + m.getType() + " message from " + m.getSource().getCanonicalHostName());
+        if(!m.getSource().equals(InetAddress.getLocalHost())) {
+            System.out.println("[RECEIVE] processing " + m.getType() + " message from " + m.getSource().getCanonicalHostName());
+        }
         switch (m.getType()) {
             case 'T':
-                TextMessage textMessage = (TextMessage) m;
-                receivedList.add(textMessage);
-                int expected = messageSeqMap.get(textMessage.getSource().getCanonicalHostName());
-                if (textMessage.getSequenceNumber() > expected) {
-                    //TODO: optimize
-                    for (int i = expected; i < textMessage.getSequenceNumber(); ++i) {
-                        sendMessageHelper(new NackMessage(targetAddress, textMessage.getSource(),  i));
+                if(!m.getSource().equals(InetAddress.getLocalHost())) {
+                    TextMessage textMessage = (TextMessage) m;
+                    receivedList.add(textMessage);
+                    int expected = messageSeqMap.get(textMessage.getSource().getCanonicalHostName());
+                    if (textMessage.getSequenceNumber() > expected) {
+                        //TODO: optimize
+                        for (int i = expected; i < textMessage.getSequenceNumber(); ++i) {
+                            sendMessageHelper(new NackMessage(targetAddress, textMessage.getSource(), i));
+                        }
+                    } else {
+                        deliverAll();
                     }
-                } else {
-                    deliverAll();
                 }
                 break;
             case 'A': // ack
@@ -250,11 +260,13 @@ public class ReliableBroadcastLibrary extends Thread {
                 }
                 break;
             case 'P':
-                assert m instanceof PingMessage;
-                PingMessage pingMessage = (PingMessage) m;
-                if (state != BroadcastState.VIEWCHANGE) { // should always be true
-                    //reset timer for the specific process in the view
-                    processTimer.resetTime(m.getSource());
+                if(!m.getSource().equals(InetAddress.getLocalHost())) {
+                    assert m instanceof PingMessage;
+                    PingMessage pingMessage = (PingMessage) m;
+                    if (state != BroadcastState.VIEWCHANGE) { // should always be true
+                        //reset timer for the specific process in the view
+                        processTimer.resetTime(m.getSource());
+                    }
                 }
                 break;
             default:
@@ -293,6 +305,11 @@ public class ReliableBroadcastLibrary extends Thread {
         }
     }
 
+    /**
+     * This function starts a view change resending all unstable messages in order and
+     * then send a flush message
+     * @param newView
+     */
     private void beginViewChange(List<InetAddress> newView) {
         System.out.println("[VIEWCHANGE] beginning view change");
         state = BroadcastState.VIEWCHANGE;
@@ -308,7 +325,7 @@ public class ReliableBroadcastLibrary extends Thread {
         sendMessageHelper(new FlushMessage(targetAddress));
         // wait to receive all flush from all other components of the view
         partialViewFlushAwaitList = new ArrayList<>(newView);
-        // TODO: wait
+        // TODO: wait, really needed?
     }
 
     /**
@@ -334,8 +351,8 @@ public class ReliableBroadcastLibrary extends Thread {
                     toRemove.add(m);
                 }
             }
-
             receivedList.removeAll(toRemove);
         }
     }
+
 }
