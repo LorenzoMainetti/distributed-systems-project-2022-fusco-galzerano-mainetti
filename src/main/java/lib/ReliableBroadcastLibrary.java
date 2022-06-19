@@ -20,8 +20,9 @@ public class ReliableBroadcastLibrary extends Thread {
 
     private int sequenceNumber;
 
-    private final List<InetAddress> view;
-    private final Map<String, Integer> messageSeqMap;
+    private List<InetAddress> view;
+    private List<InetAddress> pendingView;
+    private final Map<InetAddress, Integer> messageSeqMap;
     private final BlockingQueue<TextMessage> deliveredQueue;
     private final List<TextMessage> receivedList;
     private final Queue<TextMessage> toSend;
@@ -54,9 +55,10 @@ public class ReliableBroadcastLibrary extends Thread {
         deliveredQueue = new LinkedBlockingQueue<>();
         toSend = new LinkedList<>();
         view = new ArrayList<>();
+        view.add(InetAddress.getLocalHost());
         viewTimers = new HashMap<>();
 
-        state = BroadcastState.JOINING;
+        state = BroadcastState.NORMAL;
         System.out.println("[JOIN]");
         //broadcast join message
         sendMessageHelper(new JoinMessage(myAddress, sequenceNumber));
@@ -88,7 +90,7 @@ public class ReliableBroadcastLibrary extends Thread {
             new Thread(() -> {
                 while (state != BroadcastState.DISCONNECTED) { //isConnected=true
                     try {
-                        sendMessageHelper(new PingMessage(this.targetAddress));
+                        //sendMessageHelper(new PingMessage(this.targetAddress));
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         // endConnection();
@@ -101,6 +103,10 @@ public class ReliableBroadcastLibrary extends Thread {
                 byte[] in = new byte[2048];
                 DatagramPacket packet = new DatagramPacket(in, in.length);
                 ioSocket.receive(packet);
+                if (InetAddress.getLocalHost().equals(packet.getAddress())) {
+                    continue;
+                }
+
                 Message m = Message.parseString(new String(packet.getData()), packet.getAddress());
 
                 receiveMessage(m);
@@ -194,15 +200,13 @@ public class ReliableBroadcastLibrary extends Thread {
      */
     private void receiveMessage(Message m) throws InterruptedException, UnknownHostException {
         List<InetAddress> newView;
-        if(!m.getSource().equals(InetAddress.getLocalHost())) {
-            System.out.println("[RECEIVE] processing " + m.getType() + " message from " + m.getSource().getCanonicalHostName());
-        }
+        System.out.println("[RECEIVE] processing " + m.getType() + " message from " + m.getSource().getCanonicalHostName());
         switch (m.getType()) {
             case 'T':
-                if(!m.getSource().equals(InetAddress.getLocalHost())) {
+                if(view.contains(m.getSource())) {
                     TextMessage textMessage = (TextMessage) m;
                     receivedList.add(textMessage);
-                    int expected = messageSeqMap.get(textMessage.getSource().getCanonicalHostName());
+                    int expected = messageSeqMap.get(textMessage.getSource());
                     if (textMessage.getSequenceNumber() > expected) {
                         //TODO: optimize
                         for (int i = expected; i < textMessage.getSequenceNumber(); ++i) {
@@ -211,6 +215,8 @@ public class ReliableBroadcastLibrary extends Thread {
                     } else {
                         deliverAll();
                     }
+                } else {
+                    System.out.println("[DROP] not in view!");
                 }
                 break;
             case 'A': // ack
@@ -233,23 +239,22 @@ public class ReliableBroadcastLibrary extends Thread {
             case 'J':
                 assert m instanceof JoinMessage;
                 JoinMessage joinMessage = (JoinMessage) m;
-                messageSeqMap.put(joinMessage.getSource().getCanonicalHostName(), joinMessage.getSequenceNumber());
                 newView = new ArrayList<>(view);
                 newView.add(joinMessage.getSource());
-                beginViewChange(newView);
+                beginViewChange(newView, true);
                 break;
             case 'L':
                 assert m instanceof LeaveMessage;
                 LeaveMessage leaveMessage = (LeaveMessage) m;
                 newView = new ArrayList<>(view);
                 newView.remove(leaveMessage.getSource());
-                beginViewChange(view);
+                beginViewChange(view, true);
                 break;
             case 'V':
                 assert m instanceof ViewChangeMessage;
                 ViewChangeMessage viewChangeMessage = (ViewChangeMessage) m;
                 if (state != BroadcastState.VIEWCHANGE) {
-                    beginViewChange(viewChangeMessage.getView());
+                    beginViewChange(viewChangeMessage.getView(), false);
                 }
                 break;
             case 'F':
@@ -282,8 +287,15 @@ public class ReliableBroadcastLibrary extends Thread {
     private void processFlushMessage(FlushMessage flushMessage) throws InterruptedException {
         InetAddress source = flushMessage.getSource();
         partialViewFlushAwaitList.remove(source);
+        messageSeqMap.put(flushMessage.getSource(), flushMessage.getSequenceNumber());
         if (partialViewFlushAwaitList.isEmpty()) {
-            System.out.println("[FLUSH] completed, back to normal broadcast state");
+            System.out.println("[FLUSH] completed, back to normal broadcast state. New view is:");
+            System.out.print("\t");
+            view = new ArrayList<>(pendingView);
+            for (InetAddress address : view) {
+                System.out.print(address.toString() + ", ");
+            }
+            System.out.println("");
             state = BroadcastState.NORMAL;
             sendAllPending();
             deliverAll();
@@ -310,9 +322,13 @@ public class ReliableBroadcastLibrary extends Thread {
      * then send a flush message
      * @param newView
      */
-    private void beginViewChange(List<InetAddress> newView) {
+    private void beginViewChange(List<InetAddress> newView, boolean shouldNotify) throws UnknownHostException {
         System.out.println("[VIEWCHANGE] beginning view change");
         state = BroadcastState.VIEWCHANGE;
+        pendingView = new ArrayList<>(newView);
+
+        if (shouldNotify)
+            sendMessageHelper(new ViewChangeMessage(targetAddress, newView));
 
         Set<Integer> unstableIdsSet = sentUnstableMessages.keySet();
         Integer[] unstableIds = unstableIdsSet.toArray(new Integer[unstableIdsSet.size()]);
@@ -322,9 +338,10 @@ public class ReliableBroadcastLibrary extends Thread {
         }
         sentUnstableMessages.clear();
 
-        sendMessageHelper(new FlushMessage(targetAddress));
+        sendMessageHelper(new FlushMessage(targetAddress, sequenceNumber));
         // wait to receive all flush from all other components of the view
         partialViewFlushAwaitList = new ArrayList<>(newView);
+        partialViewFlushAwaitList.remove(InetAddress.getLocalHost());
         // TODO: wait, really needed?
     }
 
@@ -340,9 +357,9 @@ public class ReliableBroadcastLibrary extends Thread {
             redo = false;
             List<TextMessage> toRemove = new LinkedList<>();
             for (TextMessage m : receivedList) {
-                int expected = messageSeqMap.get(m.getSource().getCanonicalHostName());
+                int expected = messageSeqMap.get(m.getSource());
                 if (m.getSequenceNumber() == expected) {
-                    messageSeqMap.put(m.getSource().getCanonicalHostName(), expected + 1);
+                    messageSeqMap.put(m.getSource(), expected + 1);
                     deliveredQueue.put(m);
                     AckMessage ackMessage = new AckMessage(targetAddress, m.getSource(), m.getSequenceNumber());
                     sendMessageHelper(ackMessage);

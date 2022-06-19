@@ -22,6 +22,7 @@ public class ProcessTimer implements Runnable{
      */
     @Override
     public void run() {
+        return;/*
         while (library.getLibraryState() != BroadcastState.DISCONNECTED) {
             if(library.getLibraryState() == BroadcastState.NORMAL) {
                 for (int i = 0; i < library.getView().size(); i++) {
@@ -45,7 +46,7 @@ public class ProcessTimer implements Runnable{
                 //e.printStackTrace();
             }
 
-        }
+        }*/
 
     }
 
