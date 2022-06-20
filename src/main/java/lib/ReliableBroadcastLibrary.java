@@ -170,7 +170,7 @@ public class ReliableBroadcastLibrary extends Thread {
     }
 
     /**
-     * API call to retrieve the last delivered message
+     * API call to retrieve the last delivered message:
      * @return the last message in the queue of delivered messages
      * @throws InterruptedException
      */
@@ -194,7 +194,7 @@ public class ReliableBroadcastLibrary extends Thread {
         System.out.println("[DISCONNECT]");
         sendMessageHelper(new LeaveMessage(targetAddress, sequenceNumber));
         state = BroadcastState.DISCONNECTED;
-        //TODO System.exit(0) lo fa l'applicazione
+        //TODO System.exit(0) is done by the app
     }
 
     /**
@@ -258,7 +258,7 @@ public class ReliableBroadcastLibrary extends Thread {
                 assert m instanceof ViewChangeMessage;
                 ViewChangeMessage viewChangeMessage = (ViewChangeMessage) m;
                 if (!viewChangeMessage.getView().contains(InetAddress.getLocalHost())) {
-                    System.out.println("[VIEWCHANGE] i'm not in the view!");
+                    System.out.println("[VIEWCHANGE] I'm not in the view!");
                     state = BroadcastState.DISCONNECTED;
                     break;
                 }
@@ -325,11 +325,12 @@ public class ReliableBroadcastLibrary extends Thread {
     }
 
     /**
+     * API call used internally by ProcessTimer:
      * This function starts a view change resending all unstable messages in order and
      * then send a flush message
      * @param newView
      */
-    public void beginViewChange(List<InetAddress> newView, boolean shouldNotify) throws UnknownHostException {
+    protected void beginViewChange(List<InetAddress> newView, boolean shouldNotify) throws UnknownHostException {
         System.out.println("\t[VIEWCHANGE] beginning view change");
         state = BroadcastState.VIEWCHANGE;
         pendingView = new ArrayList<>(newView);
@@ -349,7 +350,6 @@ public class ReliableBroadcastLibrary extends Thread {
         // wait to receive all flush from all other components of the view
         partialViewFlushAwaitList = new ArrayList<>(newView);
         partialViewFlushAwaitList.remove(InetAddress.getLocalHost());
-        // TODO: wait, really needed?
     }
 
     /**

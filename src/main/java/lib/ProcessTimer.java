@@ -21,7 +21,7 @@ public class ProcessTimer implements Runnable{
     }
 
     /**
-     * This method controls, each millisecond, that the client is still connected to the server.
+     * This method controls, each millisecond, that the process is still connected.
      * If not, it calls the {@link ..} and terminates.
      */
     @Override
