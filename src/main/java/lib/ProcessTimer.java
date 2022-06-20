@@ -1,6 +1,9 @@
 package lib;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class controls if the server is still connected to the network.
@@ -8,6 +11,7 @@ import java.net.InetAddress;
 public class ProcessTimer implements Runnable{
 
     public final static int TIME_EXPIRED_MILLIS = 15000; //15 sec
+    public final static int TIME_SLEEP = 1000;
     //private int timeMillis = 0;
     private final ReliableBroadcastLibrary library;
     private boolean isConnected = true;
@@ -22,42 +26,37 @@ public class ProcessTimer implements Runnable{
      */
     @Override
     public void run() {
-        return;/*
-        while (library.getLibraryState() != BroadcastState.DISCONNECTED) {
-            if(library.getLibraryState() == BroadcastState.NORMAL) {
-                for (int i = 0; i < library.getView().size(); i++) {
-                    InetAddress source = library.getView().get(i);
-                    int timerValue = library.getViewTimers().get(source);
+        try {
+            while (library.getLibraryState() != BroadcastState.DISCONNECTED) {
+                if (library.getLibraryState() == BroadcastState.NORMAL) {
+                    List<InetAddress> toRemove = new ArrayList<>();
+                    for (InetAddress source : library.getView()) {
+                        if (InetAddress.getLocalHost().equals(source)) continue;
+                        int timerValue = library.getViewTimers().computeIfAbsent(source, k -> 0);
 
-                    if (timerValue > TIME_EXPIRED_MILLIS) {
-                        isConnected = false;
-                        library.getView().remove(i);
-                        library.sendViewChangeMessage(library.getView());
+                        if (timerValue > TIME_EXPIRED_MILLIS) {
+                            isConnected = false;
+                            toRemove.add(source);
+                            System.out.println("[WATCHDOG] timer for " + source + " has expired");
+                        } else {
+                            library.getViewTimers().put(source, timerValue + TIME_SLEEP);
+                        }
                     }
-                    library.getViewTimers().put(source, timerValue + 1000);
-
+                    if (!toRemove.isEmpty()) {
+                        library.getView().removeAll(toRemove);
+                        library.beginViewChange(library.getView(), true);
+                    }
                 }
+
+                Thread.sleep(TIME_SLEEP);
             }
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                isConnected = false;
-                //e.printStackTrace();
-            }
-
-        }*/
-
+        } catch (InterruptedException | UnknownHostException e) {
+            isConnected = false;
+            e.printStackTrace();
+        }
     }
 
     void setIsConnectedFalse(){
         isConnected = false;
-    }
-
-    /**
-     * When a ping is listened by the {@link ReliableBroadcastLibrary}, the timer is reset.
-     */
-    void resetTime(InetAddress source){
-        library.getViewTimers().put(source, 0);
     }
 }

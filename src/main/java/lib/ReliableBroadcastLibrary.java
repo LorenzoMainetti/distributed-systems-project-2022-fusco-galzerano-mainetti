@@ -90,7 +90,7 @@ public class ReliableBroadcastLibrary extends Thread {
             new Thread(() -> {
                 while (state != BroadcastState.DISCONNECTED) { //isConnected=true
                     try {
-                        //sendMessageHelper(new PingMessage(this.targetAddress));
+                        sendMessageHelper(new PingMessage(this.targetAddress));
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         // endConnection();
@@ -109,7 +109,7 @@ public class ReliableBroadcastLibrary extends Thread {
 
                 Message m = Message.parseString(new String(packet.getData()), packet.getAddress());
 
-                receiveMessage(m);
+                processMessage(m);
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -123,7 +123,8 @@ public class ReliableBroadcastLibrary extends Thread {
     private void sendMessageHelper(Message m) {
         byte[] buf = m.getTransmissionString().getBytes();
         try {
-            System.out.println("[SEND] " + m.getType() + " message");
+            if (m.getType() != 'P')
+                System.out.println("[SEND] " + m.getType() + " message");
             DatagramPacket packet = new DatagramPacket(buf, buf.length, targetAddress, port);
             ioSocket.send(packet);
         }
@@ -154,14 +155,16 @@ public class ReliableBroadcastLibrary extends Thread {
      * This function creates a text message that is then sent through another function
      * @param text is the string to insert in the message
      */
-    public void sendTextMessage(String text) {
+    public void sendTextMessage(String text) throws InterruptedException {
         TextMessage textMessage = new TextMessage(targetAddress, text, sequenceNumber);
         if (state == BroadcastState.NORMAL) {
             sendMessageHelper(textMessage);
             sentUnstableMessages.put(sequenceNumber, textMessage);
-        } else { // add to queue, all messages in queue will be sent when state goes back to normal
-            System.out.println("[SEND TEXT] state is not normal, message is added to queue");
+        } else if (state == BroadcastState.VIEWCHANGE) { // add to queue, all messages in queue will be sent when state goes back to normal
+            System.out.println("[SEND TEXT] currently in viewchange, message is added to queue");
             toSend.add(textMessage);
+        } else if (state == BroadcastState.DISCONNECTED) {
+            throw new InterruptedException();
         }
         sequenceNumber++;
     }
@@ -198,9 +201,10 @@ public class ReliableBroadcastLibrary extends Thread {
      * This function is used to receive messages and do different operations depending on the type of message received
      * @param m is the received message that has to be processed
      */
-    private void receiveMessage(Message m) throws InterruptedException, UnknownHostException {
+    private void processMessage(Message m) throws InterruptedException, UnknownHostException {
         List<InetAddress> newView;
-        System.out.println("[RECEIVE] processing " + m.getType() + " message from " + m.getSource().getCanonicalHostName());
+        if (m.getType() != 'P')
+            System.out.println("[RECEIVE] processing " + m.getType() + " message from " + m.getSource().getCanonicalHostName());
         switch (m.getType()) {
             case 'T':
                 if(view.contains(m.getSource())) {
@@ -216,7 +220,7 @@ public class ReliableBroadcastLibrary extends Thread {
                         deliverAll();
                     }
                 } else {
-                    System.out.println("[DROP] not in view!");
+                    System.out.println("\t[DROP] not in view!");
                 }
                 break;
             case 'A': // ack
@@ -253,7 +257,12 @@ public class ReliableBroadcastLibrary extends Thread {
             case 'V':
                 assert m instanceof ViewChangeMessage;
                 ViewChangeMessage viewChangeMessage = (ViewChangeMessage) m;
-                if (state != BroadcastState.VIEWCHANGE) {
+                if (!viewChangeMessage.getView().contains(InetAddress.getLocalHost())) {
+                    System.out.println("[VIEWCHANGE] i'm not in the view!");
+                    state = BroadcastState.DISCONNECTED;
+                    break;
+                }
+                if (state == BroadcastState.NORMAL) {
                     beginViewChange(viewChangeMessage.getView(), false);
                 }
                 break;
@@ -265,13 +274,11 @@ public class ReliableBroadcastLibrary extends Thread {
                 }
                 break;
             case 'P':
-                if(!m.getSource().equals(InetAddress.getLocalHost())) {
-                    assert m instanceof PingMessage;
-                    PingMessage pingMessage = (PingMessage) m;
-                    if (state != BroadcastState.VIEWCHANGE) { // should always be true
-                        //reset timer for the specific process in the view
-                        processTimer.resetTime(m.getSource());
-                    }
+                assert m instanceof PingMessage;
+                PingMessage pingMessage = (PingMessage) m;
+                if (state != BroadcastState.VIEWCHANGE) { // should always be true
+                    //reset timer for the specific process in the view
+                    viewTimers.put(pingMessage.getSource(), 0);
                 }
                 break;
             default:
@@ -322,8 +329,8 @@ public class ReliableBroadcastLibrary extends Thread {
      * then send a flush message
      * @param newView
      */
-    private void beginViewChange(List<InetAddress> newView, boolean shouldNotify) throws UnknownHostException {
-        System.out.println("[VIEWCHANGE] beginning view change");
+    public void beginViewChange(List<InetAddress> newView, boolean shouldNotify) throws UnknownHostException {
+        System.out.println("\t[VIEWCHANGE] beginning view change");
         state = BroadcastState.VIEWCHANGE;
         pendingView = new ArrayList<>(newView);
 
@@ -351,7 +358,7 @@ public class ReliableBroadcastLibrary extends Thread {
      * @throws InterruptedException
      */
     private void deliverAll() throws InterruptedException {
-        System.out.println("[DELIVER TEXT] delivering messages in FIFO order");
+        System.out.println("\t[DELIVER TEXT] preparing messages in FIFO order for delivery");
         boolean redo = true;
         while (redo) {
             redo = false;
