@@ -17,6 +17,7 @@ public interface Message {
         String type = scanner.next();
         int sequenceNumber;
         InetAddress target;
+        String[] parts;
         switch (type) {
             case "T": // content message (normal)
                 sequenceNumber = scanner.nextInt();
@@ -27,8 +28,8 @@ public interface Message {
                 sequenceNumber = scanner.nextInt();
                 return new AckMessage(sender, target, sequenceNumber);
             case "N": // nack
-                String stringTarget = scanner.next();
-                target = InetAddress.getByName(stringTarget);
+                parts = scanner.next().split("/");
+                target = InetAddress.getByName(parts[1]);
                 sequenceNumber = scanner.nextInt();
                 return new NackMessage(sender, target, sequenceNumber);
             case "J": // join
@@ -43,7 +44,7 @@ public interface Message {
                 int elements = scanner.nextInt();
                 List<InetAddress> newView = new ArrayList<>();
                 for (int i = 0; i < elements; ++i) {
-                    String[] parts = scanner.next().split("/");
+                    parts = scanner.next().split("/");
                     newView.add(InetAddress.getByName(parts[1]));
                 }
                 return new ViewChangeMessage(sender, newView);
