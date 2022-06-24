@@ -4,4 +4,4 @@ services:
   app:
     build: ./
     deploy:
-      replicas: 2
+      replicas: 3

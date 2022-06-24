@@ -177,7 +177,7 @@ public class ReliableBroadcastLibrary extends Thread {
     /**
      * API call to retrieve the last delivered message:
      * @return the last message in the queue of delivered messages
-     * @throws InterruptedException
+     * @throws InterruptedException InterruptedException
      */
     public TextMessage getTextMessage() throws InterruptedException {
         if(state != BroadcastState.DISCONNECTED) {
@@ -208,7 +208,7 @@ public class ReliableBroadcastLibrary extends Thread {
      */
     private void processMessage(Message m) throws InterruptedException, UnknownHostException {
         List<InetAddress> newView;
-        if (m.getType() != 'P')
+        if (m.getType() != 'P' && m.getType() != 'E')
             System.out.println("[RECEIVE] processing " + m.getType() + " message from " + m.getSource().getCanonicalHostName());
         switch (m.getType()) {
             case 'T':
@@ -231,7 +231,8 @@ public class ReliableBroadcastLibrary extends Thread {
             case 'A': // ack
                 assert m instanceof AckMessage;
                 AckMessage ackMessage = (AckMessage) m;
-                if (ackMessage.getTarget().equals(myAddress)) {
+                // TODO check if state==NORMAL is needed
+                if (ackMessage.getTarget().equals(myAddress) && state==BroadcastState.NORMAL) {
                     TextMessage t = sentUnstableMessages.get(ackMessage.getSequenceNumber());
                     t.incrementAckCount();
                     if (t.getAckCount() == view.size() - 1) { // all other processes in the view acknowledge
@@ -250,8 +251,12 @@ public class ReliableBroadcastLibrary extends Thread {
                 assert m instanceof JoinMessage;
                 JoinMessage joinMessage = (JoinMessage) m;
                 newView = new ArrayList<>(view);
-                newView.add(joinMessage.getSource());
-                beginViewChange(newView, true);
+                if (state == BroadcastState.NORMAL) {
+                    newView.add(joinMessage.getSource());
+                    beginViewChange(newView, true);
+                } else if (state == BroadcastState.VIEWCHANGE) {
+                    sendMessageHelper(new ErrorMessage(joinMessage.getSource()));
+                }
                 break;
             case 'L':
                 assert m instanceof LeaveMessage;
@@ -264,12 +269,16 @@ public class ReliableBroadcastLibrary extends Thread {
                 assert m instanceof ViewChangeMessage;
                 ViewChangeMessage viewChangeMessage = (ViewChangeMessage) m;
                 if (!viewChangeMessage.getView().contains(myAddress)) {
-                    System.out.println("[VIEWCHANGE] I'm not in the view!");
+                    System.out.println("[VIEWCHANGE] I'm not in the view. Disconnect");
                     state = BroadcastState.DISCONNECTED;
                     break;
                 }
                 if (state == BroadcastState.NORMAL) {
                     beginViewChange(viewChangeMessage.getView(), false);
+                } else if (state == BroadcastState.VIEWCHANGE) {
+                    System.out.println("[VIEWCHANGE] view change is already ongoing");
+                    // TODO decide how to handle view change when there is another one ongoing
+                    //beginViewChange(viewChangeMessage.getView(), false);
                 }
                 break;
             case 'F':
@@ -288,6 +297,12 @@ public class ReliableBroadcastLibrary extends Thread {
                 }
                 break;
             default:
+                assert m instanceof ErrorMessage;
+                ErrorMessage errorMessage = (ErrorMessage) m;
+                if (errorMessage.getSource().equals(myAddress)) {
+                    System.out.println("[ERROR] cannot join when a view change is ongoing. Disconnect");
+                    state = BroadcastState.DISCONNECTED;
+                }
                 break;
         }
     }
@@ -295,7 +310,7 @@ public class ReliableBroadcastLibrary extends Thread {
     /**
      * This function is used to flush messages of the given process by sending all pending messages and deliver them
      * @param flushMessage is the message received
-     * @throws InterruptedException
+     * @throws InterruptedException InterruptedException
      */
     private void processFlushMessage(FlushMessage flushMessage) throws InterruptedException {
         InetAddress source = flushMessage.getSource();
@@ -308,7 +323,7 @@ public class ReliableBroadcastLibrary extends Thread {
             for (InetAddress address : view) {
                 System.out.print(address.toString() + ", ");
             }
-            System.out.println("");
+            System.out.println(" ");
             state = BroadcastState.NORMAL;
             sendAllPending();
             deliverAll();
@@ -361,7 +376,7 @@ public class ReliableBroadcastLibrary extends Thread {
     /**
      * This function delivers all messages that have a value of {@Link sequenceNumber} equal to the one {@Link expected}
      * discards the ones with lower value and keeps the one with higher value
-     * @throws InterruptedException
+     * @throws InterruptedException InterruptedException
      */
     private void deliverAll() throws InterruptedException {
         System.out.println("\t[DELIVER TEXT] preparing messages in FIFO order for delivery");
