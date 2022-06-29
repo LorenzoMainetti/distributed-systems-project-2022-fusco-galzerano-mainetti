@@ -1,7 +1,15 @@
 version: '3.9'
 
 services:
-  app:
-    build: ./
+  node:
+    build:
+      context: ./
+      dockerfile: NodeDockerfile
     deploy:
       replicas: 3
+  supervisor:
+    build:
+      context: ./
+      dockerfile: SupervisorDockerfile
+    deploy:
+      replicas: 1

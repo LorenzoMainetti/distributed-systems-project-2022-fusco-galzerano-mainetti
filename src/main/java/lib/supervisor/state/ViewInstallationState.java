@@ -1,0 +1,30 @@
+package lib.supervisor.state;
+
+import lib.message.Message;
+import lib.supervisor.Supervisor;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ViewInstallationState extends SupervisorState {
+    private final List<InetAddress> pendingConfirmations;
+    public ViewInstallationState(Supervisor supervisor) {
+        super(supervisor);
+        pendingConfirmations = new ArrayList<>(supervisor.getView());
+    }
+
+    @Override
+    public SupervisorState processMessage(Message m) throws IOException {
+        if (m.getType() == 'F') {
+            pendingConfirmations.remove(m.getSource());
+
+            if (pendingConfirmations.isEmpty()) {
+                return new NormalState(supervisor);
+            }
+        }
+
+        return this;
+    }
+}
