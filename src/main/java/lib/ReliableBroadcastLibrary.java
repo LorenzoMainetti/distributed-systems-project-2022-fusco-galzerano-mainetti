@@ -1,6 +1,7 @@
 package lib;
 
 import lib.message.*;
+import lib.supervisor.ProcessTimer;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -31,8 +32,6 @@ public class ReliableBroadcastLibrary extends Thread {
     private BroadcastState state;
     private List<InetAddress> partialViewFlushAwaitList;
 
-    private ProcessTimer processTimer;
-    private Map<InetAddress, Integer> viewTimers;
 
     /**
      * Constructor
@@ -56,21 +55,16 @@ public class ReliableBroadcastLibrary extends Thread {
         toSend = new LinkedList<>();
         view = new ArrayList<>();
         view.add(myAddress);
-        viewTimers = new HashMap<>();
 
-        state = BroadcastState.NORMAL;
+        state = BroadcastState.JOINING;
         System.out.println("[JOIN]");
         //broadcast join message
-        sendMessageHelper(new JoinMessage(myAddress, sequenceNumber));
+        //sendMessageHelper(new JoinMessage(myAddress, sequenceNumber));
         this.start();
     }
 
     public List<InetAddress> getView() {
         return view;
-    }
-
-    public Map<InetAddress, Integer> getViewTimers() {
-        return viewTimers;
     }
 
     public BroadcastState getLibraryState() { return state; }
@@ -83,15 +77,24 @@ public class ReliableBroadcastLibrary extends Thread {
 
         try {
 
-            processTimer = new ProcessTimer(this);
-            new Thread(processTimer).start();
-
             // Send a ping each 5 seconds.
             new Thread(() -> {
                 while (state != BroadcastState.DISCONNECTED) { //isConnected=true
                     try {
-                        sendMessageHelper(new PingMessage(this.targetAddress));
+                        sendMessageHelper(new PingMessage(this.myAddress));
                         Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        // endConnection();
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+            new Thread(() -> {
+                while (state == BroadcastState.JOINING) {
+                    try {
+                        sendMessageHelper(new JoinMessage(this.myAddress, sequenceNumber));
+                        Thread.sleep(10000);
                     } catch (InterruptedException e) {
                         // endConnection();
                         e.printStackTrace();
@@ -165,8 +168,8 @@ public class ReliableBroadcastLibrary extends Thread {
             } else {
                 sendMessageHelper(textMessage);
             }
-        } else if (state == BroadcastState.VIEWCHANGE) { // add to queue, all messages in queue will be sent when state goes back to normal
-            System.out.println("[SEND TEXT] currently in viewchange, message is added to queue");
+        } else if (state == BroadcastState.VIEWCHANGE || state == BroadcastState.JOINING) { // add to queue, all messages in queue will be sent when state goes back to normal
+            System.out.println("[SEND TEXT] currently in viewchange or joining, message is added to queue");
             toSend.add(textMessage);
         } else if (state == BroadcastState.DISCONNECTED) {
             throw new InterruptedException();
@@ -208,7 +211,7 @@ public class ReliableBroadcastLibrary extends Thread {
      */
     private void processMessage(Message m) throws InterruptedException, UnknownHostException {
         List<InetAddress> newView;
-        if (m.getType() != 'P' && m.getType() != 'E')
+        if (m.getType() != 'P' && m.getType() != 'E' && m.getType() != 'J')
             System.out.println("[RECEIVE] processing " + m.getType() + " message from " + m.getSource().getCanonicalHostName());
         switch (m.getType()) {
             case 'T':
@@ -247,38 +250,18 @@ public class ReliableBroadcastLibrary extends Thread {
                 if (myAddress.equals(nackMessage.getTargetId()))
                     sendMessageHelper(sentUnstableMessages.get(nackMessage.getRequestedMessage()));
                 break;
-            case 'J':
-                assert m instanceof JoinMessage;
-                JoinMessage joinMessage = (JoinMessage) m;
-                newView = new ArrayList<>(view);
-                if (state == BroadcastState.NORMAL) {
-                    newView.add(joinMessage.getSource());
-                    beginViewChange(newView, true);
-                } else if (state == BroadcastState.VIEWCHANGE) {
-                    sendMessageHelper(new ErrorMessage(joinMessage.getSource()));
-                }
-                break;
-            case 'L':
-                assert m instanceof LeaveMessage;
-                LeaveMessage leaveMessage = (LeaveMessage) m;
-                newView = new ArrayList<>(view);
-                newView.remove(leaveMessage.getSource());
-                beginViewChange(view, true);
-                break;
             case 'V':
                 assert m instanceof ViewChangeMessage;
                 ViewChangeMessage viewChangeMessage = (ViewChangeMessage) m;
-                if (!viewChangeMessage.getView().contains(myAddress)) {
-                    System.out.println("[VIEWCHANGE] I'm not in the view. Disconnect");
-                    state = BroadcastState.DISCONNECTED;
-                    break;
-                }
-                if (state == BroadcastState.NORMAL) {
-                    beginViewChange(viewChangeMessage.getView(), false);
-                } else if (state == BroadcastState.VIEWCHANGE) {
-                    System.out.println("[VIEWCHANGE] view change is already ongoing");
-                    // TODO decide how to handle view change when there is another one ongoing
-                    //beginViewChange(viewChangeMessage.getView(), false);
+                if (state == BroadcastState.NORMAL || state == BroadcastState.JOINING) {
+                    if (!viewChangeMessage.getView().contains(myAddress)) {
+                        System.out.println("[VIEWCHANGE] I'm not in the viewchange");
+                        state = BroadcastState.DISCONNECTED;
+                        break;
+                    }
+                    else {
+                        beginViewChange(viewChangeMessage.getView());
+                    }
                 }
                 break;
             case 'F':
@@ -288,21 +271,7 @@ public class ReliableBroadcastLibrary extends Thread {
                     processFlushMessage(flushMessage);
                 }
                 break;
-            case 'P':
-                assert m instanceof PingMessage;
-                PingMessage pingMessage = (PingMessage) m;
-                if (state != BroadcastState.VIEWCHANGE) { // should always be true
-                    //reset timer for the specific process in the view
-                    viewTimers.put(pingMessage.getSource(), 0);
-                }
-                break;
             default:
-                assert m instanceof ErrorMessage;
-                ErrorMessage errorMessage = (ErrorMessage) m;
-                if (errorMessage.getSource().equals(myAddress)) {
-                    System.out.println("[ERROR] cannot join when a view change is ongoing. Disconnect");
-                    state = BroadcastState.DISCONNECTED;
-                }
                 break;
         }
     }
@@ -351,13 +320,10 @@ public class ReliableBroadcastLibrary extends Thread {
      * then send a flush message
      * @param newView
      */
-    protected void beginViewChange(List<InetAddress> newView, boolean shouldNotify) throws UnknownHostException {
+    protected void beginViewChange(List<InetAddress> newView) throws UnknownHostException {
         System.out.println("\t[VIEWCHANGE] beginning view change");
         state = BroadcastState.VIEWCHANGE;
         pendingView = new ArrayList<>(newView);
-
-        if (shouldNotify)
-            sendMessageHelper(new ViewChangeMessage(targetAddress, newView));
 
         Set<Integer> unstableIdsSet = sentUnstableMessages.keySet();
         Integer[] unstableIds = unstableIdsSet.toArray(new Integer[unstableIdsSet.size()]);
@@ -371,6 +337,11 @@ public class ReliableBroadcastLibrary extends Thread {
         // wait to receive all flush from all other components of the view
         partialViewFlushAwaitList = new ArrayList<>(newView);
         partialViewFlushAwaitList.remove(myAddress);
+
+        if (partialViewFlushAwaitList.isEmpty()) {
+            System.out.println("\t[VIEWCHANGE] installed viewchange! alone :(");
+            state = BroadcastState.NORMAL;
+        }
     }
 
     /**

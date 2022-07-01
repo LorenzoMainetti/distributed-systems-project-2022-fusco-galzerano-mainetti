@@ -13,6 +13,7 @@ public class ViewInstallationState extends SupervisorState {
     public ViewInstallationState(Supervisor supervisor) {
         super(supervisor);
         pendingConfirmations = new ArrayList<>(supervisor.getView());
+        System.out.println("[SUPERVISOR] proposing view: " + supervisor.getView());
     }
 
     @Override

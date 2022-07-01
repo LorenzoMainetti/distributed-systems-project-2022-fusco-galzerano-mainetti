@@ -10,6 +10,7 @@ import java.io.IOException;
 public class NormalState extends SupervisorState {
     public NormalState(Supervisor supervisor) {
         super(supervisor);
+        System.out.println("[SUPERVISOR] normal state with view: " + supervisor.getView());
     }
 
     @Override
@@ -21,7 +22,7 @@ public class NormalState extends SupervisorState {
             ViewChangeMessage viewChangeMessage = new ViewChangeMessage(supervisor.getMyAddress(), supervisor.getView());
             supervisor.sendMessage(viewChangeMessage);
 
-            return new ProposeViewChangeState(supervisor);
+            return new ViewInstallationState(supervisor);
         }
 
         return this;
