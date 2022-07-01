@@ -1,8 +1,6 @@
 # Default ignored files
 /.idea/workspace.xml
 
-.idea/
-
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries

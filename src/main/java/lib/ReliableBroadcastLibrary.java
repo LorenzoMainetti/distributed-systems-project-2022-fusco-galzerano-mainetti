@@ -234,13 +234,14 @@ public class ReliableBroadcastLibrary extends Thread {
             case 'A': // ack
                 assert m instanceof AckMessage;
                 AckMessage ackMessage = (AckMessage) m;
-                // TODO check if state==NORMAL is needed
-                if (ackMessage.getTarget().equals(myAddress) && state==BroadcastState.NORMAL) {
+                if (ackMessage.getTarget().equals(myAddress)) {
                     TextMessage t = sentUnstableMessages.get(ackMessage.getSequenceNumber());
-                    t.incrementAckCount();
-                    if (t.getAckCount() == view.size() - 1) { // all other processes in the view acknowledge
-                        sentUnstableMessages.remove(ackMessage.getSequenceNumber());
-                        System.out.println("\t[ACK] message number " + t.getSequenceNumber() + " completely acknowledged (" + sentUnstableMessages.size() + " left)");
+                    if (t != null) {
+                        t.incrementAckCount();
+                        if (t.getAckCount() == view.size() - 1) { // all other processes in the view acknowledge
+                            sentUnstableMessages.remove(ackMessage.getSequenceNumber());
+                            System.out.println("\t[ACK] message number " + t.getSequenceNumber() + " completely acknowledged (" + sentUnstableMessages.size() + " left)");
+                        }
                     }
                 }
                 break;
