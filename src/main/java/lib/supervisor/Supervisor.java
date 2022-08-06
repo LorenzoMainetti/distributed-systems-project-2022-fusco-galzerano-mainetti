@@ -32,8 +32,6 @@ public class Supervisor implements Receiver {
     private final MessageReceiver messageReceiver;
     private final ProcessTimer processTimer;
 
-
-
     public static void main(String[] args) throws Exception {
         Supervisor supervisor = new Supervisor("224.0.0.1", 8888);
         supervisor.runStateMachine();
@@ -109,5 +107,11 @@ public class Supervisor implements Receiver {
 
     public void putMessage(Message m) throws InterruptedException {
         messageQueue.put(m);
+    }
+
+    public void publishDisconnected(List<InetAddress> disconnected) throws IOException {
+        if (!disconnected.isEmpty()) {
+            state = state.processDisconnect(disconnected);
+        }
     }
 }

@@ -14,8 +14,6 @@ public class ProposeViewChangeState extends SupervisorState {
     public ProposeViewChangeState(Supervisor supervisor) throws IOException {
         super(supervisor);
         pendingConfirmations = new ArrayList<>(supervisor.getView());
-        ViewChangeMessage viewChangeMessage = new ViewChangeMessage(supervisor.getMyAddress(), supervisor.getView());
-        supervisor.sendMessage(viewChangeMessage);
         System.out.println("[SUPERVISOR] proposing view: " + supervisor.getView());
     }
 

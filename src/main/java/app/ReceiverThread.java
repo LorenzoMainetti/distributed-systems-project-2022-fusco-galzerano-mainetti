@@ -1,11 +1,7 @@
 package app;
 
 import lib.client.ReliableBroadcastLibrary;
-import lib.client.Settings;
 import lib.message.TextMessage;
-
-import java.io.IOException;
-import java.net.InetAddress;
 
 public class ReceiverThread extends Thread {
     private final ReliableBroadcastLibrary library;
