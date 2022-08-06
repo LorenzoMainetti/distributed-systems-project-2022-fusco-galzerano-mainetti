@@ -1,4 +1,4 @@
-package lib;
+package lib.client;
 
 public class Settings {
     public static final boolean T_FAULT = true;

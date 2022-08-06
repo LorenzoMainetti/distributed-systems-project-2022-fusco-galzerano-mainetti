@@ -1,6 +1,7 @@
 package lib.supervisor;
 
-import lib.BroadcastState;
+import lib.MessageReceiver;
+import lib.Receiver;
 import lib.message.Message;
 import lib.message.PingMessage;
 import lib.supervisor.state.NormalState;
@@ -10,7 +11,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Supervisor {
+public class Supervisor implements Receiver {
     private SupervisorState state;
     private final InetAddress targetAddress;
     private final InetAddress myAddress;
@@ -82,7 +82,7 @@ public class Supervisor {
     }
 
     private boolean isImportantMessage(char type) {
-        return type == 'J' || type == 'F';
+        return false;
     }
 
     private void handlePing(PingMessage m) {

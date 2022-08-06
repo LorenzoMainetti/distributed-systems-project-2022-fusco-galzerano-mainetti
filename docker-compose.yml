@@ -1,15 +1,23 @@
 version: '3.9'
 
 services:
-  node:
+  node-1:
+    container_name: node-1
     build:
       context: ./
       dockerfile: NodeDockerfile
-    deploy:
-      replicas: 3
+  node-2:
+    container_name: node-2
+    build:
+      context: ./
+      dockerfile: NodeDockerfile
+  node-3:
+    container_name: node-3
+    build:
+      context: ./
+      dockerfile: NodeDockerfile
   supervisor:
+    container_name: supervisor
     build:
       context: ./
       dockerfile: SupervisorDockerfile
-    deploy:
-      replicas: 1

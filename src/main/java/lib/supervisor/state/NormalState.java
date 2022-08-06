@@ -19,10 +19,7 @@ public class NormalState extends SupervisorState {
             JoinMessage joinMessage = (JoinMessage) m;
             supervisor.getView().add(joinMessage.getSource());
 
-            ViewChangeMessage viewChangeMessage = new ViewChangeMessage(supervisor.getMyAddress(), supervisor.getView());
-            supervisor.sendMessage(viewChangeMessage);
-
-            return new ViewInstallationState(supervisor);
+            return new ProposeViewChangeState(supervisor);
         }
 
         return this;

@@ -1,7 +1,5 @@
 package lib.supervisor;
 
-import lib.ReliableBroadcastLibrary;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -38,8 +36,8 @@ public class ProcessTimer extends Thread {
 
                     if (timerValue > TIME_EXPIRED_MILLIS) {
                         isConnected = false;
-                        toRemove.add(source);
-                        System.out.println("[WATCHDOG] timer for " + source + " has expired");
+                        //toRemove.add(source);
+                        //System.out.println("[WATCHDOG] timer for " + source + " has expired");
                     } else {
                         supervisor.getViewTimers().put(source, timerValue + TIME_SLEEP);
                     }

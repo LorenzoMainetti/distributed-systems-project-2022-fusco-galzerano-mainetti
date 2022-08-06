@@ -1,5 +1,6 @@
 package lib.supervisor.state;
 
+import lib.message.BeginMessage;
 import lib.message.Message;
 import lib.supervisor.Supervisor;
 
@@ -10,10 +11,11 @@ import java.util.List;
 
 public class ViewInstallationState extends SupervisorState {
     private final List<InetAddress> pendingConfirmations;
-    public ViewInstallationState(Supervisor supervisor) {
+    public ViewInstallationState(Supervisor supervisor) throws IOException {
         super(supervisor);
         pendingConfirmations = new ArrayList<>(supervisor.getView());
-        System.out.println("[SUPERVISOR] proposing view: " + supervisor.getView());
+        supervisor.sendMessage(new BeginMessage(supervisor.getMyAddress()));
+        System.out.println("[SUPERVISOR] installing view: " + supervisor.getView());
     }
 
     @Override

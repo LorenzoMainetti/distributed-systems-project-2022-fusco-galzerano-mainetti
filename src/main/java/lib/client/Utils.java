@@ -1,4 +1,4 @@
-package lib;
+package lib.client;
 
 public class Utils {
     public static void sleepRandomRange(long maxMillis) {

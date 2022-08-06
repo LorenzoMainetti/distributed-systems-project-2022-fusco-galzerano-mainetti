@@ -51,6 +51,10 @@ public interface Message {
             case "F":
                 sequenceNumber = scanner.nextInt();
                 return new FlushMessage(sender, sequenceNumber);
+            case "C":
+                return new ViewChangeAcceptMessage(sender);
+            case "B":
+                return new BeginMessage(sender);
             default:
                 return new ErrorMessage(sender);
         }

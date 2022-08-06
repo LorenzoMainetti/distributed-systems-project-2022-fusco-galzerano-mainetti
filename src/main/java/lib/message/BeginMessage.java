@@ -2,16 +2,16 @@ package lib.message;
 
 import java.net.InetAddress;
 
-public class ViewChangeAcceptMessage implements Message {
+public class BeginMessage implements Message {
     private final InetAddress source;
 
-    public ViewChangeAcceptMessage(InetAddress source) {
+    public BeginMessage(InetAddress source) {
         this.source = source;
     }
 
     @Override
     public char getType() {
-        return 'C';
+        return 'B';
     }
 
     @Override
@@ -21,6 +21,6 @@ public class ViewChangeAcceptMessage implements Message {
 
     @Override
     public String getTransmissionString() {
-        return "C|";
+        return "B|";
     }
 }
