@@ -40,7 +40,6 @@ public class NormalState extends SupervisorState {
                         }
                     }
                     if (running) supervisor.publishDisconnected(disconnected);
-                    System.out.println("SLEEPSLEEPSLEEPSLEEPSLEEPSLEEP");
                     Thread.sleep(Settings.PING_PERIOD);
                 } catch (InterruptedException | IOException e) {
                     e.printStackTrace();
