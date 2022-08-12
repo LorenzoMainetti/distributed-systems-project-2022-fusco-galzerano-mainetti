@@ -2,6 +2,7 @@ package lib.client;
 
 import lib.MessageReceiver;
 import lib.Receiver;
+import lib.Settings;
 import lib.client.state.ClientState;
 import lib.client.state.DisconnectedState;
 import lib.client.state.JoiningState;
@@ -11,7 +12,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -70,6 +70,10 @@ public class ReliableBroadcastLibrary implements Receiver {
 
     public List<InetAddress> getView() {
         return view;
+    }
+
+    public List<TextMessage> getUnstableMessages() {
+        return new ArrayList<>(sentUnstableMessages.values());
     }
 
     public Message receiveMessage() throws IOException {

@@ -10,6 +10,7 @@ import lib.message.ViewChangeMessage;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class NormalState extends ClientState {
@@ -60,6 +61,13 @@ public class NormalState extends ClientState {
     @Override
     public void sendTextMessage(TextMessage m) {
         library.addUnstableMessage(m);
-        library.sendMessageHelper(m);
+        if (Settings.UNORDERED) {
+            List<TextMessage> unstableMessages = library.getUnstableMessages();
+            Collections.shuffle(unstableMessages);
+            library.sendMessageHelper(unstableMessages.get(unstableMessages.size() - 1));
+        }
+        else {
+            library.sendMessageHelper(m);
+        }
     }
 }

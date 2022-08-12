@@ -3,6 +3,7 @@ package lib;
 public class Settings {
     public static final boolean T_FAULT = true;
     public static final boolean P_FAULT = true;
+    public static final boolean UNORDERED = true;
 
 
     public static final long SETUP_TIME = 10000;
