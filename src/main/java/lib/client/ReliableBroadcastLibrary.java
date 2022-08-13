@@ -147,6 +147,12 @@ public class ReliableBroadcastLibrary implements Receiver {
             case 'T':
                 if(view.contains(m.getSource())) {
                     TextMessage textMessage = (TextMessage) m;
+                    if (Settings.CAN_DROP_TEXT_MESSAGE) {
+                        if (Math.random() < Settings.DROP_TEXT_MESSAGE_RATIO) {
+                            System.out.println("[DROP] SIMULATING MESSAGE NOT RECEIVED (" + textMessage.getMessage() + " from " + m.getSource() + ")");
+                            return;
+                        }
+                    }
                     receivedList.add(textMessage);
                     int expected = messageSeqMap.get(textMessage.getSource());
                     if (textMessage.getSequenceNumber() > expected) {

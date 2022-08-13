@@ -12,10 +12,11 @@ public class SenderThread extends Thread {
 
     @Override
     public void run() {
+        int i = 0;
         try {
             while (true) {
                 synchronized (library) {
-                    library.sendTextMessage("hello");
+                    library.sendTextMessage(String.valueOf(i++));
                 }
                 Thread.sleep(Settings.T_FREQUENCY);
             }

@@ -11,4 +11,7 @@ public class Settings {
 
     public static final long PING_PERIOD = 1000;
     public static final long PING_TIMEOUT = 5000;
+
+    public static final boolean CAN_DROP_TEXT_MESSAGE = true;
+    public static final double DROP_TEXT_MESSAGE_RATIO = 0.2;
 }
