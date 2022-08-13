@@ -1,0 +1,39 @@
+#1 [distributed-systems-project-2022-fusco-galzerano-mainetti_supervisor internal] load build definition from SupervisorDockerfile
+#1 transferring dockerfile: 197B done
+#1 DONE 0.0s
+
+#2 [distributed-systems-project-2022-fusco-galzerano-mainetti_supervisor internal] load .dockerignore
+#2 DONE 0.0s
+
+#3 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 internal] load build definition from NodeDockerfile
+#3 transferring dockerfile: 36B done
+#3 DONE 0.1s
+
+#4 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-1 internal] load build definition from NodeDockerfile
+#4 transferring dockerfile: 36B done
+#4 DONE 0.0s
+
+#5 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 internal] load build definition from NodeDockerfile
+#5 transferring dockerfile: 174B done
+#5 DONE 0.1s
+
+#6 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 internal] load .dockerignore
+#6 ...
+
+#2 [distributed-systems-project-2022-fusco-galzerano-mainetti_supervisor internal] load .dockerignore
+#2 transferring context: 2B done
+#2 DONE 0.1s
+
+#7 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-1 internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.2s
+
+#6 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 internal] load .dockerignore
+#6 transferring context: 2B done
+#6 DONE 0.1s
+
+#8 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 internal] load .dockerignore
+#8 transferring context: 2B done
+#8 DONE 0.2s
+
+#9 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 internal] load metadata for docker.io/library/maven:latest
