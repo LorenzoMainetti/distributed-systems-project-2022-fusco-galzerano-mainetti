@@ -17,6 +17,13 @@ public class NormalState extends SupervisorState {
     private Boolean running;
     private Thread pingingThread;
 
+    /**
+     * Constructor
+     * @param supervisor is the process that will be the supervisor
+     * This function includes the actions of the supervisor which after adding the
+     * process to the {@Link viewTimer} and the starts the thread that will manage the
+     * ping messages and processes disconnections.
+     */
     public NormalState(Supervisor supervisor) {
         super(supervisor);
         System.out.println("[SUPERVISOR] normal state with view: " + supervisor.getView());
@@ -54,6 +61,11 @@ public class NormalState extends SupervisorState {
         running = false;
     }
 
+    /**
+     * This function has to start the view change process through {@Link viewChangeMessage}
+     * when a message of type join is received.
+     * @param m message to be processed
+     */
     @Override
     public SupervisorState processMessage(Message m) throws IOException {
         if (m.getType() == 'J') {
@@ -68,7 +80,11 @@ public class NormalState extends SupervisorState {
 
         return this;
     }
-
+    /**
+     * This function removes all processes that are disconencted from the view
+     * and starts the view change process.
+     * @param disconnectList is the list of process that has to be disconnected
+     */
     @Override
     public SupervisorState processDisconnect(List<InetAddress> disconnectList) throws IOException {
         System.out.println("[SUPERVISOR] disconnecting: " + disconnectList);

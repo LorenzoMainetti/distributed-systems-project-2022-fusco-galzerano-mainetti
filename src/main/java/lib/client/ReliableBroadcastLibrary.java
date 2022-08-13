@@ -76,6 +76,9 @@ public class ReliableBroadcastLibrary implements Receiver {
         return new ArrayList<>(sentUnstableMessages.values());
     }
 
+    /**
+     * This function creates a datagramPacket to be received through the {@Link ioSocket}
+     */
     public Message receiveMessage() throws IOException {
         DatagramPacket packet;
         do {

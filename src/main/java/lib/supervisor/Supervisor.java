@@ -37,6 +37,12 @@ public class Supervisor implements Receiver {
         supervisor.runStateMachine();
     }
 
+    /**
+     * Constructor
+     * @param address is the address of the process
+     * @param port is the input port for the process
+     * @throws IOException
+     */
     public Supervisor(String address, int port) throws IOException {
         targetAddress = InetAddress.getByName(address);
         this.port = port;
@@ -53,6 +59,10 @@ public class Supervisor implements Receiver {
         processTimer = new ProcessTimer(this);
     }
 
+    /**
+     * This function creates a datagramPacket to be received through the {@Link ioSocket}
+     * @throws IOException
+     */
     public Message receiveMessage() throws IOException {
         DatagramPacket packet;
         do {
@@ -64,6 +74,12 @@ public class Supervisor implements Receiver {
         return Message.parseString(new String(packet.getData()), packet.getAddress());
     }
 
+    /**
+     * This function contains the logic of the Supervisor which consists in starting {@Link messageReceiver}
+     * and {@Link processTimer} to then handle messages through {@Link messageQueue}
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void runStateMachine() throws IOException, InterruptedException {
         messageReceiver.start();
         processTimer.start();
@@ -83,10 +99,20 @@ public class Supervisor implements Receiver {
         return false;
     }
 
+    /**
+     * This function handles the pings messages by restarting the timer in
+     * {@Link viewTimers} for the process who sent the message and is in the view
+     * @param m ping message received
+     */
     private void handlePing(PingMessage m) {
         viewTimers.put(m.getSource(), 0);
     }
 
+    /**
+     * This function creates a datagramPacket to be sent through the {@Link ioSocket}
+     * @param m message to be sent
+     * @throws IOException
+     */
     public void sendMessage(Message m) throws IOException {
         byte[] buf = m.getTransmissionString().getBytes();
         DatagramPacket packet = new DatagramPacket(buf, buf.length, targetAddress, port);
