@@ -18,4 +18,8 @@ public abstract class ClientState {
     public void sendTextMessage(TextMessage m) {
         library.addToSend(m);
     }
+
+    public void close() {
+
+    }
 }

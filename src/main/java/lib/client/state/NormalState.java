@@ -70,4 +70,9 @@ public class NormalState extends ClientState {
             library.sendMessageHelper(m);
         }
     }
+
+    @Override
+    public void close() {
+        running = false;
+    }
 }
