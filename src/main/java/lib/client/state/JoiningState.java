@@ -46,4 +46,9 @@ public class JoiningState extends ClientState {
         }
         return this;
     }
+
+    @Override
+    public void close() {
+        running = false;
+    }
 }

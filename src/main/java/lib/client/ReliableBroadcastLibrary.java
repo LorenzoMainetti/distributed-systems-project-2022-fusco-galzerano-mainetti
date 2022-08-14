@@ -133,6 +133,7 @@ public class ReliableBroadcastLibrary implements Receiver {
         System.out.println("[DISCONNECT]");
         sendMessageHelper(new LeaveMessage(targetAddress, sequenceNumber));
         state.close();
+        messageReceiver.close();
         state = new DisconnectedState(this);
         //TODO System.exit(0) is done by the app
     }
@@ -188,6 +189,7 @@ public class ReliableBroadcastLibrary implements Receiver {
                 break;
             default:
                 synchronized (this) {
+                    state.close();
                     state = state.processMessage(m);
                 }
                 break;

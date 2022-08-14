@@ -24,4 +24,8 @@ public class MessageReceiver extends Thread {
             }
         }
     }
+
+    public void close(){
+        System.exit(0);
+    }
 }
