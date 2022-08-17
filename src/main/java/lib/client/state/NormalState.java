@@ -15,7 +15,7 @@ import java.util.List;
 
 public class NormalState extends ClientState {
     private Thread pingingThread;
-    private boolean running;
+    public volatile boolean running;
     private final List<InetAddress> view;
 
     public NormalState(ReliableBroadcastLibrary library, List<InetAddress> view) {
@@ -25,20 +25,7 @@ public class NormalState extends ClientState {
         System.out.println("[NORMAL] new view is " + view);
         running = true;
 
-        pingingThread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while (running) {
-                        library.sendMessageHelper(new PingMessage(library.getAddress()));
-                        Thread.sleep(Settings.PING_PERIOD);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
+        pingingThread = new PingingThread(this);
         pingingThread.start();
     }
 
@@ -46,7 +33,7 @@ public class NormalState extends ClientState {
     public ClientState processMessage(Message m) throws IOException {
         switch (m.getType()) {
             case 'V':
-                running = false;
+                close();
                 ViewChangeMessage viewChangeMessage = (ViewChangeMessage) m;
                 if (!viewChangeMessage.getView().contains(library.getAddress())) {
                     System.out.println("[VIEWCHANGE] not in viewchange! Reverting to joining state");
@@ -62,9 +49,13 @@ public class NormalState extends ClientState {
     public void sendTextMessage(TextMessage m) {
         library.addUnstableMessage(m);
         if (Settings.UNORDERED) {
-            List<TextMessage> unstableMessages = library.getUnstableMessages();
-            Collections.shuffle(unstableMessages);
-            library.sendMessageHelper(unstableMessages.get(unstableMessages.size() - 1));
+            Settings.unorderedMessagesList.add(m);
+            if (Math.random() < Settings.UNORDERED_CHANCE) { // if chance then send accumulated message in reverse, else only accumulate
+                if (Settings.unorderedMessagesList.size() > 1) System.out.println("[UNORDERED] SENDING " + Settings.unorderedMessagesList.size() + " MESSAGES IN REVERSE!");
+                while (!Settings.unorderedMessagesList.isEmpty()) {
+                    library.sendMessageHelper(Settings.unorderedMessagesList.remove(Settings.unorderedMessagesList.size() - 1));
+                }
+            }
         }
         else {
             library.sendMessageHelper(m);
@@ -74,5 +65,30 @@ public class NormalState extends ClientState {
     @Override
     public void close() {
         running = false;
+        try {
+            pingingThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class PingingThread extends Thread {
+    private final NormalState state;
+
+    public PingingThread(NormalState state) {
+        this.state = state;
+    }
+
+    @Override
+    public void run() {
+        try {
+            while (state.running) {
+                state.library.sendMessageHelper(new PingMessage(state.library.getAddress()));
+                Thread.sleep(Settings.PING_PERIOD);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

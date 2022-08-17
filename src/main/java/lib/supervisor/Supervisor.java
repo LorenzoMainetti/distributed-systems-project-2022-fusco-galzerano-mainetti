@@ -30,7 +30,7 @@ public class Supervisor implements Receiver {
     private final Map<InetAddress, Integer> viewTimers;
 
     private final MessageReceiver messageReceiver;
-    private final ProcessTimer processTimer;
+    //private final ProcessTimer processTimer;
 
     public static void main(String[] args) throws Exception {
         Supervisor supervisor = new Supervisor("224.0.0.1", 8888);
@@ -56,7 +56,7 @@ public class Supervisor implements Receiver {
 
         state = new NormalState(this);
         messageReceiver = new MessageReceiver(this);
-        processTimer = new ProcessTimer(this);
+        //processTimer = new ProcessTimer(this);
     }
 
     /**
@@ -82,7 +82,7 @@ public class Supervisor implements Receiver {
      */
     public void runStateMachine() throws IOException, InterruptedException {
         messageReceiver.start();
-        processTimer.start();
+        //processTimer.start();
         while (true) {
             Message m = messageQueue.take();
             if (isImportantMessage(m.getType()))

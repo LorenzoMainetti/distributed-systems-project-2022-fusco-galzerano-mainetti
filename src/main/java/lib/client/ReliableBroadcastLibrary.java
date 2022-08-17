@@ -143,7 +143,7 @@ public class ReliableBroadcastLibrary implements Receiver {
      * @param m is the received message that has to be processed
      */
     public void putMessage(Message m) throws InterruptedException, IOException {
-        if (m.getType() != 'P' && m.getType() != 'E' && m.getType() != 'J')
+        if (m.getType() != 'P' && m.getType() != 'E' && m.getType() != 'J' && m.getType() != 'A')
             System.out.println("[" + state.getClass().getSimpleName() + "] processing " + m.getType() + " message from " + m.getSource());
         switch (m.getType()) {
             case 'T':
@@ -188,10 +188,7 @@ public class ReliableBroadcastLibrary implements Receiver {
                     sendMessageHelper(sentUnstableMessages.get(nackMessage.getRequestedMessage()));
                 break;
             default:
-                synchronized (this) {
-                    state.close();
-                    state = state.processMessage(m);
-                }
+                state = state.processMessage(m);
                 break;
         }
     }

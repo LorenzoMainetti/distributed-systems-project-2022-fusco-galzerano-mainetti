@@ -8,7 +8,7 @@ import lib.supervisor.Supervisor;
 import java.io.IOException;
 
 public abstract class ClientState {
-    protected final ReliableBroadcastLibrary library;
+    public final ReliableBroadcastLibrary library;
 
     public ClientState(ReliableBroadcastLibrary library) {
         this.library = library;
