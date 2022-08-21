@@ -3,7 +3,6 @@ package lib.supervisor.state;
 import lib.Settings;
 import lib.message.JoinMessage;
 import lib.message.Message;
-import lib.message.PingMessage;
 import lib.message.ViewChangeMessage;
 import lib.supervisor.Supervisor;
 
@@ -81,7 +80,7 @@ public class NormalState extends SupervisorState {
         return this;
     }
     /**
-     * This function removes all processes that are disconencted from the view
+     * This function removes all processes that are disconnected from the view
      * and starts the view change process.
      * @param disconnectList is the list of process that has to be disconnected
      */
