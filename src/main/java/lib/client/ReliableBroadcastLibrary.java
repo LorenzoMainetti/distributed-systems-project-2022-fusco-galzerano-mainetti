@@ -68,6 +68,10 @@ public class ReliableBroadcastLibrary implements Receiver {
         messageReceiver.start();
     }
 
+    public int getId() {
+        return Integer.parseInt(myAddress.toString().split("\\.")[3]);
+    }
+
     public List<InetAddress> getView() {
         return view;
     }

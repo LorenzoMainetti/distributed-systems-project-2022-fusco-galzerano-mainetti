@@ -8,20 +8,13 @@ import java.net.InetAddress;
 
 public class Main {
     public static void main (String[] args) {
-        long waitTime = (long)(Math.random() * Settings.SETUP_TIME);
-
-        System.out.println("Hello world! I'm waiting for " + waitTime + " milliseconds");
-        try {
-            Thread.sleep(waitTime);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
 
         try {
 
-            System.out.println("localhost: " + InetAddress.getLocalHost());
             ReliableBroadcastLibrary lib = new ReliableBroadcastLibrary("224.0.0.1", 8888);
+            System.out.println("Hello world! I'm waiting for " + Settings.INITIAL_TIMEOUTS.get(lib.getId()) + " milliseconds");
+            Thread.sleep(Settings.INITIAL_TIMEOUTS.get(lib.getId()));
+            System.out.println("localhost: " + InetAddress.getLocalHost() + "; id: " + lib.getId());
 
             ReceiverThread receiverThread = new ReceiverThread(lib);
             SenderThread senderThread = new SenderThread(lib);

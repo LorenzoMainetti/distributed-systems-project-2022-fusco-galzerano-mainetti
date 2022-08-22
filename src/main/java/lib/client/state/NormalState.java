@@ -24,6 +24,7 @@ public class NormalState extends ClientState {
         library.setView(view);
         System.out.println("[NORMAL] new view is " + view);
         running = true;
+        Settings.unorderedMessagesList.clear();
 
         pingingThread = new PingingThread(this);
         pingingThread.start();

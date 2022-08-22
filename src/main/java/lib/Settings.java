@@ -3,7 +3,9 @@ package lib;
 import lib.message.TextMessage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Settings {
     public static final boolean T_FAULT = true;
@@ -22,4 +24,17 @@ public class Settings {
 
     public static final List<TextMessage> unorderedMessagesList = new ArrayList<>();
     public static final double UNORDERED_CHANCE = 0.8;
+
+    public static final Map<Integer, Integer> INITIAL_TIMEOUTS = new HashMap<>();
+    public static final Map<Integer, Integer> N_MESSAGES = new HashMap<>();
+
+    static {
+        INITIAL_TIMEOUTS.put(2, 1000);
+        INITIAL_TIMEOUTS.put(3, 10000);
+        INITIAL_TIMEOUTS.put(4, 20000);
+
+        N_MESSAGES.put(2, 20);
+        N_MESSAGES.put(3, 15);
+        N_MESSAGES.put(4, 10);
+    }
 }

@@ -13,7 +13,7 @@ public class SenderThread extends Thread {
 
     @Override
     public void run(){
-        int i = 0, j = (int)(Math.random() * 10) + 10;
+        int i = 0, j = Settings.N_MESSAGES.get(library.getId());
         System.out.println("[INFO] will leave after " + j + " messages");
         try {
             while (true) {
