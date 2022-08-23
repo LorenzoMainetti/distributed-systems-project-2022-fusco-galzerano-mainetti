@@ -12,7 +12,7 @@ public class Main {
         try {
 
             ReliableBroadcastLibrary lib = new ReliableBroadcastLibrary("224.0.0.1", 8888);
-            System.out.println("Hello world! I'm waiting for " + Settings.INITIAL_TIMEOUTS.get(lib.getId()) + " milliseconds");
+            System.out.println("Hello world! I am " + lib.getId() + " and I am waiting for " + Settings.INITIAL_TIMEOUTS.get(lib.getId()) + " milliseconds");
             Thread.sleep(Settings.INITIAL_TIMEOUTS.get(lib.getId()));
             System.out.println("localhost: " + InetAddress.getLocalHost() + "; id: " + lib.getId());
 

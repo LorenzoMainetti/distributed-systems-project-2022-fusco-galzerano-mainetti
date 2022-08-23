@@ -12,12 +12,28 @@ import java.util.List;
 public class ViewChangeState extends ClientState {
     private final List<InetAddress> pendingView;
     private final List<InetAddress> view;
+    private volatile boolean loop;
+    private final Thread flushingThread;
 
     public ViewChangeState(ReliableBroadcastLibrary library, List<InetAddress> view) {
         super(library);
         this.pendingView = new ArrayList<>(view);
         pendingView.remove(library.getAddress());
         this.view = new ArrayList<>(view);
+
+        loop = true;
+        flushingThread = new Thread(() -> {
+            while (loop) {
+                try {
+                    library.sendMessageHelper(new FlushMessage(library.getAddress(), library.getSequenceNumber()));
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        flushingThread.start();
     }
 
     @Override
@@ -30,6 +46,12 @@ public class ViewChangeState extends ClientState {
             if (pendingView.isEmpty()) {
                 library.sendAllPending();
                 library.deliverAll();
+                loop = false;
+                try {
+                    flushingThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 return new NormalState(library, view);
             }
         }
