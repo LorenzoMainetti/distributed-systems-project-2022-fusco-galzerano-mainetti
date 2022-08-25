@@ -6,6 +6,8 @@ import lib.message.Message;
 import lib.message.ViewChangeMessage;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.util.List;
 
 public class JoiningState extends ClientState {
     private boolean running;
@@ -41,7 +43,14 @@ public class JoiningState extends ClientState {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                return new AwaitBeginState(library, viewChangeMessage.getView());
+                System.out.println("[VIEWCHANGE] beginning");
+                library.doFlush();
+                List<InetAddress> view = viewChangeMessage.getView();
+                if (view.size() <= 1) {
+                    return new NormalState(library, view);
+                } else {
+                    return new ViewChangeState(library, view);
+                }
             }
         }
         return this;

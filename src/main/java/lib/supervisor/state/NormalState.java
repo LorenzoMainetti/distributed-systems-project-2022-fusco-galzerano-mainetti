@@ -74,7 +74,7 @@ public class NormalState extends SupervisorState {
             stopPingingThread();
             ViewChangeMessage viewChangeMessage = new ViewChangeMessage(supervisor.getMyAddress(), supervisor.getView());
             supervisor.sendMessage(viewChangeMessage);
-            return new ProposeViewChangeState(supervisor);
+            return new ViewInstallationState(supervisor);
         }
 
         return this;
@@ -95,7 +95,7 @@ public class NormalState extends SupervisorState {
         if (supervisor.getView().isEmpty()) {
             return new NormalState(supervisor);
         } else {
-            return new ProposeViewChangeState(supervisor);
+            return new ViewInstallationState(supervisor);
         }
     }
 }

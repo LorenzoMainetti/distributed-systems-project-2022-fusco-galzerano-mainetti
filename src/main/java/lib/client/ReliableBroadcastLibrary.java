@@ -189,7 +189,8 @@ public class ReliableBroadcastLibrary implements Receiver {
             case 'N':
                 NackMessage nackMessage = (NackMessage) m;
                 if (myAddress.equals(nackMessage.getTargetId()))
-                    sendMessageHelper(sentUnstableMessages.get(nackMessage.getRequestedMessage()));
+                    if (sentUnstableMessages.containsKey(nackMessage.getRequestedMessage()))
+                        sendMessageHelper(sentUnstableMessages.get(nackMessage.getRequestedMessage()));
                 break;
             default:
                 state = state.processMessage(m);

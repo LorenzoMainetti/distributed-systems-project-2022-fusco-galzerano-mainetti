@@ -40,7 +40,13 @@ public class NormalState extends ClientState {
                     System.out.println("[VIEWCHANGE] not in viewchange! Reverting to joining state");
                     return new JoiningState(library);
                 } else {
-                    return new AwaitBeginState(library, viewChangeMessage.getView());
+                    library.doFlush();
+                    List<InetAddress> newView = viewChangeMessage.getView();
+                    if (newView.size() <= 1) {
+                        return new NormalState(library, newView);
+                    } else {
+                        return new ViewChangeState(library, newView);
+                    }
                 }
         }
         return this;

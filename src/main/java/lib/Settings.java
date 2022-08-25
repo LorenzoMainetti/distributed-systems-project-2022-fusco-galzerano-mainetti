@@ -32,9 +32,11 @@ public class Settings {
         INITIAL_TIMEOUTS.put(2, 1000);
         INITIAL_TIMEOUTS.put(3, 10000);
         INITIAL_TIMEOUTS.put(4, 20000);
+        INITIAL_TIMEOUTS.put(5, 30000);
 
         N_MESSAGES.put(2, 20);
         N_MESSAGES.put(3, 15);
         N_MESSAGES.put(4, 10);
+        N_MESSAGES.put(5, 10);
     }
 }

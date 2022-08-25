@@ -14,7 +14,7 @@ public class ViewInstallationState extends SupervisorState {
     public ViewInstallationState(Supervisor supervisor) throws IOException {
         super(supervisor);
         pendingConfirmations = new ArrayList<>(supervisor.getView());
-        supervisor.sendMessage(new BeginMessage(supervisor.getMyAddress()));
+        //supervisor.sendMessage(new BeginMessage(supervisor.getMyAddress()));
         System.out.println("[SUPERVISOR] installing view: " + supervisor.getView());
     }
 
