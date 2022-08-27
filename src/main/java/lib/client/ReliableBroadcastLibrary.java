@@ -1,5 +1,6 @@
 package lib.client;
 
+import lib.utils.Pair;
 import lib.MessageReceiver;
 import lib.Receiver;
 import lib.Settings;
@@ -32,6 +33,7 @@ public class ReliableBroadcastLibrary implements Receiver {
     private final List<TextMessage> receivedList;
     private final Queue<TextMessage> toSend;
     private final Map<Integer, TextMessage> sentUnstableMessages;
+    private final Map<InetAddress, Map<Integer, Pair<List<InetAddress>, TextMessage>>> receivedUnstableMessages;
 
     private ClientState state;
     private List<InetAddress> partialViewFlushAwaitList;
@@ -57,6 +59,7 @@ public class ReliableBroadcastLibrary implements Receiver {
         messageSeqMap = new HashMap<>();
         receivedList = new LinkedList<>();
         sentUnstableMessages = new HashMap<>();
+        receivedUnstableMessages = new HashMap<>();
         deliveredQueue = new LinkedBlockingQueue<>();
         toSend = new LinkedList<>();
         view = new ArrayList<>();
@@ -74,6 +77,10 @@ public class ReliableBroadcastLibrary implements Receiver {
 
     public List<InetAddress> getView() {
         return view;
+    }
+
+    public Map<InetAddress, Map<Integer, Pair<List<InetAddress>, TextMessage>>> getReceivedUnstableMessages() {
+        return receivedUnstableMessages;
     }
 
     public List<TextMessage> getUnstableMessages() {
@@ -178,19 +185,48 @@ public class ReliableBroadcastLibrary implements Receiver {
                 if (ackMessage.getTarget().equals(myAddress)) {
                     TextMessage t = sentUnstableMessages.get(ackMessage.getSequenceNumber());
                     if (t != null) {
-                        t.incrementAckCount();
-                        if (t.getAckCount() == view.size() - 1) { // all other processes in the view acknowledge
+                        List<InetAddress> l = t.getAckList();
+                        l.remove(ackMessage.getSource());
+                        if (l.isEmpty()) { // all other processes in the view acknowledge
                             sentUnstableMessages.remove(ackMessage.getSequenceNumber());
                             System.out.println("\t[ACK] message number " + t.getSequenceNumber() + " completely acknowledged (" + sentUnstableMessages.size() + " left)");
                         }
+                    }
+                } else {
+                    // case of stabilizing received messages
+                    Map<Integer, Pair<List<InetAddress>, TextMessage>> map = receivedUnstableMessages.get(ackMessage.getTarget());
+                    if (map == null) break;
+                    Pair<List<InetAddress>, TextMessage> pair = map.get(ackMessage.getSequenceNumber());
+                    if (pair == null) break;
+                    pair.fst.remove(ackMessage.getSource());
+                    if (pair.fst.isEmpty()) {
+                        System.out.println("\t[ACK] message number " + pair.snd.getSequenceNumber() + " from " + pair.snd.getSource() +  " completely acknowledged and ready to deliver!");
+                        map.remove(ackMessage.getSequenceNumber());
+                        if (!map.keySet().isEmpty()) {
+                            List<Integer> missing = new ArrayList<>(map.keySet());
+                            Collections.sort(missing);
+                            for (int i : missing) {
+                                if (i < pair.snd.getSequenceNumber()) {
+                                    Pair<List<InetAddress>, TextMessage> otherPair = map.get(i);
+                                    System.out.println("\t\t[ACK] assuming delivery of " + i);
+                                    map.remove(i);
+                                    deliveredQueue.put(otherPair.snd);
+                                }
+                            }
+                        }
+                        deliveredQueue.put(pair.snd);
                     }
                 }
                 break;
             case 'N':
                 NackMessage nackMessage = (NackMessage) m;
-                if (myAddress.equals(nackMessage.getTargetId()))
+                System.out.println("[NACK] " + nackMessage.getRequestedMessage());
+                if (myAddress.equals(nackMessage.getTargetId())) {
                     if (sentUnstableMessages.containsKey(nackMessage.getRequestedMessage()))
                         sendMessageHelper(sentUnstableMessages.get(nackMessage.getRequestedMessage()));
+                    else
+                        System.out.println("[NACK] ERROR " + nackMessage.getRequestedMessage());
+                }
                 break;
             default:
                 state = state.processMessage(m);
@@ -241,13 +277,31 @@ public class ReliableBroadcastLibrary implements Receiver {
                 int expected = messageSeqMap.get(m.getSource());
                 if (m.getSequenceNumber() == expected) {
                     messageSeqMap.put(m.getSource(), expected + 1);
-                    try {
-                        deliveredQueue.put(m);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException();
+                    if (view.size() > 2) {
+                        Map<Integer, Pair<List<InetAddress>, TextMessage>> map = receivedUnstableMessages.get(m.getSource());
+                        if (map == null) map = new HashMap<>();
+                        Pair<List<InetAddress>, TextMessage> pair = new Pair<>(new ArrayList<>(view), m);
+                        // acknowledgement required by all other processes in the view who are not the sender
+                        pair.fst.remove(myAddress);
+                        pair.fst.remove(m.getSource());
+
+                        map.put(m.getSequenceNumber(), pair);
+                        receivedUnstableMessages.put(m.getSource(), map);
+                    } else {
+                        try {
+                            deliveredQueue.put(m);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                     AckMessage ackMessage = new AckMessage(targetAddress, m.getSource(), m.getSequenceNumber());
                     sendMessageHelper(ackMessage);
+                    for (InetAddress addr : receivedUnstableMessages.keySet()) {
+                        Map<Integer, Pair<List<InetAddress>, TextMessage>> map = receivedUnstableMessages.get(addr);
+                        for (int num : map.keySet()) {
+                            sendMessageHelper(new AckMessage(targetAddress, addr, num));
+                        }
+                    }
                     redo = true;
                 } else if (m.getSequenceNumber() < expected) {
                     toRemove.add(m);

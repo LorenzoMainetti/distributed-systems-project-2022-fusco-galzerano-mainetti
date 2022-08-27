@@ -20,10 +20,10 @@ public class Settings {
     public static final long PING_TIMEOUT = 5000;
 
     public static final boolean CAN_DROP_TEXT_MESSAGE = true;
-    public static final double DROP_TEXT_MESSAGE_RATIO = 0.2;
+    public static final double DROP_TEXT_MESSAGE_RATIO = 0.1;
 
     public static final List<TextMessage> unorderedMessagesList = new ArrayList<>();
-    public static final double UNORDERED_CHANCE = 0.8;
+    public static final double UNORDERED_CHANCE = 0.9;
 
     public static final Map<Integer, Integer> INITIAL_TIMEOUTS = new HashMap<>();
     public static final Map<Integer, Integer> N_MESSAGES = new HashMap<>();

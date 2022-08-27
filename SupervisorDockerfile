@@ -2,6 +2,6 @@ FROM maven
 
 COPY .. ./
 
-RUN mvn package
+RUN mvn -q package
 
 ENTRYPOINT ["java", "-cp", "target/reliable_broadcast-1.0-SNAPSHOT.jar", "lib.supervisor.Supervisor"]

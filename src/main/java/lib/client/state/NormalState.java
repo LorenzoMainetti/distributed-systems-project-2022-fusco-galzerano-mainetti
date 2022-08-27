@@ -9,6 +9,7 @@ import lib.message.ViewChangeMessage;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,6 +37,7 @@ public class NormalState extends ClientState {
             case 'V':
                 close();
                 ViewChangeMessage viewChangeMessage = (ViewChangeMessage) m;
+                library.getReceivedUnstableMessages().clear();
                 if (!viewChangeMessage.getView().contains(library.getAddress())) {
                     System.out.println("[VIEWCHANGE] not in viewchange! Reverting to joining state");
                     return new JoiningState(library);
@@ -54,6 +56,13 @@ public class NormalState extends ClientState {
 
     @Override
     public void sendTextMessage(TextMessage m) {
+        List<InetAddress> ackList = new ArrayList<>(view);
+        try {
+            ackList.remove(InetAddress.getLocalHost());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        m.setAckList(ackList);
         library.addUnstableMessage(m);
         if (Settings.UNORDERED) {
             Settings.unorderedMessagesList.add(m);

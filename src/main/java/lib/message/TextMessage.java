@@ -1,18 +1,20 @@
 package lib.message;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TextMessage implements Message {
     private final String message;
     private final InetAddress source;
     private final int sequenceNumber;
-    private int ackCount;
+    private List<InetAddress> ackList;
 
     public TextMessage(InetAddress source, String message, int sequenceNumber) {
         this.message = message;
         this.source = source;
         this.sequenceNumber = sequenceNumber;
-        ackCount = 0;
+        ackList = new ArrayList<>();
     }
 
     @Override
@@ -37,7 +39,11 @@ public class TextMessage implements Message {
         return sequenceNumber;
     }
 
-    public void incrementAckCount() { ackCount++; }
+    public List<InetAddress> getAckList() {
+        return ackList;
+    }
 
-    public int getAckCount() { return ackCount; }
+    public void setAckList(List<InetAddress> ackList) {
+        this.ackList = new ArrayList<>(ackList);
+    }
 }
