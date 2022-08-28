@@ -71,7 +71,7 @@ public class ReliableBroadcastLibrary implements Receiver {
         messageReceiver.start();
     }
 
-    public int getId() {
+    public static int getId() {
         return Integer.parseInt(System.getenv("NODE"));
     }
 
