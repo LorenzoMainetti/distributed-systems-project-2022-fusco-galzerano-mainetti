@@ -25,7 +25,7 @@ public class ViewChangeState extends ClientState {
         flushingThread = new Thread(() -> {
             while (loop) {
                 try {
-                    library.sendMessageHelper(new FlushMessage(library.getAddress(), library.getSequenceNumber()));
+                    library.doFlush();
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

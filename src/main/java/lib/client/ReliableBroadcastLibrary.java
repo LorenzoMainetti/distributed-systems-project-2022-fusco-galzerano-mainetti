@@ -83,10 +83,6 @@ public class ReliableBroadcastLibrary implements Receiver {
         return receivedUnstableMessages;
     }
 
-    public List<TextMessage> getUnstableMessages() {
-        return new ArrayList<>(sentUnstableMessages.values());
-    }
-
     /**
      * This function creates a datagramPacket to be received through the {@Link ioSocket}
      */
@@ -250,15 +246,7 @@ public class ReliableBroadcastLibrary implements Receiver {
     }
 
     public void doFlush() {
-        Set<Integer> unstableIdsSet = sentUnstableMessages.keySet();
-        Integer[] unstableIds = unstableIdsSet.toArray(new Integer[unstableIdsSet.size()]);
-        Arrays.sort(unstableIds);
-        for (Integer i : unstableIds) {
-            sendMessageHelper(sentUnstableMessages.get(i));
-        }
-        sentUnstableMessages.clear();
-
-        sendMessageHelper(new FlushMessage(targetAddress, sequenceNumber));
+        sendMessageHelper(new FlushMessage(targetAddress, getFlushIndex()));
     }
 
     /**
@@ -329,5 +317,10 @@ public class ReliableBroadcastLibrary implements Receiver {
 
     public void setView(List<InetAddress> view) {
         this.view = new ArrayList<>(view);
+    }
+
+    public int getFlushIndex() {
+        if (sentUnstableMessages.isEmpty()) return sequenceNumber;
+        return Collections.min(sentUnstableMessages.keySet());
     }
 }

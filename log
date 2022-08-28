@@ -1,17 +1,17 @@
 #1 [distributed-systems-project-2022-fusco-galzerano-mainetti_supervisor internal] load build definition from SupervisorDockerfile
-#1 transferring dockerfile: 200B done
+#1 transferring dockerfile: 42B done
 #1 DONE 0.0s
 
-#2 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-1 internal] load build definition from NodeDockerfile
+#2 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 internal] load build definition from NodeDockerfile
 #2 transferring dockerfile: 177B done
 #2 DONE 0.1s
 
-#3 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 internal] load build definition from NodeDockerfile
-#3 transferring dockerfile: 177B done
+#3 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 internal] load .dockerignore
+#3 transferring context: 2B done
 #3 DONE 0.1s
 
-#4 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-1 internal] load .dockerignore
-#4 transferring context: 2B done
+#4 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-1 internal] load build definition from NodeDockerfile
+#4 transferring dockerfile: 177B done
 #4 DONE 0.1s
 
 #5 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 internal] load build definition from NodeDockerfile
@@ -24,742 +24,848 @@
 
 #7 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 internal] load .dockerignore
 #7 transferring context: 2B done
-#7 DONE 0.1s
+#7 DONE 0.2s
 
-#8 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 internal] load .dockerignore
+#8 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-1 internal] load .dockerignore
 #8 transferring context: 2B done
 #8 DONE 0.2s
 
-#9 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 internal] load metadata for docker.io/library/maven:latest
-#9 DONE 1.5s
+#9 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 internal] load metadata for docker.io/library/maven:latest
+#9 DONE 4.1s
 
-#10 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 internal] load build context
-#10 transferring context: 64.03kB 0.0s done
+#10 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 1/3] FROM docker.io/library/maven@sha256:34fb2f37f57320159c43e9242376bf645093fb31111a55bd436b8c19c4e5c6e4
+#10 resolve docker.io/library/maven@sha256:34fb2f37f57320159c43e9242376bf645093fb31111a55bd436b8c19c4e5c6e4 0.0s done
 #10 DONE 0.1s
 
-#11 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 1/3] FROM docker.io/library/maven@sha256:34fb2f37f57320159c43e9242376bf645093fb31111a55bd436b8c19c4e5c6e4
-#11 resolve docker.io/library/maven@sha256:34fb2f37f57320159c43e9242376bf645093fb31111a55bd436b8c19c4e5c6e4 0.0s done
+#11 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 internal] load build context
+#11 transferring context: 39.39kB 0.0s done
 #11 DONE 0.1s
 
-#12 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-1 internal] load build context
-#12 transferring context: 64.03kB 0.0s done
-#12 DONE 0.2s
+#12 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 internal] load build context
+#12 transferring context: 39.39kB 0.0s done
+#12 DONE 0.1s
 
-#13 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 internal] load build context
-#13 transferring context: 64.03kB 0.0s done
+#10 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 1/3] FROM docker.io/library/maven@sha256:34fb2f37f57320159c43e9242376bf645093fb31111a55bd436b8c19c4e5c6e4
+#10 CACHED
+
+#13 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-1 internal] load build context
+#13 transferring context: 39.39kB 0.0s done
 #13 DONE 0.1s
 
 #14 [distributed-systems-project-2022-fusco-galzerano-mainetti_supervisor internal] load build context
-#14 transferring context: 64.03kB 0.0s done
-#14 DONE 0.1s
+#14 transferring context: 39.39kB 0.0s done
+#14 DONE 0.2s
 
-#11 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 1/3] FROM docker.io/library/maven@sha256:34fb2f37f57320159c43e9242376bf645093fb31111a55bd436b8c19c4e5c6e4
-#11 CACHED
+#15 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 2/3] COPY .. ./
+#15 ...
 
-#15 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 2/3] COPY .. ./
-#15 DONE 0.1s
+#16 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 2/3] COPY .. ./
+#16 DONE 0.2s
 
-#16 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 3/3] RUN mvn -q package
-#16 DONE 7.0s
+#15 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 2/3] COPY .. ./
+#15 DONE 0.3s
 
-#17 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2] exporting to image
-#17 exporting layers
-#17 exporting layers 0.3s done
-#17 exporting layers 0.3s done
-#17 writing image sha256:2d4ca5572d47f9cbee52f778aa6f7119ef98c9f7044c414bb5d0dcebd5bd6bff 0.0s done
-#17 naming to docker.io/library/distributed-systems-project-2022-fusco-galzerano-mainetti_supervisor 0.0s done
-#17 writing image sha256:658480ae14a00f1b4cda130b989cf0c55dd28e88c8bfc1033a9269b68aae98bc 0.0s done
-#17 naming to docker.io/library/distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 0.0s done
-#17 naming to docker.io/library/distributed-systems-project-2022-fusco-galzerano-mainetti_node-1 done
-#17 writing image sha256:658480ae14a00f1b4cda130b989cf0c55dd28e88c8bfc1033a9269b68aae98bc done
-#17 naming to docker.io/library/distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 done
-#17 DONE 0.5s
+#17 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 3/3] RUN mvn -q package
+#17 DONE 9.2s
+
+#18 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-2] exporting to image
+#18 exporting layers
+#18 exporting layers 0.3s done
+#18 writing image sha256:b02cdf263b1e1743ca7293967e29f37add8fbfc12d6b38a36a1c929d2793219e done
+#18 naming to docker.io/library/distributed-systems-project-2022-fusco-galzerano-mainetti_node-2 done
+#18 DONE 0.3s
+
+#19 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 3/3] RUN mvn -q package
+#19 DONE 9.7s
+
+#18 [distributed-systems-project-2022-fusco-galzerano-mainetti_node-3] exporting to image
+#18 exporting layers 0.2s done
+#18 writing image sha256:c2cf0d19f6dd0f069a6898b24049184f25ec9c365cff636005319dcdd0eedd83
+#18 naming to docker.io/library/distributed-systems-project-2022-fusco-galzerano-mainetti_node-3
+#18 writing image sha256:c2cf0d19f6dd0f069a6898b24049184f25ec9c365cff636005319dcdd0eedd83 0.0s done
+#18 naming to docker.io/library/distributed-systems-project-2022-fusco-galzerano-mainetti_node-3 0.0s done
+#18 naming to docker.io/library/distributed-systems-project-2022-fusco-galzerano-mainetti_node-1 done
+#18 writing image sha256:03af3144e335c0ce69a2afb272599023b11a16d21be781b7418b03578e8b3030
+#18 writing image sha256:03af3144e335c0ce69a2afb272599023b11a16d21be781b7418b03578e8b3030 done
+#18 naming to docker.io/library/distributed-systems-project-2022-fusco-galzerano-mainetti_supervisor done
+#18 DONE 0.8s
 Attaching to node-1, node-2, node-3, supervisor
-supervisor  | [SUPERVISOR] normal state with view: []
 node-1      | Hello world! I am node-1 and I am waiting for 1000 milliseconds
-supervisor  | [SUPERVISOR] installing view: [/172.21.0.3]
-node-1      | [JoiningState] processing V message from /172.21.0.2
-node-3      | Hello world! I am node-3 and I am waiting for 20000 milliseconds
 node-2      | Hello world! I am node-2 and I am waiting for 10000 milliseconds
-node-1      | localhost: 8275f8e37280/172.21.0.3; id: 1
+supervisor  | [SUPERVISOR] normal state with view: []
+node-3      | Hello world! I am node-3 and I am waiting for 20000 milliseconds
+supervisor  | [SUPERVISOR] installing view: [/172.21.0.5]
+node-1      | [JoiningState] processing V message from /172.21.0.4
+node-2      | [JoiningState] processing V message from /172.21.0.4
+node-3      | [JoiningState] processing V message from /172.21.0.4
+node-1      | localhost: 31838c2564dc/172.21.0.2; id: 1
 node-1      | [INFO] will leave after 20 messages
-node-1      | [VIEWCHANGE] beginning
-node-1      | [SEND] F|1|
-supervisor  | [SUPERVISOR] normal state with view: [/172.21.0.3]
-node-1      | [NORMAL] new view is [/172.21.0.3]
-node-3      | [JoiningState] processing F message from /172.21.0.3
-node-2      | [JoiningState] processing F message from /172.21.0.3
-supervisor  | [SUPERVISOR] installing view: [/172.21.0.3, /172.21.0.5]
-node-1      | [NormalState] processing V message from /172.21.0.2
-node-2      | [JoiningState] processing V message from /172.21.0.2
-node-3      | [JoiningState] processing V message from /172.21.0.2
-node-1      | [SEND] F|1|
-node-2      | [JoiningState] processing F message from /172.21.0.3
-node-1      | [SEND] F|1|
-node-2      | [JoiningState] processing F message from /172.21.0.3
 node-3      | [VIEWCHANGE] beginning
 node-3      | [SEND] F|0|
-node-1      | [ViewChangeState] processing F message from /172.21.0.5
-node-3      | [ViewChangeState] processing F message from /172.21.0.3
-supervisor  | [SUPERVISOR] normal state with view: [/172.21.0.3, /172.21.0.5]
+supervisor  | [SUPERVISOR] normal state with view: [/172.21.0.5]
+node-2      | [JoiningState] processing F message from /172.21.0.5
+node-1      | [JoiningState] processing F message from /172.21.0.5
+node-3      | [NORMAL] new view is [/172.21.0.5]
+node-1      | [JoiningState] processing V message from /172.21.0.4
+supervisor  | [SUPERVISOR] installing view: [/172.21.0.5, /172.21.0.2]
+node-2      | [JoiningState] processing V message from /172.21.0.4
+node-3      | [NormalState] processing V message from /172.21.0.4
+node-3      | [SEND] F|0|
 node-2      | [JoiningState] processing F message from /172.21.0.5
 node-3      | [SEND] F|0|
+node-2      | [JoiningState] processing F message from /172.21.0.5
+node-1      | [VIEWCHANGE] beginning
+node-1      | [SEND] F|1|
+node-2      | [JoiningState] processing F message from /172.21.0.2
+supervisor  | [SUPERVISOR] normal state with view: [/172.21.0.5, /172.21.0.2]
+node-1      | [ViewChangeState] processing F message from /172.21.0.5
 node-1      | [FLUSH] sending all pending text messages
-node-3      | [FLUSH] sending all pending text messages
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
 node-1      | [SEND] T|0|0|
 node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [JoiningState] processing F message from /172.21.0.5
-node-2      | [JoiningState] processing T message from /172.21.0.3
-node-2      | 	[DROP] not in view! [7fc26040a437/172.21.0.4]
-supervisor  | [SUPERVISOR] installing view: [/172.21.0.3, /172.21.0.5, /172.21.0.4]
-node-2      | [JoiningState] processing V message from /172.21.0.2
-node-1      | [NORMAL] new view is [/172.21.0.3, /172.21.0.5]
+node-1      | [NORMAL] new view is [/172.21.0.5, /172.21.0.2]
 node-1      | [NormalState] processing F message from /172.21.0.5
-node-1      | [NormalState] processing V message from /172.21.0.2
-node-3      | [NORMAL] new view is [/172.21.0.3, /172.21.0.5]
-node-3      | [NormalState] processing F message from /172.21.0.3
-node-3      | [NormalState] processing T message from /172.21.0.3
+node-2      | [JoiningState] processing T message from /172.21.0.2
+node-2      | 	[DROP] not in view! [bf15c1f1ed0b/172.21.0.3]
+node-3      | [ViewChangeState] processing F message from /172.21.0.2
+node-3      | [FLUSH] sending all pending text messages
 node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [NormalState] processing V message from /172.21.0.2
+supervisor  | [SUPERVISOR] installing view: [/172.21.0.5, /172.21.0.2, /172.21.0.3]
+node-1      | [NormalState] processing V message from /172.21.0.4
+node-2      | [JoiningState] processing V message from /172.21.0.4
+node-3      | [NORMAL] new view is [/172.21.0.5, /172.21.0.2]
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | [NormalState] processing V message from /172.21.0.4
+node-1      | [SEND] F|0|
+node-1      | [SEND] F|0|
 node-2      | [VIEWCHANGE] beginning
 node-2      | [SEND] F|0|
 node-2      | [SEND] F|0|
-node-1      | [SEND] T|0|0|
-node-1      | [SEND] F|1|
-node-1      | [SEND] F|1|
-node-2      | [ViewChangeState] processing T message from /172.21.0.3
-node-2      | 	[DROP] not in view! [7fc26040a437/172.21.0.4]
-node-1      | [ViewChangeState] processing F message from /172.21.0.4
-node-2      | [ViewChangeState] processing F message from /172.21.0.3
-node-1      | [ViewChangeState] processing F message from /172.21.0.4
-node-2      | [ViewChangeState] processing F message from /172.21.0.3
+node-1      | [ViewChangeState] processing F message from /172.21.0.3
+node-1      | [ViewChangeState] processing F message from /172.21.0.3
+node-2      | [ViewChangeState] processing F message from /172.21.0.2
+node-2      | [ViewChangeState] processing F message from /172.21.0.2
 node-3      | [SEND] F|0|
-node-2      | [ViewChangeState] processing F message from /172.21.0.5
-node-2      | [FLUSH] sending all pending text messages
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
 node-1      | [ViewChangeState] processing F message from /172.21.0.5
 node-1      | [FLUSH] sending all pending text messages
-supervisor  | [SUPERVISOR] normal state with view: [/172.21.0.3, /172.21.0.5, /172.21.0.4]
+node-2      | [ViewChangeState] processing F message from /172.21.0.5
+node-2      | [FLUSH] sending all pending text messages
 node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [ViewChangeState] processing F message from /172.21.0.4
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | [ViewChangeState] processing F message from /172.21.0.2
+supervisor  | [SUPERVISOR] normal state with view: [/172.21.0.5, /172.21.0.2, /172.21.0.3]
 node-3      | [SEND] F|0|
-node-3      | [ViewChangeState] processing F message from /172.21.0.4
-node-3      | [ViewChangeState] processing T message from /172.21.0.3
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | [ViewChangeState] processing F message from /172.21.0.2
 node-3      | [ViewChangeState] processing F message from /172.21.0.3
 node-3      | [FLUSH] sending all pending text messages
 node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [NORMAL] new view is [/172.21.0.3, /172.21.0.5, /172.21.0.4]
-node-2      | [NormalState] processing F message from /172.21.0.5
-node-1      | [NORMAL] new view is [/172.21.0.3, /172.21.0.5, /172.21.0.4]
+node-1      | [NORMAL] new view is [/172.21.0.5, /172.21.0.2, /172.21.0.3]
 node-1      | [NormalState] processing F message from /172.21.0.5
-node-3      | [NORMAL] new view is [/172.21.0.3, /172.21.0.5, /172.21.0.4]
+node-2      | [NORMAL] new view is [/172.21.0.5, /172.21.0.2, /172.21.0.3]
+node-2      | [NormalState] processing F message from /172.21.0.5
+node-3      | [NORMAL] new view is [/172.21.0.5, /172.21.0.2, /172.21.0.3]
 node-3      | [NormalState] processing F message from /172.21.0.3
 node-1      | [SEND] T|1|1|
-node-3      | [NormalState] processing T message from /172.21.0.3
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-2      | [SEND] N|/172.21.0.2|0|
+node-3      | [SEND] N|/172.21.0.2|0|
+node-3      | [NormalState] processing N message from /172.21.0.3
+node-3      | [NACK] 0
+node-2      | [NormalState] processing N message from /172.21.0.5
+node-2      | [NACK] 0
+node-1      | [NormalState] processing N message from /172.21.0.3
+node-1      | [NACK] 0
+node-1      | [SEND] T|0|0|
+node-1      | [NormalState] processing N message from /172.21.0.5
+node-1      | [NACK] 0
+node-1      | [SEND] T|0|0|
+node-3      | [NormalState] processing T message from /172.21.0.2
 node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.3|1|
-node-3      | [SEND] A|172.21.0.3|1|
-node-2      | [NormalState] processing T message from /172.21.0.3
-node-1      | 	[ACK] message number 1 completely acknowledged (0 left)
+node-2      | [NormalState] processing T message from /172.21.0.2
 node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [SEND] A|172.21.0.3|1|
-node-3      | 	[ACK] message number 1 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-2      | [SEND] A|172.21.0.3|1|
-node-2      | 	[ACK] message number 1 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-2      | localhost: 7fc26040a437/172.21.0.4; id: 2
-node-2      | [MAIN] 1 FROM /172.21.0.3
+node-3      | [SEND] A|172.21.0.2|0|
+node-3      | [SEND] A|172.21.0.2|0|
+node-3      | [SEND] A|172.21.0.2|1|
+node-3      | [SEND] A|172.21.0.2|0|
+node-3      | [SEND] A|172.21.0.2|1|
+node-2      | [SEND] A|172.21.0.2|0|
+node-2      | [SEND] A|172.21.0.2|0|
+node-2      | [SEND] A|172.21.0.2|1|
+node-2      | [SEND] A|172.21.0.2|0|
+node-2      | [SEND] A|172.21.0.2|1|
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-2      | [DROP] SIMULATING MESSAGE NOT RECEIVED (0 from /172.21.0.2)
+node-2      | 	[ACK] message number 0 containing 0 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-1      | 	[ACK] message number 0 completely acknowledged (1 left)
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | 	[ACK] message number 1 containing 1 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-3      | 	[ACK] message number 0 containing 0 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-3      | 	[ACK] message number 1 containing 1 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-1      | 	[ACK] message number 1 completely acknowledged (0 left)
+node-2      | localhost: bf15c1f1ed0b/172.21.0.3; id: 2
+node-2      | [MAIN] 0 FROM /172.21.0.2
+node-2      | [MAIN] 1 FROM /172.21.0.2
 node-2      | [INFO] will leave after 15 messages
 node-2      | [SEND] T|0|0|
-node-1      | [NormalState] processing T message from /172.21.0.4
+node-1      | [NormalState] processing T message from /172.21.0.3
 node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [NormalState] processing T message from /172.21.0.4
+node-3      | [NormalState] processing T message from /172.21.0.3
 node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.4|0|
-node-1      | [SEND] A|172.21.0.4|0|
-node-1      | [SEND] A|172.21.0.4|0|
-node-3      | [SEND] A|172.21.0.4|0|
-node-3      | 	[ACK] message number 0 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-1      | 	[ACK] message number 0 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-1      | [MAIN] 0 FROM /172.21.0.4
+node-1      | [SEND] A|172.21.0.3|0|
+node-3      | [SEND] A|172.21.0.3|0|
+node-1      | [SEND] A|172.21.0.3|0|
+node-3      | [SEND] A|172.21.0.3|0|
+node-3      | 	[ACK] message number 0 containing 0 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-1      | 	[ACK] message number 0 containing 0 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-1      | [MAIN] 0 FROM /172.21.0.3
 node-2      | 	[ACK] message number 0 completely acknowledged (0 left)
 node-1      | [SEND] T|2|2|
-node-3      | [NormalState] processing T message from /172.21.0.3
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.3|2|
-node-2      | [NormalState] processing T message from /172.21.0.3
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-3      | [DROP] SIMULATING MESSAGE NOT RECEIVED (2 from /172.21.0.2)
+node-2      | [NormalState] processing T message from /172.21.0.2
 node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.3|2|
-node-2      | [SEND] A|172.21.0.3|2|
-node-2      | [SEND] A|172.21.0.3|2|
-node-2      | 	[ACK] message number 2 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-2      | [MAIN] 2 FROM /172.21.0.3
-node-3      | 	[ACK] message number 2 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-1      | 	[ACK] message number 2 completely acknowledged (0 left)
+node-2      | [SEND] A|172.21.0.2|2|
+node-2      | [SEND] A|172.21.0.2|2|
 node-2      | [SEND] T|1|1|
-node-3      | [NormalState] processing T message from /172.21.0.4
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.4|1|
-node-1      | [NormalState] processing T message from /172.21.0.4
+node-1      | [NormalState] processing T message from /172.21.0.3
 node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.4|1|
-node-3      | [SEND] A|172.21.0.4|1|
-node-1      | [SEND] A|172.21.0.4|1|
-node-2      | 	[ACK] message number 1 completely acknowledged (0 left)
-node-1      | 	[ACK] message number 1 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-1      | [MAIN] 1 FROM /172.21.0.4
-node-3      | 	[ACK] message number 1 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-1      | [SEND] T|3|3|
+node-1      | [SEND] A|172.21.0.3|1|
+node-1      | [SEND] A|172.21.0.3|1|
 node-3      | [NormalState] processing T message from /172.21.0.3
 node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.3|3|
-node-3      | [SEND] A|172.21.0.3|3|
-node-2      | [NormalState] processing T message from /172.21.0.3
-node-2      | [DROP] SIMULATING MESSAGE NOT RECEIVED (3 from /172.21.0.3)
-node-3      | localhost: 47fa83dedeb2/172.21.0.5; id: 3
-node-3      | [MAIN] 1 FROM /172.21.0.3
-node-3      | [INFO] will leave after 10 messages
-node-3      | [MAIN] 0 FROM /172.21.0.4
-node-3      | [MAIN] 2 FROM /172.21.0.3
-node-3      | [MAIN] 1 FROM /172.21.0.4
-node-3      | [SEND] T|0|0|
-node-1      | [NormalState] processing T message from /172.21.0.5
-node-2      | [NormalState] processing T message from /172.21.0.5
+node-3      | [SEND] A|172.21.0.3|1|
+node-3      | [SEND] A|172.21.0.3|1|
+node-3      | 	[ACK] message number 1 containing 1 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-1      | 	[ACK] message number 1 containing 1 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-1      | [MAIN] 1 FROM /172.21.0.3
+node-2      | 	[ACK] message number 1 completely acknowledged (0 left)
+node-1      | [SEND] T|3|3|
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-3      | [SEND] N|/172.21.0.2|2|
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [SEND] A|172.21.0.2|3|
+node-1      | [NormalState] processing N message from /172.21.0.5
+node-1      | [NACK] 2
+node-1      | [SEND] T|2|2|
+node-2      | [SEND] A|172.21.0.2|2|
+node-2      | [SEND] A|172.21.0.2|3|
+node-2      | [NormalState] processing N message from /172.21.0.5
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-2      | [NACK] 2
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | [SEND] A|172.21.0.2|2|
+node-3      | [SEND] A|172.21.0.2|2|
+node-3      | [SEND] A|172.21.0.2|3|
+node-3      | [SEND] A|172.21.0.2|2|
+node-3      | [SEND] A|172.21.0.2|3|
+node-1      | 	[ACK] message number 2 completely acknowledged (1 left)
+node-3      | 	[ACK] message number 2 containing 2 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | 	[ACK] message number 3 completely acknowledged (0 left)
+node-2      | 	[ACK] message number 2 containing 2 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-3      | 	[ACK] message number 3 containing 3 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-2      | [MAIN] 2 FROM /172.21.0.2
+node-2      | 	[ACK] message number 3 containing 3 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-2      | [MAIN] 3 FROM /172.21.0.2
+node-2      | [SEND] T|2|2|
+node-3      | [NormalState] processing T message from /172.21.0.3
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-3      | [SEND] A|172.21.0.3|2|
 node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | 	[ACK] message number 0 completely acknowledged (0 left)
+node-1      | [SEND] A|172.21.0.3|2|
+node-1      | [SEND] A|172.21.0.3|2|
+node-1      | 	[ACK] message number 2 containing 2 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-1      | [MAIN] 2 FROM /172.21.0.3
+node-2      | 	[ACK] message number 2 completely acknowledged (0 left)
+node-3      | [SEND] A|172.21.0.3|2|
+node-3      | 	[ACK] message number 2 containing 2 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-3      | localhost: 4ad614d18640/172.21.0.5; id: 3
+node-3      | [MAIN] 0 FROM /172.21.0.2
+node-3      | [MAIN] 1 FROM /172.21.0.2
+node-3      | [MAIN] 0 FROM /172.21.0.3
+node-3      | [MAIN] 1 FROM /172.21.0.3
+node-3      | [MAIN] 2 FROM /172.21.0.2
+node-3      | [MAIN] 3 FROM /172.21.0.2
+node-3      | [MAIN] 2 FROM /172.21.0.3
+node-3      | [INFO] will leave after 10 messages
+node-3      | [SEND] T|0|0|
+node-2      | [NormalState] processing T message from /172.21.0.5
 node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
 node-2      | [SEND] A|172.21.0.5|0|
-node-1      | [SEND] A|172.21.0.5|0|
-node-1      | [SEND] A|172.21.0.5|0|
 node-2      | [SEND] A|172.21.0.5|0|
-node-2      | 	[ACK] message number 0 from /172.21.0.5 completely acknowledged and ready to deliver!
-node-2      | [MAIN] 0 FROM /172.21.0.5
-node-1      | 	[ACK] message number 0 from /172.21.0.5 completely acknowledged and ready to deliver!
-node-1      | [MAIN] 0 FROM /172.21.0.5
-node-2      | [SEND] T|2|2|
-node-1      | [NormalState] processing T message from /172.21.0.4
+node-1      | [NormalState] processing T message from /172.21.0.5
 node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [NormalState] processing T message from /172.21.0.4
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.4|2|
-node-3      | [SEND] A|172.21.0.4|2|
-node-3      | [SEND] A|172.21.0.4|2|
-node-3      | [SEND] A|172.21.0.3|3|
-node-1      | [SEND] A|172.21.0.4|2|
-node-1      | 	[ACK] message number 2 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-3      | 	[ACK] message number 2 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-1      | [MAIN] 2 FROM /172.21.0.4
-node-3      | [MAIN] 2 FROM /172.21.0.4
-node-2      | 	[ACK] message number 2 completely acknowledged (0 left)
+node-1      | [SEND] A|172.21.0.5|0|
+node-1      | [SEND] A|172.21.0.5|0|
+node-2      | 	[ACK] message number 0 containing 0 from /172.21.0.5 completely acknowledged and ready to deliver!
+node-2      | [MAIN] 0 FROM /172.21.0.5
+node-3      | 	[ACK] message number 0 completely acknowledged (0 left)
+node-1      | 	[ACK] message number 0 containing 0 from /172.21.0.5 completely acknowledged and ready to deliver!
+node-1      | [MAIN] 0 FROM /172.21.0.5
 node-1      | [SEND] T|4|4|
-node-2      | [NormalState] processing T message from /172.21.0.3
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-3      | [SEND] A|172.21.0.2|4|
+node-3      | [SEND] A|172.21.0.2|4|
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [SEND] A|172.21.0.2|4|
+node-2      | [SEND] A|172.21.0.2|4|
+node-3      | 	[ACK] message number 4 containing 4 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-3      | [MAIN] 4 FROM /172.21.0.2
+node-2      | 	[ACK] message number 4 containing 4 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-2      | [MAIN] 4 FROM /172.21.0.2
+node-1      | 	[ACK] message number 4 completely acknowledged (0 left)
+node-2      | [SEND] T|3|3|
 node-3      | [NormalState] processing T message from /172.21.0.3
 node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.3|4|
 node-3      | [SEND] A|172.21.0.3|3|
-node-2      | [SEND] N|/172.21.0.3|3|
-node-3      | [SEND] A|172.21.0.3|4|
-node-1      | [NormalState] processing N message from /172.21.0.4
-node-1      | [NACK] 3
-node-1      | [SEND] T|3|3|
-node-2      | [NormalState] processing T message from /172.21.0.3
-node-2      | [DROP] SIMULATING MESSAGE NOT RECEIVED (3 from /172.21.0.3)
-node-3      | [NormalState] processing N message from /172.21.0.4
-node-3      | [NACK] 3
-node-3      | [NormalState] processing T message from /172.21.0.3
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | [SEND] A|172.21.0.3|3|
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [SEND] A|172.21.0.3|3|
+node-1      | [SEND] A|172.21.0.3|3|
+node-1      | 	[ACK] message number 3 containing 3 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-3      | 	[ACK] message number 3 containing 3 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-3      | [MAIN] 3 FROM /172.21.0.3
+node-1      | [MAIN] 3 FROM /172.21.0.3
+node-2      | 	[ACK] message number 3 completely acknowledged (0 left)
 node-3      | [SEND] T|1|1|
 node-2      | [NormalState] processing T message from /172.21.0.5
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
 node-1      | [NormalState] processing T message from /172.21.0.5
-node-2      | [SEND] A|172.21.0.5|1|
 node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
 node-1      | [SEND] A|172.21.0.5|1|
 node-1      | [SEND] A|172.21.0.5|1|
 node-2      | [SEND] A|172.21.0.5|1|
-node-2      | 	[ACK] message number 1 from /172.21.0.5 completely acknowledged and ready to deliver!
-node-1      | 	[ACK] message number 1 from /172.21.0.5 completely acknowledged and ready to deliver!
-node-2      | [MAIN] 1 FROM /172.21.0.5
+node-2      | [SEND] A|172.21.0.5|1|
+node-1      | 	[ACK] message number 1 containing 1 from /172.21.0.5 completely acknowledged and ready to deliver!
+node-2      | 	[ACK] message number 1 containing 1 from /172.21.0.5 completely acknowledged and ready to deliver!
 node-1      | [MAIN] 1 FROM /172.21.0.5
+node-2      | [MAIN] 1 FROM /172.21.0.5
 node-3      | 	[ACK] message number 1 completely acknowledged (0 left)
-node-2      | [SEND] T|3|3|
-node-1      | [NormalState] processing T message from /172.21.0.4
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.4|3|
-node-3      | [NormalState] processing T message from /172.21.0.4
-node-1      | [SEND] A|172.21.0.4|3|
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.4|3|
-node-3      | [SEND] A|172.21.0.4|3|
-node-1      | 	[ACK] message number 3 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-1      | [MAIN] 3 FROM /172.21.0.4
-node-3      | [SEND] A|172.21.0.3|3|
-node-3      | [SEND] A|172.21.0.3|4|
-node-2      | 	[ACK] message number 3 completely acknowledged (0 left)
-node-3      | 	[ACK] message number 3 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 3 FROM /172.21.0.4
 node-1      | [SEND] T|5|5|
-node-3      | [NormalState] processing T message from /172.21.0.3
-node-2      | [NormalState] processing T message from /172.21.0.3
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [SEND] N|/172.21.0.3|3|
-node-3      | [SEND] A|172.21.0.3|5|
-node-2      | [SEND] N|/172.21.0.3|4|
-node-3      | [SEND] A|172.21.0.3|3|
-node-3      | [SEND] A|172.21.0.3|4|
-node-3      | [SEND] A|172.21.0.3|5|
-node-3      | [NormalState] processing N message from /172.21.0.4
-node-3      | [NACK] 3
-node-1      | [NormalState] processing N message from /172.21.0.4
-node-1      | [NACK] 3
-node-1      | [SEND] T|3|3|
-node-3      | [NormalState] processing N message from /172.21.0.4
-node-3      | [NACK] 4
-node-3      | [NormalState] processing T message from /172.21.0.3
-node-1      | [NormalState] processing N message from /172.21.0.4
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [NormalState] processing T message from /172.21.0.3
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [NACK] 4
-node-1      | [SEND] T|4|4|
-node-2      | [NormalState] processing T message from /172.21.0.3
+node-2      | [NormalState] processing T message from /172.21.0.2
 node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [SEND] A|172.21.0.3|3|
-node-2      | [SEND] A|172.21.0.3|3|
-node-2      | [SEND] A|172.21.0.3|4|
-node-2      | [SEND] A|172.21.0.3|3|
-node-2      | [SEND] A|172.21.0.3|4|
-node-2      | [SEND] A|172.21.0.3|5|
-node-2      | [SEND] A|172.21.0.3|3|
-node-2      | [SEND] A|172.21.0.3|4|
-node-2      | [SEND] A|172.21.0.3|5|
-node-2      | [NormalState] processing T message from /172.21.0.3
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | 	[ACK] message number 3 completely acknowledged (2 left)
-node-1      | 	[ACK] message number 4 completely acknowledged (1 left)
+node-2      | [SEND] A|172.21.0.2|5|
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [SEND] A|172.21.0.2|5|
+node-3      | [SEND] A|172.21.0.2|5|
+node-3      | [SEND] A|172.21.0.2|5|
+node-3      | 	[ACK] message number 5 containing 5 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-3      | [MAIN] 5 FROM /172.21.0.2
+node-2      | 	[ACK] message number 5 containing 5 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-2      | [MAIN] 5 FROM /172.21.0.2
 node-1      | 	[ACK] message number 5 completely acknowledged (0 left)
-node-3      | 	[ACK] message number 3 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-3      | 	[ACK] message number 4 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-3      | 	[ACK] message number 5 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 3 FROM /172.21.0.3
-node-3      | [MAIN] 4 FROM /172.21.0.3
-node-3      | [MAIN] 5 FROM /172.21.0.3
-node-3      | [SEND] T|2|2|
-node-2      | [NormalState] processing T message from /172.21.0.5
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [NormalState] processing T message from /172.21.0.5
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.5|2|
-node-2      | [SEND] A|172.21.0.5|2|
-node-2      | [SEND] A|172.21.0.5|2|
-node-2      | [SEND] A|172.21.0.3|3|
-node-2      | [SEND] A|172.21.0.3|4|
-node-2      | [SEND] A|172.21.0.3|5|
-node-3      | 	[ACK] message number 2 completely acknowledged (0 left)
-node-2      | 	[ACK] message number 2 from /172.21.0.5 completely acknowledged and ready to deliver!
-node-2      | [MAIN] 2 FROM /172.21.0.5
-node-1      | [SEND] A|172.21.0.5|2|
-node-1      | 	[ACK] message number 2 from /172.21.0.5 completely acknowledged and ready to deliver!
-node-1      | [MAIN] 2 FROM /172.21.0.5
 node-2      | [SEND] T|4|4|
-node-3      | [NormalState] processing T message from /172.21.0.4
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.4|4|
-node-3      | [SEND] A|172.21.0.4|4|
-node-1      | [NormalState] processing T message from /172.21.0.4
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.4|4|
-node-1      | [SEND] A|172.21.0.4|4|
-node-2      | 	[ACK] message number 4 completely acknowledged (0 left)
-node-3      | 	[ACK] message number 4 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 4 FROM /172.21.0.4
-node-1      | 	[ACK] message number 4 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-1      | [MAIN] 4 FROM /172.21.0.4
-node-1      | [SEND] T|6|6|
-node-2      | [NormalState] processing T message from /172.21.0.3
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
 node-3      | [NormalState] processing T message from /172.21.0.3
 node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.3|6|
-node-2      | [SEND] A|172.21.0.3|6|
-node-3      | [SEND] A|172.21.0.3|6|
-node-2      | [SEND] A|172.21.0.3|3|
-node-2      | [SEND] A|172.21.0.3|4|
-node-3      | 	[ACK] message number 6 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 6 FROM /172.21.0.3
-node-2      | [SEND] A|172.21.0.3|5|
-node-2      | [SEND] A|172.21.0.3|6|
-node-2      | 	[ACK] message number 6 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-1      | 	[ACK] message number 6 completely acknowledged (0 left)
-node-2      | 		[ACK] assuming delivery of 3
-node-2      | [MAIN] 3 FROM /172.21.0.3
-node-2      | 		[ACK] assuming delivery of 4
-node-2      | 		[ACK] assuming delivery of 5
-node-2      | [MAIN] 4 FROM /172.21.0.3
-node-2      | [MAIN] 5 FROM /172.21.0.3
-node-2      | [MAIN] 6 FROM /172.21.0.3
-node-3      | [SEND] T|3|3|
+node-3      | [SEND] A|172.21.0.3|4|
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [SEND] A|172.21.0.3|4|
+node-1      | [SEND] A|172.21.0.3|4|
+node-1      | 	[ACK] message number 4 containing 4 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-1      | [MAIN] 4 FROM /172.21.0.3
+node-2      | 	[ACK] message number 4 completely acknowledged (0 left)
+node-3      | [SEND] A|172.21.0.3|4|
+node-3      | 	[ACK] message number 4 containing 4 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-3      | [MAIN] 4 FROM /172.21.0.3
+node-3      | [SEND] T|2|2|
+node-1      | [NormalState] processing T message from /172.21.0.5
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [SEND] A|172.21.0.5|2|
 node-2      | [NormalState] processing T message from /172.21.0.5
 node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [NormalState] processing T message from /172.21.0.5
-node-1      | [DROP] SIMULATING MESSAGE NOT RECEIVED (3 from /172.21.0.5)
-node-2      | [SEND] A|172.21.0.5|3|
-node-2      | [SEND] A|172.21.0.5|3|
-node-2      | [SEND] T|5|5|
-node-1      | [NormalState] processing T message from /172.21.0.4
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.4|5|
-node-3      | [NormalState] processing T message from /172.21.0.4
-node-1      | [SEND] A|172.21.0.4|5|
+node-1      | [SEND] A|172.21.0.5|2|
+node-2      | [SEND] A|172.21.0.5|2|
+node-2      | [SEND] A|172.21.0.5|2|
+node-2      | 	[ACK] message number 2 containing 2 from /172.21.0.5 completely acknowledged and ready to deliver!
+node-1      | 	[ACK] message number 2 containing 2 from /172.21.0.5 completely acknowledged and ready to deliver!
+node-2      | [MAIN] 2 FROM /172.21.0.5
+node-1      | [MAIN] 2 FROM /172.21.0.5
+node-3      | 	[ACK] message number 2 completely acknowledged (0 left)
+node-1      | [SEND] T|6|6|
+node-3      | [NormalState] processing T message from /172.21.0.2
 node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.4|5|
-node-2      | 	[ACK] message number 5 completely acknowledged (0 left)
-node-1      | 	[ACK] message number 5 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-1      | [MAIN] 5 FROM /172.21.0.4
-node-3      | [SEND] A|172.21.0.4|5|
-node-3      | 	[ACK] message number 5 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 5 FROM /172.21.0.4
-node-1      | [SEND] T|7|7|
-node-3      | [NormalState] processing T message from /172.21.0.3
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [NormalState] processing T message from /172.21.0.3
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-3      | [SEND] A|172.21.0.2|6|
 node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [SEND] A|172.21.0.3|7|
-node-3      | [SEND] A|172.21.0.3|7|
-node-3      | [SEND] A|172.21.0.3|7|
-node-1      | 	[ACK] message number 7 completely acknowledged (0 left)
-node-2      | [SEND] A|172.21.0.5|3|
-node-3      | 	[ACK] message number 7 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 7 FROM /172.21.0.3
-node-2      | [SEND] A|172.21.0.3|7|
-node-2      | 	[ACK] message number 7 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-2      | [MAIN] 7 FROM /172.21.0.3
+node-3      | [SEND] A|172.21.0.2|6|
+node-2      | [SEND] A|172.21.0.2|6|
+node-2      | [SEND] A|172.21.0.2|6|
+node-3      | 	[ACK] message number 6 containing 6 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-2      | 	[ACK] message number 6 containing 6 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-3      | [MAIN] 6 FROM /172.21.0.2
+node-2      | [MAIN] 6 FROM /172.21.0.2
+node-1      | 	[ACK] message number 6 completely acknowledged (0 left)
+node-2      | [SEND] T|5|5|
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-3      | [NormalState] processing T message from /172.21.0.3
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [SEND] A|172.21.0.3|5|
+node-3      | [SEND] A|172.21.0.3|5|
+node-3      | [SEND] A|172.21.0.3|5|
+node-3      | 	[ACK] message number 5 containing 5 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-2      | 	[ACK] message number 5 completely acknowledged (0 left)
+node-3      | [MAIN] 5 FROM /172.21.0.3
+node-1      | [SEND] A|172.21.0.3|5|
+node-1      | 	[ACK] message number 5 containing 5 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-1      | [MAIN] 5 FROM /172.21.0.3
+node-1      | [SEND] T|7|7|
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | [SEND] A|172.21.0.2|7|
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-3      | [SEND] A|172.21.0.2|7|
+node-2      | [DROP] SIMULATING MESSAGE NOT RECEIVED (7 from /172.21.0.2)
+node-2      | [SEND] T|6|6|
+node-3      | [NormalState] processing T message from /172.21.0.3
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-1      | [DROP] SIMULATING MESSAGE NOT RECEIVED (6 from /172.21.0.3)
+node-3      | [DROP] SIMULATING MESSAGE NOT RECEIVED (6 from /172.21.0.3)
+node-3      | [UNORDERED] SENDING 2 MESSAGES IN REVERSE!
 node-3      | [SEND] T|4|4|
+node-3      | [SEND] T|3|3|
 node-1      | [NormalState] processing T message from /172.21.0.5
 node-1      | [SEND] N|/172.21.0.5|3|
 node-2      | [NormalState] processing T message from /172.21.0.5
-node-3      | [NormalState] processing N message from /172.21.0.3
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [SEND] N|/172.21.0.5|3|
+node-1      | [NormalState] processing T message from /172.21.0.5
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [SEND] A|172.21.0.5|3|
+node-1      | [SEND] A|172.21.0.5|3|
+node-1      | [SEND] A|172.21.0.5|4|
+node-1      | [SEND] A|172.21.0.5|3|
+node-1      | [SEND] A|172.21.0.5|4|
+node-3      | [NormalState] processing N message from /172.21.0.2
 node-3      | [NACK] 3
 node-3      | [SEND] T|3|3|
+node-3      | [NormalState] processing N message from /172.21.0.3
+node-3      | [NACK] 3
+node-3      | [SEND] T|3|3|
+node-2      | [NormalState] processing T message from /172.21.0.5
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [SEND] A|172.21.0.5|3|
+node-1      | [NormalState] processing N message from /172.21.0.3
+node-1      | [NACK] 3
+node-1      | [NormalState] processing T message from /172.21.0.5
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [SEND] A|172.21.0.5|3|
+node-1      | [NormalState] processing T message from /172.21.0.5
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
 node-2      | [SEND] A|172.21.0.5|4|
 node-2      | [SEND] A|172.21.0.5|3|
 node-2      | [SEND] A|172.21.0.5|4|
-node-1      | [NormalState] processing T message from /172.21.0.5
-node-2      | [NormalState] processing N message from /172.21.0.3
+node-2      | [NormalState] processing N message from /172.21.0.2
 node-2      | [NACK] 3
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.5|3|
-node-2      | [NormalState] processing T message from /172.21.0.5
-node-1      | [SEND] A|172.21.0.5|3|
-node-1      | [SEND] A|172.21.0.5|4|
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.5|3|
-node-1      | [SEND] A|172.21.0.5|4|
-node-2      | 	[ACK] message number 3 from /172.21.0.5 completely acknowledged and ready to deliver!
+node-2      | 	[ACK] message number 3 containing 3 from /172.21.0.5 completely acknowledged and ready to deliver!
 node-2      | [MAIN] 3 FROM /172.21.0.5
+node-1      | 	[ACK] message number 3 containing 3 from /172.21.0.5 completely acknowledged and ready to deliver!
+node-1      | 	[ACK] message number 4 containing 4 from /172.21.0.5 completely acknowledged and ready to deliver!
+node-1      | [MAIN] 3 FROM /172.21.0.5
+node-1      | [MAIN] 4 FROM /172.21.0.5
 node-3      | 	[ACK] message number 3 completely acknowledged (1 left)
 node-3      | 	[ACK] message number 4 completely acknowledged (0 left)
-node-2      | 	[ACK] message number 4 from /172.21.0.5 completely acknowledged and ready to deliver!
+node-2      | 	[ACK] message number 4 containing 4 from /172.21.0.5 completely acknowledged and ready to deliver!
 node-2      | [MAIN] 4 FROM /172.21.0.5
-node-2      | [SEND] T|6|6|
-node-1      | [NormalState] processing T message from /172.21.0.4
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.4|6|
-node-3      | [NormalState] processing T message from /172.21.0.4
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.4|6|
-node-3      | [SEND] A|172.21.0.4|6|
-node-2      | 	[ACK] message number 6 completely acknowledged (0 left)
-node-3      | 	[ACK] message number 6 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 6 FROM /172.21.0.4
-node-1      | [SEND] A|172.21.0.5|3|
-node-1      | [SEND] A|172.21.0.5|4|
-node-1      | [SEND] A|172.21.0.4|6|
-node-1      | 	[ACK] message number 6 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-1      | [MAIN] 6 FROM /172.21.0.4
+node-2      | [NormalState] processing T message from /172.21.0.5
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [NormalState] processing T message from /172.21.0.5
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
 node-1      | [SEND] T|8|8|
-node-3      | [NormalState] processing T message from /172.21.0.3
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-3      | [NormalState] processing T message from /172.21.0.2
 node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [NormalState] processing T message from /172.21.0.3
-node-3      | [SEND] A|172.21.0.3|8|
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [SEND] A|172.21.0.3|8|
-node-2      | [SEND] A|172.21.0.3|8|
-node-2      | 	[ACK] message number 8 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-3      | [SEND] A|172.21.0.3|8|
-node-1      | 	[ACK] message number 8 completely acknowledged (0 left)
-node-2      | [MAIN] 8 FROM /172.21.0.3
-node-3      | 	[ACK] message number 8 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 8 FROM /172.21.0.3
-node-3      | [SEND] T|5|5|
-node-2      | [NormalState] processing T message from /172.21.0.5
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [NormalState] processing T message from /172.21.0.5
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [SEND] A|172.21.0.5|5|
-node-1      | [SEND] A|172.21.0.5|5|
-node-1      | [SEND] A|172.21.0.5|3|
-node-2      | [SEND] A|172.21.0.5|5|
-node-1      | [SEND] A|172.21.0.5|4|
-node-3      | 	[ACK] message number 5 completely acknowledged (0 left)
-node-1      | [SEND] A|172.21.0.5|5|
-node-2      | 	[ACK] message number 5 from /172.21.0.5 completely acknowledged and ready to deliver!
-node-2      | [MAIN] 5 FROM /172.21.0.5
-node-1      | 	[ACK] message number 5 from /172.21.0.5 completely acknowledged and ready to deliver!
-node-1      | 		[ACK] assuming delivery of 3
-node-1      | [MAIN] 3 FROM /172.21.0.5
-node-1      | 		[ACK] assuming delivery of 4
-node-1      | [MAIN] 4 FROM /172.21.0.5
-node-1      | [MAIN] 5 FROM /172.21.0.5
-node-1      | [SEND] T|9|9|
-node-2      | [NormalState] processing T message from /172.21.0.3
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [SEND] A|172.21.0.3|9|
-node-3      | [NormalState] processing T message from /172.21.0.3
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.3|9|
-node-3      | [SEND] A|172.21.0.3|9|
-node-2      | [SEND] A|172.21.0.3|9|
-node-3      | 	[ACK] message number 9 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 9 FROM /172.21.0.3
-node-1      | 	[ACK] message number 9 completely acknowledged (0 left)
-node-2      | 	[ACK] message number 9 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-2      | [MAIN] 9 FROM /172.21.0.3
-node-3      | [SEND] T|6|6|
-node-1      | [NormalState] processing T message from /172.21.0.5
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.5|6|
-node-2      | [NormalState] processing T message from /172.21.0.5
-node-2      | [DROP] SIMULATING MESSAGE NOT RECEIVED (6 from /172.21.0.5)
-node-1      | [SEND] A|172.21.0.5|6|
-node-2      | [UNORDERED] SENDING 2 MESSAGES IN REVERSE!
-node-2      | [SEND] T|8|8|
-node-1      | [NormalState] processing T message from /172.21.0.4
-node-1      | [SEND] N|/172.21.0.4|7|
-node-1      | [NormalState] processing T message from /172.21.0.4
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.4|7|
-node-1      | [SEND] A|172.21.0.5|6|
-node-1      | [SEND] A|172.21.0.4|7|
-node-1      | [SEND] A|172.21.0.4|8|
-node-1      | [SEND] A|172.21.0.5|6|
-node-1      | [SEND] A|172.21.0.4|7|
-node-1      | [SEND] A|172.21.0.4|8|
-node-1      | [NormalState] processing N message from /172.21.0.5
+node-3      | [SEND] A|172.21.0.2|8|
+node-1      | [NormalState] processing N message from /172.21.0.3
 node-1      | [NACK] 7
-node-1      | 	[ACK] message number 7 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-1      | [MAIN] 7 FROM /172.21.0.4
-node-1      | 	[ACK] message number 8 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-1      | [MAIN] 8 FROM /172.21.0.4
-node-3      | [NormalState] processing T message from /172.21.0.4
-node-3      | [SEND] N|/172.21.0.4|7|
-node-2      | [SEND] T|7|7|
-node-3      | [NormalState] processing T message from /172.21.0.4
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.4|7|
-node-3      | [SEND] A|172.21.0.4|7|
-node-3      | [SEND] A|172.21.0.4|8|
-node-3      | [SEND] A|172.21.0.4|7|
-node-3      | [SEND] A|172.21.0.4|8|
+node-1      | [SEND] T|7|7|
+node-2      | [SEND] N|/172.21.0.2|7|
+node-3      | [SEND] A|172.21.0.2|7|
+node-3      | [SEND] A|172.21.0.2|8|
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-2      | [DROP] SIMULATING MESSAGE NOT RECEIVED (7 from /172.21.0.2)
 node-3      | [NormalState] processing N message from /172.21.0.3
 node-3      | [NACK] 7
-node-3      | 	[ACK] message number 7 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 7 FROM /172.21.0.4
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [SEND] T|7|7|
+node-3      | [NormalState] processing T message from /172.21.0.3
+node-3      | [DROP] SIMULATING MESSAGE NOT RECEIVED (7 from /172.21.0.3)
+node-3      | [NormalState] processing N message from /172.21.0.2
+node-3      | [NACK] 6
+node-3      | [NormalState] processing T message from /172.21.0.3
+node-3      | [DROP] SIMULATING MESSAGE NOT RECEIVED (6 from /172.21.0.3)
+node-2      | [NormalState] processing N message from /172.21.0.2
+node-2      | [NACK] 6
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-1      | [SEND] N|/172.21.0.3|6|
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-2      | [SEND] T|6|6|
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [SEND] A|172.21.0.3|6|
+node-1      | [SEND] A|172.21.0.3|6|
+node-1      | [SEND] A|172.21.0.3|7|
+node-1      | [SEND] A|172.21.0.3|6|
+node-1      | [SEND] A|172.21.0.3|7|
+node-3      | [SEND] T|5|5|
+node-1      | [NormalState] processing T message from /172.21.0.5
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [SEND] A|172.21.0.5|5|
+node-1      | [SEND] A|172.21.0.5|5|
+node-1      | [SEND] A|172.21.0.3|6|
+node-1      | [SEND] A|172.21.0.3|7|
+node-2      | [NormalState] processing T message from /172.21.0.5
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [SEND] A|172.21.0.5|5|
+node-2      | [SEND] A|172.21.0.5|5|
+node-1      | 	[ACK] message number 5 containing 5 from /172.21.0.5 completely acknowledged and ready to deliver!
+node-1      | [MAIN] 5 FROM /172.21.0.5
+node-2      | 	[ACK] message number 5 containing 5 from /172.21.0.5 completely acknowledged and ready to deliver!
+node-3      | 	[ACK] message number 5 completely acknowledged (0 left)
+node-2      | [MAIN] 5 FROM /172.21.0.5
+node-1      | [SEND] T|9|9|
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-2      | [SEND] N|/172.21.0.2|7|
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | [SEND] A|172.21.0.2|9|
+node-3      | [SEND] A|172.21.0.2|7|
+node-2      | [SEND] N|/172.21.0.2|8|
+node-3      | [SEND] A|172.21.0.2|8|
+node-3      | [SEND] A|172.21.0.2|9|
+node-1      | [NormalState] processing N message from /172.21.0.3
+node-3      | [NormalState] processing N message from /172.21.0.3
+node-1      | [NACK] 7
+node-1      | [SEND] T|7|7|
+node-3      | [NACK] 7
+node-3      | [NormalState] processing N message from /172.21.0.3
+node-3      | [NACK] 8
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [NormalState] processing N message from /172.21.0.3
+node-1      | [NACK] 8
+node-1      | [SEND] T|8|8|
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [SEND] A|172.21.0.2|7|
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | 	[ACK] message number 7 containing 7 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-2      | [SEND] A|172.21.0.2|7|
+node-2      | [SEND] A|172.21.0.2|8|
+node-2      | [SEND] A|172.21.0.2|7|
+node-2      | [SEND] A|172.21.0.2|8|
+node-2      | [SEND] A|172.21.0.2|9|
+node-2      | [SEND] A|172.21.0.2|7|
+node-2      | [SEND] A|172.21.0.2|8|
+node-2      | [SEND] A|172.21.0.2|9|
+node-3      | 	[ACK] message number 8 containing 8 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-3      | 	[ACK] message number 9 containing 9 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | 	[ACK] message number 7 completely acknowledged (2 left)
+node-1      | 	[ACK] message number 8 completely acknowledged (1 left)
+node-1      | 	[ACK] message number 9 completely acknowledged (0 left)
+node-3      | [MAIN] 7 FROM /172.21.0.2
+node-3      | [MAIN] 8 FROM /172.21.0.2
+node-3      | [MAIN] 9 FROM /172.21.0.2
+node-2      | [SEND] T|8|8|
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-1      | [DROP] SIMULATING MESSAGE NOT RECEIVED (8 from /172.21.0.3)
+node-3      | [NormalState] processing T message from /172.21.0.3
+node-3      | [SEND] N|/172.21.0.3|6|
+node-2      | [NormalState] processing N message from /172.21.0.5
+node-1      | [NormalState] processing N message from /172.21.0.5
+node-2      | [NACK] 6
+node-2      | [SEND] T|6|6|
+node-3      | [SEND] N|/172.21.0.3|7|
+node-1      | [NACK] 6
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
 node-2      | [NormalState] processing N message from /172.21.0.5
 node-2      | [NACK] 7
+node-1      | [NormalState] processing N message from /172.21.0.5
+node-1      | [NACK] 7
 node-2      | [SEND] T|7|7|
-node-3      | 	[ACK] message number 8 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 8 FROM /172.21.0.4
-node-2      | [NormalState] processing N message from /172.21.0.3
-node-2      | [NACK] 7
-node-2      | [SEND] T|7|7|
-node-3      | [NormalState] processing T message from /172.21.0.4
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [NormalState] processing T message from /172.21.0.4
-node-3      | [NormalState] processing T message from /172.21.0.4
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [NormalState] processing T message from /172.21.0.3
 node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [NormalState] processing T message from /172.21.0.4
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | [NormalState] processing T message from /172.21.0.3
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | [SEND] A|172.21.0.3|6|
+node-1      | 	[ACK] message number 6 containing 6 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-1      | [MAIN] 6 FROM /172.21.0.3
+node-2      | 	[ACK] message number 6 completely acknowledged (2 left)
+node-3      | [SEND] A|172.21.0.3|6|
+node-3      | [NormalState] processing T message from /172.21.0.3
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | [SEND] A|172.21.0.3|7|
+node-1      | 	[ACK] message number 7 containing 7 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-1      | [MAIN] 7 FROM /172.21.0.3
 node-2      | 	[ACK] message number 7 completely acknowledged (1 left)
-node-2      | 	[ACK] message number 8 completely acknowledged (0 left)
-node-1      | [SEND] T|10|10|
-node-2      | [NormalState] processing T message from /172.21.0.3
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [SEND] A|172.21.0.3|10|
-node-3      | [NormalState] processing T message from /172.21.0.3
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [SEND] A|172.21.0.3|10|
-node-3      | [SEND] A|172.21.0.3|10|
-node-2      | 	[ACK] message number 10 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-2      | [MAIN] 10 FROM /172.21.0.3
-node-3      | [SEND] A|172.21.0.3|10|
-node-1      | 	[ACK] message number 10 completely acknowledged (0 left)
-node-3      | 	[ACK] message number 10 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 10 FROM /172.21.0.3
-node-3      | [SEND] T|7|7|
-node-1      | [NormalState] processing T message from /172.21.0.5
-node-1      | [DROP] SIMULATING MESSAGE NOT RECEIVED (7 from /172.21.0.5)
-node-2      | [NormalState] processing T message from /172.21.0.5
-node-2      | [SEND] N|/172.21.0.5|6|
-node-1      | [NormalState] processing N message from /172.21.0.4
-node-3      | [NormalState] processing N message from /172.21.0.4
-node-3      | [NACK] 6
+node-3      | [SEND] A|172.21.0.3|6|
+node-3      | [SEND] A|172.21.0.3|7|
+node-3      | [SEND] A|172.21.0.3|8|
+node-3      | [SEND] A|172.21.0.3|6|
+node-3      | [SEND] A|172.21.0.3|7|
+node-3      | [SEND] A|172.21.0.3|8|
 node-3      | [SEND] T|6|6|
-node-1      | [NACK] 6
+node-1      | [NormalState] processing T message from /172.21.0.5
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [SEND] A|172.21.0.5|6|
+node-1      | [SEND] A|172.21.0.5|6|
 node-2      | [NormalState] processing T message from /172.21.0.5
 node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
 node-2      | [SEND] A|172.21.0.5|6|
-node-1      | [NormalState] processing T message from /172.21.0.5
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | 	[ACK] message number 6 from /172.21.0.5 completely acknowledged and ready to deliver!
 node-2      | [SEND] A|172.21.0.5|6|
+node-2      | [SEND] A|172.21.0.2|7|
+node-2      | [SEND] A|172.21.0.2|8|
+node-2      | [SEND] A|172.21.0.2|9|
+node-1      | 	[ACK] message number 6 containing 6 from /172.21.0.5 completely acknowledged and ready to deliver!
 node-1      | [MAIN] 6 FROM /172.21.0.5
-node-2      | [SEND] A|172.21.0.5|7|
-node-2      | [SEND] A|172.21.0.5|6|
-node-2      | [SEND] A|172.21.0.5|7|
-node-3      | 	[ACK] message number 6 completely acknowledged (1 left)
-node-2      | [SEND] T|9|9|
-node-3      | [NormalState] processing T message from /172.21.0.4
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [NormalState] processing T message from /172.21.0.4
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.4|9|
-node-3      | [SEND] A|172.21.0.4|9|
-node-1      | [SEND] A|172.21.0.4|9|
-node-1      | [SEND] A|172.21.0.4|9|
-node-3      | 	[ACK] message number 9 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-1      | 	[ACK] message number 9 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-1      | [MAIN] 9 FROM /172.21.0.4
-node-3      | [MAIN] 9 FROM /172.21.0.4
-node-2      | 	[ACK] message number 9 completely acknowledged (0 left)
-node-1      | [SEND] T|11|11|
-node-3      | [NormalState] processing T message from /172.21.0.3
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [NormalState] processing T message from /172.21.0.3
-node-3      | [SEND] A|172.21.0.3|11|
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [SEND] A|172.21.0.3|11|
-node-3      | [SEND] A|172.21.0.3|11|
-node-2      | [SEND] A|172.21.0.5|6|
-node-2      | [SEND] A|172.21.0.5|7|
-node-2      | [SEND] A|172.21.0.3|11|
-node-2      | 	[ACK] message number 11 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-2      | [MAIN] 11 FROM /172.21.0.3
-node-3      | 	[ACK] message number 11 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 11 FROM /172.21.0.3
-node-1      | 	[ACK] message number 11 completely acknowledged (0 left)
-node-3      | [SEND] T|8|8|
-node-1      | [NormalState] processing T message from /172.21.0.5
-node-1      | [SEND] N|/172.21.0.5|7|
-node-2      | [NormalState] processing T message from /172.21.0.5
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [SEND] A|172.21.0.5|8|
-node-2      | [SEND] A|172.21.0.5|6|
-node-2      | [SEND] A|172.21.0.5|7|
-node-2      | [SEND] A|172.21.0.5|8|
-node-2      | [NormalState] processing N message from /172.21.0.3
-node-2      | [NACK] 7
-node-3      | [NormalState] processing N message from /172.21.0.3
-node-3      | [NACK] 7
-node-3      | [SEND] T|7|7|
-node-2      | [NormalState] processing T message from /172.21.0.5
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [NormalState] processing T message from /172.21.0.5
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.5|7|
-node-1      | [SEND] A|172.21.0.5|7|
-node-1      | [SEND] A|172.21.0.5|8|
-node-1      | [SEND] A|172.21.0.5|7|
-node-1      | [SEND] A|172.21.0.5|8|
-node-2      | 	[ACK] message number 7 from /172.21.0.5 completely acknowledged and ready to deliver!
-node-2      | 		[ACK] assuming delivery of 6
+node-3      | 	[ACK] message number 6 completely acknowledged (0 left)
+node-2      | 	[ACK] message number 6 containing 6 from /172.21.0.5 completely acknowledged and ready to deliver!
 node-2      | [MAIN] 6 FROM /172.21.0.5
-node-2      | [MAIN] 7 FROM /172.21.0.5
-node-2      | 	[ACK] message number 8 from /172.21.0.5 completely acknowledged and ready to deliver!
-node-2      | [MAIN] 8 FROM /172.21.0.5
-node-3      | 	[ACK] message number 7 completely acknowledged (1 left)
-node-3      | 	[ACK] message number 8 completely acknowledged (0 left)
-node-2      | [SEND] T|10|10|
-node-1      | [NormalState] processing T message from /172.21.0.4
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.4|10|
-node-3      | [NormalState] processing T message from /172.21.0.4
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.4|10|
-node-3      | [SEND] A|172.21.0.4|10|
-node-1      | [SEND] A|172.21.0.5|7|
-node-3      | 	[ACK] message number 10 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 10 FROM /172.21.0.4
-node-2      | 	[ACK] message number 10 completely acknowledged (0 left)
-node-1      | [SEND] A|172.21.0.5|8|
-node-1      | [SEND] A|172.21.0.4|10|
-node-1      | 	[ACK] message number 10 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-1      | [MAIN] 10 FROM /172.21.0.4
-node-1      | [SEND] T|12|12|
-node-2      | [NormalState] processing T message from /172.21.0.3
+node-1      | [SEND] T|10|10|
+node-2      | [NormalState] processing T message from /172.21.0.2
 node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [SEND] A|172.21.0.3|12|
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-2      | [SEND] A|172.21.0.2|10|
+node-2      | [SEND] A|172.21.0.2|7|
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | [SEND] A|172.21.0.2|10|
+node-3      | [SEND] A|172.21.0.3|6|
+node-3      | [SEND] A|172.21.0.3|7|
+node-3      | [SEND] A|172.21.0.3|8|
+node-3      | [SEND] A|172.21.0.2|10|
+node-3      | 	[ACK] message number 10 containing 10 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-3      | [MAIN] 10 FROM /172.21.0.2
+node-2      | [SEND] A|172.21.0.2|8|
+node-2      | [SEND] A|172.21.0.2|9|
+node-2      | [SEND] A|172.21.0.2|10|
+node-2      | 	[ACK] message number 10 containing 10 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-2      | 		[ACK] assuming delivery of 7
+node-2      | 		[ACK] assuming delivery of 8
+node-2      | 		[ACK] assuming delivery of 9
+node-1      | 	[ACK] message number 10 completely acknowledged (0 left)
+node-2      | [MAIN] 7 FROM /172.21.0.2
+node-2      | [MAIN] 8 FROM /172.21.0.2
+node-2      | [MAIN] 9 FROM /172.21.0.2
+node-2      | [MAIN] 10 FROM /172.21.0.2
+node-2      | [SEND] T|9|9|
 node-3      | [NormalState] processing T message from /172.21.0.3
 node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.3|12|
-node-2      | [SEND] A|172.21.0.3|12|
-node-3      | [SEND] A|172.21.0.3|12|
-node-2      | 	[ACK] message number 12 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-2      | [MAIN] 12 FROM /172.21.0.3
+node-3      | [SEND] A|172.21.0.3|9|
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-1      | [SEND] N|/172.21.0.3|8|
+node-3      | [SEND] A|172.21.0.3|6|
+node-2      | [NormalState] processing N message from /172.21.0.2
+node-2      | [NACK] 8
+node-2      | [SEND] T|8|8|
+node-3      | [SEND] A|172.21.0.3|7|
+node-3      | [SEND] A|172.21.0.3|8|
+node-3      | [SEND] A|172.21.0.3|9|
+node-3      | [NormalState] processing N message from /172.21.0.2
+node-3      | [NACK] 8
+node-3      | [NormalState] processing T message from /172.21.0.3
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [SEND] A|172.21.0.3|8|
+node-1      | [SEND] A|172.21.0.3|8|
+node-3      | 	[ACK] message number 8 containing 8 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-3      | 		[ACK] assuming delivery of 6
+node-3      | 		[ACK] assuming delivery of 7
+node-2      | 	[ACK] message number 8 completely acknowledged (1 left)
+node-3      | [MAIN] 6 FROM /172.21.0.3
+node-1      | [SEND] A|172.21.0.3|9|
+node-3      | [MAIN] 7 FROM /172.21.0.3
+node-3      | [MAIN] 8 FROM /172.21.0.3
+node-1      | [SEND] A|172.21.0.3|8|
+node-1      | [SEND] A|172.21.0.3|9|
+node-2      | 	[ACK] message number 9 completely acknowledged (0 left)
+node-3      | 	[ACK] message number 9 containing 9 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-3      | [MAIN] 9 FROM /172.21.0.3
+node-3      | [SEND] T|7|7|
+node-1      | [NormalState] processing T message from /172.21.0.5
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [SEND] A|172.21.0.5|7|
+node-2      | [NormalState] processing T message from /172.21.0.5
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [SEND] A|172.21.0.5|7|
+node-1      | [SEND] A|172.21.0.5|7|
+node-1      | [SEND] A|172.21.0.3|8|
+node-3      | 	[ACK] message number 7 completely acknowledged (0 left)
+node-1      | [SEND] A|172.21.0.3|9|
+node-2      | [SEND] A|172.21.0.5|7|
+node-2      | 	[ACK] message number 7 containing 7 from /172.21.0.5 completely acknowledged and ready to deliver!
+node-2      | [MAIN] 7 FROM /172.21.0.5
+node-1      | 	[ACK] message number 7 containing 7 from /172.21.0.5 completely acknowledged and ready to deliver!
+node-1      | [MAIN] 7 FROM /172.21.0.5
+node-2      | [SEND] T|10|10|
+node-3      | [NormalState] processing T message from /172.21.0.3
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | [SEND] A|172.21.0.3|10|
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-1      | [DROP] SIMULATING MESSAGE NOT RECEIVED (10 from /172.21.0.3)
+node-3      | [SEND] A|172.21.0.3|10|
+node-3      | [SEND] T|8|8|
+node-2      | [NormalState] processing T message from /172.21.0.5
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [NormalState] processing T message from /172.21.0.5
+node-1      | [DROP] SIMULATING MESSAGE NOT RECEIVED (8 from /172.21.0.5)
+node-2      | [SEND] A|172.21.0.5|8|
+node-2      | [SEND] A|172.21.0.5|8|
+node-1      | [UNORDERED] SENDING 2 MESSAGES IN REVERSE!
+node-1      | [SEND] T|12|12|
+node-1      | [SEND] T|11|11|
+node-1      | [NormalState] processing N message from /172.21.0.3
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-2      | [SEND] N|/172.21.0.2|11|
+node-1      | [NACK] 11
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [SEND] A|172.21.0.2|11|
+node-2      | [SEND] A|172.21.0.5|8|
+node-1      | [SEND] T|11|11|
+node-2      | [SEND] A|172.21.0.2|11|
+node-2      | [SEND] A|172.21.0.2|12|
+node-2      | [SEND] A|172.21.0.5|8|
+node-2      | [SEND] A|172.21.0.2|11|
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-2      | [SEND] A|172.21.0.2|12|
+node-3      | [SEND] N|/172.21.0.2|11|
+node-3      | [NormalState] processing N message from /172.21.0.3
+node-3      | [NACK] 11
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [NormalState] processing N message from /172.21.0.5
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-2      | [NACK] 11
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | [SEND] A|172.21.0.2|11|
+node-3      | [SEND] A|172.21.0.3|10|
+node-3      | [SEND] A|172.21.0.2|11|
+node-2      | 	[ACK] message number 11 containing 11 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-2      | [MAIN] 11 FROM /172.21.0.2
+node-3      | [SEND] A|172.21.0.2|12|
+node-3      | [SEND] A|172.21.0.3|10|
+node-3      | [SEND] A|172.21.0.2|11|
+node-3      | [SEND] A|172.21.0.2|12|
+node-2      | 	[ACK] message number 12 containing 12 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-2      | [MAIN] 12 FROM /172.21.0.2
+node-3      | 	[ACK] message number 11 containing 11 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | 	[ACK] message number 12 containing 12 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-3      | [MAIN] 11 FROM /172.21.0.2
+node-1      | [NormalState] processing N message from /172.21.0.5
+node-1      | [NACK] 11
+node-3      | [MAIN] 12 FROM /172.21.0.2
+node-1      | [SEND] T|11|11|
+node-1      | 	[ACK] message number 11 completely acknowledged (1 left)
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
 node-1      | 	[ACK] message number 12 completely acknowledged (0 left)
-node-3      | 	[ACK] message number 12 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 12 FROM /172.21.0.3
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [SEND] T|11|11|
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-3      | [NormalState] processing T message from /172.21.0.3
+node-1      | [SEND] N|/172.21.0.3|10|
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-3      | [SEND] A|172.21.0.3|11|
+node-3      | [SEND] A|172.21.0.3|10|
+node-3      | [SEND] A|172.21.0.3|11|
+node-2      | [NormalState] processing N message from /172.21.0.2
+node-2      | [NACK] 10
+node-2      | [SEND] T|10|10|
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-3      | [NormalState] processing N message from /172.21.0.2
+node-3      | [NACK] 10
+node-3      | [NormalState] processing T message from /172.21.0.3
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [SEND] A|172.21.0.3|10|
+node-1      | [SEND] A|172.21.0.3|8|
+node-2      | 	[ACK] message number 10 completely acknowledged (1 left)
+node-1      | [SEND] A|172.21.0.3|9|
+node-3      | 	[ACK] message number 10 containing 10 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-3      | [MAIN] 10 FROM /172.21.0.3
+node-1      | [SEND] A|172.21.0.3|10|
+node-1      | [SEND] A|172.21.0.3|11|
+node-3      | 	[ACK] message number 11 containing 11 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-3      | [MAIN] 11 FROM /172.21.0.3
+node-2      | 	[ACK] message number 11 completely acknowledged (0 left)
+node-1      | [SEND] A|172.21.0.3|8|
+node-1      | [SEND] A|172.21.0.3|9|
+node-1      | [SEND] A|172.21.0.3|10|
+node-1      | [SEND] A|172.21.0.3|11|
+node-1      | 	[ACK] message number 11 containing 11 from /172.21.0.3 completely acknowledged and ready to deliver!
+node-1      | 		[ACK] assuming delivery of 8
+node-1      | 		[ACK] assuming delivery of 9
+node-1      | 		[ACK] assuming delivery of 10
+node-1      | [MAIN] 8 FROM /172.21.0.3
+node-1      | [MAIN] 9 FROM /172.21.0.3
+node-1      | [MAIN] 10 FROM /172.21.0.3
+node-1      | [MAIN] 11 FROM /172.21.0.3
 node-3      | [SEND] T|9|9|
 node-2      | [NormalState] processing T message from /172.21.0.5
-node-1      | [NormalState] processing T message from /172.21.0.5
 node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
 node-2      | [SEND] A|172.21.0.5|9|
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.5|9|
+node-1      | [NormalState] processing T message from /172.21.0.5
+node-3      | [NormalState] processing N message from /172.21.0.2
+node-2      | [SEND] A|172.21.0.5|8|
+node-1      | [SEND] N|/172.21.0.5|8|
+node-3      | [NACK] 8
 node-2      | [SEND] A|172.21.0.5|9|
-node-1      | [SEND] A|172.21.0.5|7|
-node-1      | [SEND] A|172.21.0.5|8|
-node-1      | [SEND] A|172.21.0.5|9|
-node-2      | 	[ACK] message number 9 from /172.21.0.5 completely acknowledged and ready to deliver!
-node-2      | [MAIN] 9 FROM /172.21.0.5
-node-1      | 	[ACK] message number 9 from /172.21.0.5 completely acknowledged and ready to deliver!
-node-3      | 	[ACK] message number 9 completely acknowledged (0 left)
-node-1      | 		[ACK] assuming delivery of 7
-node-1      | [MAIN] 7 FROM /172.21.0.5
-node-1      | 		[ACK] assuming delivery of 8
-node-1      | [MAIN] 8 FROM /172.21.0.5
-node-1      | [MAIN] 9 FROM /172.21.0.5
-node-2      | [SEND] T|11|11|
-node-1      | [NormalState] processing T message from /172.21.0.4
+node-1      | [NormalState] processing T message from /172.21.0.5
 node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.4|11|
-node-3      | [NormalState] processing T message from /172.21.0.4
-node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.4|11|
-node-3      | [SEND] A|172.21.0.4|11|
-node-1      | 	[ACK] message number 11 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-3      | [SEND] A|172.21.0.4|11|
-node-2      | 	[ACK] message number 11 completely acknowledged (0 left)
-node-3      | 	[ACK] message number 11 from /172.21.0.4 completely acknowledged and ready to deliver!
-node-3      | [MAIN] 11 FROM /172.21.0.4
-node-1      | [MAIN] 11 FROM /172.21.0.4
+node-2      | [NormalState] processing N message from /172.21.0.2
+node-3      | [SEND] T|8|8|
+node-1      | [SEND] A|172.21.0.5|8|
+node-1      | [SEND] A|172.21.0.5|8|
+node-2      | [NACK] 8
+node-2      | [NormalState] processing T message from /172.21.0.5
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [SEND] A|172.21.0.5|9|
+node-2      | 	[ACK] message number 8 containing 8 from /172.21.0.5 completely acknowledged and ready to deliver!
+node-1      | [SEND] A|172.21.0.5|8|
+node-2      | [MAIN] 8 FROM /172.21.0.5
+node-1      | [SEND] A|172.21.0.5|9|
+node-3      | 	[ACK] message number 8 completely acknowledged (1 left)
+node-3      | 	[ACK] message number 9 completely acknowledged (0 left)
+node-2      | 	[ACK] message number 9 containing 9 from /172.21.0.5 completely acknowledged and ready to deliver!
+node-2      | [MAIN] 9 FROM /172.21.0.5
 node-1      | [SEND] T|13|13|
+node-3      | [NormalState] processing T message from /172.21.0.2
+node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [SEND] A|172.21.0.2|13|
+node-3      | [SEND] A|172.21.0.2|13|
+node-3      | [SEND] A|172.21.0.2|13|
+node-1      | 	[ACK] message number 13 completely acknowledged (0 left)
+node-3      | 	[ACK] message number 13 containing 13 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-3      | [MAIN] 13 FROM /172.21.0.2
+node-2      | [SEND] A|172.21.0.2|13|
+node-2      | 	[ACK] message number 13 containing 13 from /172.21.0.2 completely acknowledged and ready to deliver!
+node-2      | [MAIN] 13 FROM /172.21.0.2
+node-2      | [SEND] T|12|12|
 node-3      | [NormalState] processing T message from /172.21.0.3
 node-3      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-3      | [SEND] A|172.21.0.3|13|
-node-3      | [SEND] A|172.21.0.3|13|
-node-2      | [NormalState] processing T message from /172.21.0.3
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [SEND] A|172.21.0.3|13|
-node-2      | [SEND] A|172.21.0.3|13|
-node-1      | 	[ACK] message number 13 completely acknowledged (0 left)
-node-2      | 	[ACK] message number 13 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-3      | 	[ACK] message number 13 from /172.21.0.3 completely acknowledged and ready to deliver!
-node-2      | [MAIN] 13 FROM /172.21.0.3
-node-3      | [MAIN] 13 FROM /172.21.0.3
+node-3      | [SEND] A|172.21.0.3|12|
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-1      | [DROP] SIMULATING MESSAGE NOT RECEIVED (12 from /172.21.0.3)
+node-3      | [SEND] A|172.21.0.3|12|
 node-3      | START LEAVING
 node-3      | [DISCONNECT]
 node-3      | [SEND] L|10|
@@ -767,64 +873,79 @@ node-2      | [NormalState] processing L message from /172.21.0.5
 node-1      | [NormalState] processing L message from /172.21.0.5
 node-3 exited with code 0
 node-1      | [SEND] T|14|14|
-node-2      | [NormalState] processing T message from /172.21.0.3
+node-2      | [NormalState] processing T message from /172.21.0.2
 node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [SEND] A|172.21.0.3|14|
-node-2      | [SEND] A|172.21.0.3|14|
+node-2      | [SEND] A|172.21.0.2|14|
+node-2      | [SEND] A|172.21.0.2|14|
 supervisor  | [SUPERVISOR] disconnecting: [/172.21.0.5]
-node-2      | [NormalState] processing V message from /172.21.0.2
-supervisor  | [SUPERVISOR] installing view: [/172.21.0.3, /172.21.0.4]
-node-1      | [NormalState] processing V message from /172.21.0.2
-node-2      | [SEND] T|12|12|
-node-2      | [SEND] F|13|
-node-2      | [SEND] F|13|
-node-1      | [SEND] T|14|14|
-node-2      | [ViewChangeState] processing T message from /172.21.0.3
-node-1      | [SEND] F|15|
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [ViewChangeState] processing F message from /172.21.0.3
+node-1      | [NormalState] processing V message from /172.21.0.4
+supervisor  | [SUPERVISOR] installing view: [/172.21.0.2, /172.21.0.3]
+node-2      | [NormalState] processing V message from /172.21.0.4
+node-1      | [SEND] F|14|
+node-1      | [SEND] F|14|
+node-2      | [SEND] T|13|13|
+node-1      | [ViewChangeState] processing T message from /172.21.0.3
+node-1      | [SEND] N|/172.21.0.3|12|
+node-2      | [SEND] F|12|
+node-1      | [ViewChangeState] processing F message from /172.21.0.3
+supervisor  | [SUPERVISOR] normal state with view: [/172.21.0.2, /172.21.0.3]
+node-2      | [SEND] F|12|
+node-2      | [ViewChangeState] processing F message from /172.21.0.2
 node-2      | [FLUSH] sending all pending text messages
-node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] F|15|
-node-1      | [ViewChangeState] processing T message from /172.21.0.4
-node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-1      | [SEND] A|172.21.0.4|12|
-node-1      | [SEND] A|172.21.0.4|12|
-supervisor  | [SUPERVISOR] normal state with view: [/172.21.0.3, /172.21.0.4]
-node-1      | [ViewChangeState] processing F message from /172.21.0.4
 node-1      | [FLUSH] sending all pending text messages
 node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
-node-2      | [NORMAL] new view is [/172.21.0.3, /172.21.0.4]
-node-2      | [NormalState] processing F message from /172.21.0.3
-node-1      | [NORMAL] new view is [/172.21.0.3, /172.21.0.4]
-node-1      | [NormalState] processing F message from /172.21.0.4
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [NORMAL] new view is [/172.21.0.2, /172.21.0.3]
+node-1      | [NormalState] processing F message from /172.21.0.3
+node-2      | [NORMAL] new view is [/172.21.0.2, /172.21.0.3]
+node-2      | [NormalState] processing F message from /172.21.0.2
+node-2      | [NormalState] processing N message from /172.21.0.2
+node-2      | [NACK] 12
+node-2      | [SEND] T|12|12|
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [MAIN] 12 FROM /172.21.0.3
+node-1      | [SEND] A|172.21.0.3|12|
+node-1      | [MAIN] 13 FROM /172.21.0.3
+node-1      | [SEND] A|172.21.0.3|13|
+node-2      | 	[ACK] message number 12 completely acknowledged (1 left)
 node-2      | [SEND] T|14|14|
-node-1      | [NormalState] processing T message from /172.21.0.4
-node-1      | [SEND] N|/172.21.0.4|13|
-node-2      | [NormalState] processing N message from /172.21.0.3
-node-2      | [NACK] 13
-node-2      | [NACK] ERROR 13
+node-1      | [NormalState] processing T message from /172.21.0.3
+node-1      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-1      | [SEND] A|172.21.0.3|14|
+node-1      | [MAIN] 14 FROM /172.21.0.3
+node-2      | 	[ACK] message number 14 completely acknowledged (1 left)
 node-1      | [SEND] T|16|16|
-node-2      | [NormalState] processing T message from /172.21.0.3
-node-2      | [DROP] SIMULATING MESSAGE NOT RECEIVED (16 from /172.21.0.3)
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-2      | [SEND] N|/172.21.0.2|14|
+node-2      | [SEND] N|/172.21.0.2|15|
+node-1      | [NormalState] processing N message from /172.21.0.3
+node-1      | [NACK] 14
+node-1      | [SEND] T|14|14|
+node-2      | [NormalState] processing T message from /172.21.0.2
+node-2      | 	[DELIVER TEXT] preparing messages in FIFO order for delivery
+node-2      | [MAIN] 14 FROM /172.21.0.2
+node-2      | [SEND] A|172.21.0.2|14|
+node-1      | [NormalState] processing N message from /172.21.0.3
+node-1      | [NACK] 15
+node-1      | [NACK] ERROR 15
 node-2      | START LEAVING
 node-2      | [DISCONNECT]
 node-2      | [SEND] L|15|
-node-1      | [NormalState] processing L message from /172.21.0.4
+node-1      | [NormalState] processing L message from /172.21.0.3
 node-2 exited with code 0
 node-1      | [SEND] T|17|17|
-supervisor  | [SUPERVISOR] disconnecting: [/172.21.0.4]
-supervisor  | [SUPERVISOR] installing view: [/172.21.0.3]
-node-1      | [NormalState] processing V message from /172.21.0.2
-node-1      | [SEND] T|16|16|
-node-1      | [SEND] T|17|17|
-node-1      | [SEND] F|18|
-supervisor  | [SUPERVISOR] normal state with view: [/172.21.0.3]
-node-1      | [NORMAL] new view is [/172.21.0.3]
+supervisor  | [SUPERVISOR] disconnecting: [/172.21.0.3]
+supervisor  | [SUPERVISOR] installing view: [/172.21.0.2]
+node-1      | [NormalState] processing V message from /172.21.0.4
+node-1      | [SEND] F|14|
+node-1      | [NORMAL] new view is [/172.21.0.2]
+supervisor  | [SUPERVISOR] normal state with view: [/172.21.0.2]
 node-1      | [SEND] T|18|18|
+node-1      | [SEND] T|19|19|
 node-1      | START LEAVING
 node-1      | [DISCONNECT]
 node-1      | [SEND] L|20|
 node-1 exited with code 0
-supervisor  | [SUPERVISOR] disconnecting: [/172.21.0.3]
+supervisor  | [SUPERVISOR] disconnecting: [/172.21.0.2]
 supervisor  | [SUPERVISOR] normal state with view: []
