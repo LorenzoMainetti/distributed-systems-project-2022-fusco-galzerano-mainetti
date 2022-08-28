@@ -1,6 +1,7 @@
 package lib.client;
 
 import lib.Test;
+import lib.client.state.NormalState;
 import lib.utils.Pair;
 import lib.MessageReceiver;
 import lib.Receiver;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -176,15 +178,22 @@ public class ReliableBroadcastLibrary implements Receiver {
                 }
                 break;
             case 'A': // ack
+                if (state.getClass() != NormalState.class) break;
                 AckMessage ackMessage = (AckMessage) m;
                 if (ackMessage.getTarget().equals(myAddress)) {
-                    TextMessage t = sentUnstableMessages.get(ackMessage.getSequenceNumber());
-                    if (t != null) {
-                        List<InetAddress> l = t.getAckList();
-                        l.remove(ackMessage.getSource());
-                        if (l.isEmpty()) { // all other processes in the view acknowledge
-                            sentUnstableMessages.remove(ackMessage.getSequenceNumber());
-                            System.out.println("\t[ACK] message number " + t.getSequenceNumber() + " completely acknowledged (" + sentUnstableMessages.size() + " left)");
+                    List<Integer> pendingIds = new ArrayList<>(sentUnstableMessages.keySet());
+                    for (int i : pendingIds) {
+                        if (i <= ackMessage.getSequenceNumber()) {
+                            TextMessage t = sentUnstableMessages.get(i);
+                            if (t != null) {
+                                List<InetAddress> l = t.getAckList();
+                                l.remove(ackMessage.getSource());
+                                if (l.isEmpty()) { // all other processes in the view acknowledge
+                                    System.out.println("[REMOVING] " + sentUnstableMessages.get(i).getTransmissionString());
+                                    sentUnstableMessages.remove(i);
+                                    System.out.println("\t[ACK] message number " + t.getSequenceNumber() + " completely acknowledged (" + sentUnstableMessages.size() + " left)");
+                                }
+                            }
                         }
                     }
                 } else {
@@ -220,11 +229,25 @@ public class ReliableBroadcastLibrary implements Receiver {
                     if (sentUnstableMessages.containsKey(nackMessage.getRequestedMessage()))
                         sendMessageHelper(sentUnstableMessages.get(nackMessage.getRequestedMessage()));
                     else
-                        System.out.println("[NACK] ERROR " + nackMessage.getRequestedMessage());
+                        System.out.println("[NACK] ERROR " + nackMessage.getRequestedMessage() + " ||| " + nackMessage.getSource());
                 }
                 break;
             default:
+                ClientState lastState = state;
                 state = state.processMessage(m);
+                if (state.getClass() == NormalState.class && lastState.getClass() != NormalState.class) {
+                    for (int i : sentUnstableMessages.keySet()) {
+                        List<InetAddress> ackList = new ArrayList<>(view);
+                        ackList.remove(myAddress);
+                        sentUnstableMessages.get(i).setAckList(ackList);
+                    }
+                    for (TextMessage t : new ArrayList<>(Test.unorderedMessagesList)) {
+                        state.sendTextMessage(t);
+                    }
+                    Test.unorderedMessagesList.clear();
+                    sendAllPending();
+                    deliverAll();
+                }
                 break;
         }
     }
@@ -236,8 +259,8 @@ public class ReliableBroadcastLibrary implements Receiver {
         System.out.println("[FLUSH] sending all pending text messages");
         while (!toSend.isEmpty()) {
             TextMessage m = toSend.remove();
-            sendMessageHelper(m);
-            sentUnstableMessages.put(m.getSequenceNumber(), m);
+            state.sendTextMessage(m);
+            System.out.println("\t[FLUSH] sending " + m.getTransmissionString());
         }
     }
 

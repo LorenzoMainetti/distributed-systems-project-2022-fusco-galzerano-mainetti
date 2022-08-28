@@ -16,6 +16,7 @@ public class SenderThread extends Thread {
         int i = 0, j = Settings.N_MESSAGES.get(library.getId());
         System.out.println("[INFO] will leave after " + j + " messages");
         try {
+            Thread.sleep(10000);
             while (true) {
                 library.sendTextMessage(String.valueOf(i++));
                 Thread.sleep(Settings.T_FREQUENCY);

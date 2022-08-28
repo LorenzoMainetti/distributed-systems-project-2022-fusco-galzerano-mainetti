@@ -41,11 +41,12 @@ public class ViewChangeState extends ClientState {
         if (m.getType() == 'F') {
             FlushMessage flushMessage = (FlushMessage) m;
             pendingView.remove(m.getSource());
-            library.getMessageSeqMap().put(flushMessage.getSource(), flushMessage.getSequenceNumber());
+            Integer curSeq = library.getMessageSeqMap().get(flushMessage.getSource());
+            if (curSeq == null || curSeq < flushMessage.getSequenceNumber()) {
+                library.getMessageSeqMap().put(flushMessage.getSource(), flushMessage.getSequenceNumber());
+            }
 
             if (pendingView.isEmpty()) {
-                library.sendAllPending();
-                library.deliverAll();
                 loop = false;
                 try {
                     flushingThread.join();

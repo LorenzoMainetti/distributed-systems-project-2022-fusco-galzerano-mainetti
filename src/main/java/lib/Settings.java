@@ -23,9 +23,9 @@ public class Settings {
 
     static {
         INITIAL_TIMEOUTS.put(1, 1000);
-        INITIAL_TIMEOUTS.put(2, 10000);
-        INITIAL_TIMEOUTS.put(3, 20000);
-        INITIAL_TIMEOUTS.put(4, 30000);
+        INITIAL_TIMEOUTS.put(2, 3000);
+        INITIAL_TIMEOUTS.put(3, 6000);
+        INITIAL_TIMEOUTS.put(4, 9000);
 
         N_MESSAGES.put(1, 20);
         N_MESSAGES.put(2, 15);

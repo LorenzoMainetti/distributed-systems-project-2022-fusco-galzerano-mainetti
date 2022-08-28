@@ -26,7 +26,6 @@ public class NormalState extends ClientState {
         library.setView(view);
         System.out.println("[NORMAL] new view is " + view);
         running = true;
-        Test.unorderedMessagesList.clear();
 
         pingingThread = new PingingThread(this);
         pingingThread.start();
@@ -64,18 +63,20 @@ public class NormalState extends ClientState {
             e.printStackTrace();
         }
         m.setAckList(ackList);
-        library.addUnstableMessage(m);
-        if (Test.UNORDERED) {
-            Test.unorderedMessagesList.add(m);
-            if (Math.random() < Test.UNORDERED_CHANCE) { // if chance then send accumulated message in reverse, else only accumulate
-                if (Test.unorderedMessagesList.size() > 1) System.out.println("[UNORDERED] SENDING " + Test.unorderedMessagesList.size() + " MESSAGES IN REVERSE!");
-                while (!Test.unorderedMessagesList.isEmpty()) {
-                    library.sendMessageHelper(Test.unorderedMessagesList.remove(Test.unorderedMessagesList.size() - 1));
+        if (!ackList.isEmpty()) {
+            library.addUnstableMessage(m);
+            if (Test.UNORDERED) {
+                Test.unorderedMessagesList.add(m);
+                if (Math.random() < Test.UNORDERED_CHANCE) { // if chance then send accumulated message in reverse, else only accumulate
+                    if (Test.unorderedMessagesList.size() > 1) System.out.println("[UNORDERED] SENDING " + Test.unorderedMessagesList.size() + " MESSAGES IN REVERSE!");
+                    while (!Test.unorderedMessagesList.isEmpty()) {
+                        library.sendMessageHelper(Test.unorderedMessagesList.remove(Test.unorderedMessagesList.size() - 1));
+                    }
                 }
             }
-        }
-        else {
-            library.sendMessageHelper(m);
+            else {
+                library.sendMessageHelper(m);
+            }
         }
     }
 
