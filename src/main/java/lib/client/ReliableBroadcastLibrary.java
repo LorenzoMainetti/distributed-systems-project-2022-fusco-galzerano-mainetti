@@ -199,7 +199,7 @@ public class ReliableBroadcastLibrary implements Receiver {
                     if (pair == null) break;
                     pair.fst.remove(ackMessage.getSource());
                     if (pair.fst.isEmpty()) {
-                        System.out.println("\t[ACK] message number " + pair.snd.getSequenceNumber() + " from " + pair.snd.getSource() +  " completely acknowledged and ready to deliver!");
+                        System.out.println("\t[ACK] message number " + pair.snd.getSequenceNumber() + " containing " + pair.snd.getMessage() + " from " + pair.snd.getSource() +  " completely acknowledged and ready to deliver!");
                         map.remove(ackMessage.getSequenceNumber());
                         if (!map.keySet().isEmpty()) {
                             List<Integer> missing = new ArrayList<>(map.keySet());

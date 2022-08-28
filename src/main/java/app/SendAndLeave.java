@@ -22,7 +22,7 @@ public class SendAndLeave {
             Thread.sleep(10000);
 
             if (ReliableBroadcastLibrary.getId() == 1) {
-                lib.sendTextMessage("hello there!");
+                lib.sendTextMessage("HELLO THERE!");
             }
 
             Thread.sleep(5000);
@@ -31,8 +31,23 @@ public class SendAndLeave {
                 Test.dropNextMessage = true;
             }
 
+            Thread.sleep(5000);
+
             if (ReliableBroadcastLibrary.getId() == 1) {
-                lib.sendTextMessage("should not deliver!");
+                lib.sendTextMessage("SHOULD NOT DELIVER!");
+            }
+
+            Thread.sleep(5000);
+
+            if (ReliableBroadcastLibrary.getId() == 2) {
+                lib.leaveGroup();
+                System.exit(0);
+            }
+
+            Thread.sleep(10000);
+
+            if (ReliableBroadcastLibrary.getId() == 1) {
+                lib.sendTextMessage("SHOULD DELIVER!");
             }
 
             Thread.sleep(5000);
