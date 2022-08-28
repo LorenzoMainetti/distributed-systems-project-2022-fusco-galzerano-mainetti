@@ -1,5 +1,6 @@
 package lib.client;
 
+import lib.Test;
 import lib.utils.Pair;
 import lib.MessageReceiver;
 import lib.Receiver;
@@ -40,7 +41,6 @@ public class ReliableBroadcastLibrary implements Receiver {
 
     private final MessageReceiver messageReceiver;
 
-
     /**
      * Constructor
      * @param inetAddr is the address of the process
@@ -72,7 +72,7 @@ public class ReliableBroadcastLibrary implements Receiver {
     }
 
     public int getId() {
-        return Integer.parseInt(myAddress.toString().split("\\.")[3]);
+        return Integer.parseInt(System.getenv("NODE"));
     }
 
     public List<InetAddress> getView() {
@@ -160,11 +160,10 @@ public class ReliableBroadcastLibrary implements Receiver {
             case 'T':
                 if(view.contains(m.getSource())) {
                     TextMessage textMessage = (TextMessage) m;
-                    if (Settings.CAN_DROP_TEXT_MESSAGE) {
-                        if (Math.random() < Settings.DROP_TEXT_MESSAGE_RATIO) {
+                    if (Math.random() < Test.DROP_TEXT_MESSAGE_RATIO || Test.dropNextMessage) {
+                            Test.dropNextMessage = false;
                             System.out.println("[DROP] SIMULATING MESSAGE NOT RECEIVED (" + textMessage.getMessage() + " from " + m.getSource() + ")");
                             return;
-                        }
                     }
                     receivedList.add(textMessage);
                     int expected = messageSeqMap.get(textMessage.getSource());
