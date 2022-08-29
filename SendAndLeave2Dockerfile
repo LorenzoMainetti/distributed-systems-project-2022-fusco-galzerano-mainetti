@@ -1,0 +1,7 @@
+FROM maven
+
+COPY .. ./
+
+RUN mvn -q package
+
+ENTRYPOINT ["java", "-cp", "target/reliable_broadcast-1.0-SNAPSHOT.jar", "app.SendAndLeave2"]

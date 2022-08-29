@@ -41,10 +41,7 @@ public class ViewChangeState extends ClientState {
         if (m.getType() == 'F') {
             FlushMessage flushMessage = (FlushMessage) m;
             pendingView.remove(m.getSource());
-            Integer curSeq = library.getMessageSeqMap().get(flushMessage.getSource());
-            if (curSeq == null || curSeq < flushMessage.getSequenceNumber()) {
-                library.getMessageSeqMap().put(flushMessage.getSource(), flushMessage.getSequenceNumber());
-            }
+            library.getMessageSeqMap().put(flushMessage.getSource(), flushMessage.getSequenceNumber());
 
             if (pendingView.isEmpty()) {
                 loop = false;

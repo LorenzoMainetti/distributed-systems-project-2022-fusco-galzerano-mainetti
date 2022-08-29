@@ -16,7 +16,7 @@ public class ReceiverThread extends Thread {
         try {
             while (true) {
                 TextMessage m = library.getTextMessage();
-                System.out.println("[MAIN] " + m.getMessage() + " FROM " + m.getSource());
+                System.out.println("[MAIN] " + "{" + library.getAddress() + "} " + m.getMessage() + " FROM |" + m.getSource() + "| (" + library.getView() + ")");
             }
         } catch (InterruptedException e) {
             System.out.println("Disconnection occurred");

@@ -140,7 +140,7 @@ public class ReliableBroadcastLibrary implements Receiver {
      */
     public void leaveGroup() throws IOException {
         System.out.println("[DISCONNECT]");
-        sendMessageHelper(new LeaveMessage(targetAddress, sequenceNumber));
+        //sendMessageHelper(new LeaveMessage(targetAddress, sequenceNumber));
         state.close();
         messageReceiver.close();
         state = new DisconnectedState(this);

@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  node-1:
+    container_name: node-1
+    build:
+      context: ./
+      dockerfile: SendAndLeave2Dockerfile
+    environment:
+      - NODE=1
+  node-2:
+    container_name: node-2
+    build:
+      context: ./
+      dockerfile: SendAndLeave2Dockerfile
+    environment:
+      - NODE=2
+  supervisor:
+    container_name: supervisor
+    build:
+      context: ./
+      dockerfile: SupervisorDockerfile
