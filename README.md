@@ -1,4 +1,4 @@
-# distributed-system-project-2022-fusco-galzerano-mainetti
+# Distributed System Project - Reliable Broadcast Library
 
 ## Description:
 
