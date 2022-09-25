@@ -20,6 +20,6 @@ Following the project specifications, we considered a LAN scenario (i.e., link-l
 
 ## Team
 
-[Luigi Fusco](https://github.com/luigifusco) 
-[Arianna Galzerano](https://github.com/arigalzi) 
-[Lorenzo Mainetti](https://github.com/LorenzoMainetti)
+- [Luigi Fusco](https://github.com/luigifusco) 
+- [Arianna Galzerano](https://github.com/arigalzi) 
+- [Lorenzo Mainetti](https://github.com/LorenzoMainetti)
